@@ -123,11 +123,11 @@ async function seedDatabase() {
   const existingMachines = await storage.getMachines();
   if (existingMachines.length === 0) {
     await db.insert(machines).values([
-      { name: "Starter", minDeposit: 20, durationDays: 30, dailyRate: "2.0", maxDailyRate: "2.5" },
-      { name: "Standard", minDeposit: 50, durationDays: 60, dailyRate: "2.5", maxDailyRate: "3.0" },
-      { name: "Pro", minDeposit: 200, durationDays: 90, dailyRate: "3.0", maxDailyRate: "3.5" },
-      { name: "Elite", minDeposit: 500, durationDays: 180, dailyRate: "3.5", maxDailyRate: "4.0" },
-      { name: "VIP", minDeposit: 1000, durationDays: 30, dailyRate: "4.0", maxDailyRate: "4.5" },
+      { name: "Starter", minDeposit: 20, durationDays: 30, dailyRate: "2.0", maxDailyRate: "2.5", maintenanceFee: "0.4", electricityFee: "0.5" },
+      { name: "Standard", minDeposit: 50, durationDays: 60, dailyRate: "2.5", maxDailyRate: "3.0", maintenanceFee: "0.4", electricityFee: "0.5" },
+      { name: "Pro", minDeposit: 200, durationDays: 90, dailyRate: "3.0", maxDailyRate: "3.5", maintenanceFee: "0.4", electricityFee: "0.5" },
+      { name: "Elite", minDeposit: 500, durationDays: 180, dailyRate: "3.5", maxDailyRate: "4.0", maintenanceFee: "0.4", electricityFee: "0.5" },
+      { name: "VIP", minDeposit: 1000, durationDays: 30, dailyRate: "4.0", maxDailyRate: "4.5", maintenanceFee: "0.4", electricityFee: "0.5" },
     ]);
   }
 }

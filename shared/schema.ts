@@ -14,6 +14,8 @@ export const users = pgTable("users", {
   referralCode: text("referral_code").unique(),
   referredBy: integer("referred_by"), 
   kycStatus: text("kyc_status").default("pending"), 
+  affiliationGrade: text("affiliation_grade").default("Bronze"),
+  activeReferrals: integer("active_referrals").default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -24,6 +26,8 @@ export const machines = pgTable("machines", {
   durationDays: integer("duration_days").notNull(),
   dailyRate: decimal("daily_rate", { precision: 5, scale: 2 }).notNull(), 
   maxDailyRate: decimal("max_daily_rate", { precision: 5, scale: 2 }).notNull(),
+  maintenanceFee: decimal("maintenance_fee", { precision: 5, scale: 2 }).default("0.4"),
+  electricityFee: decimal("electricity_fee", { precision: 5, scale: 2 }).default("0.5"),
 });
 
 export const contracts = pgTable("contracts", {

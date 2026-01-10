@@ -12,9 +12,12 @@ export default function Home() {
   const [calcAmount, setCalcAmount] = useState([1000]);
   const [selectedDuration, setSelectedDuration] = useState(30);
 
-  // Simple calculation logic for demo
+  // Simple calculation logic for demo based on official data
+  const maintenanceFee = 0.4;
+  const electricityFee = 0.5;
   const dailyRate = 2.5; // Average rate
-  const dailyProfit = (calcAmount[0] * dailyRate) / 100;
+  const netDailyRate = dailyRate - maintenanceFee - electricityFee;
+  const dailyProfit = (calcAmount[0] * netDailyRate) / 100;
   const totalProfit = dailyProfit * selectedDuration;
 
   return (
