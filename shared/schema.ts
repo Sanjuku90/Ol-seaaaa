@@ -22,14 +22,13 @@ export const users = pgTable("users", {
 export const machines = pgTable("machines", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(), 
+  type: text("type", { enum: ["rent", "buy"] }).notNull().default("rent"),
+  rentalPrice: decimal("rental_price", { precision: 10, scale: 2 }),
+  buyPrice: decimal("buy_price", { precision: 10, scale: 2 }),
   minDeposit: integer("min_deposit").notNull(),
-  durationDays: integer("duration_days").notNull(),
+  durationDays: integer("duration_days").notNull().default(30),
   dailyRate: decimal("daily_rate", { precision: 5, scale: 2 }).notNull(), 
-  maxDailyRate: decimal("max_daily_rate", { precision: 5, scale: 2 }).notNull(),
-  maintenanceFee: decimal("maintenance_fee", { precision: 5, scale: 2 }).default("0.4"),
-  electricityFee: decimal("electricity_fee", { precision: 5, scale: 2 }).default("0.5"),
-  withdrawalFee: decimal("withdrawal_fee", { precision: 5, scale: 2 }).default("3.0"),
-  activationFee: decimal("activation_fee", { precision: 5, scale: 2 }).default("2.0"),
+  monthlyFee: decimal("monthly_fee", { precision: 10, scale: 2 }).default("3.0"),
   description: text("description"),
 });
 

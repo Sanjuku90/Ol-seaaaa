@@ -1,174 +1,198 @@
-import { useAuth } from "@/hooks/use-auth";
-import { useContracts, useStats, useTransactions } from "@/hooks/use-platform";
+import { useQuery } from "@tanstack/react-query";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { StatCard } from "@/components/ui/StatCard";
-import { DollarSign, Cpu, TrendingUp, Activity, Bell } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import CountUp from "react-countup";
-import { api } from "@shared/routes";
 import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer 
-} from "recharts";
-
-// Données de performance croissante
-const chartData = [
-  { name: 'Lun', profit: 120 },
-  { name: 'Mar', profit: 155 },
-  { name: 'Mer', profit: 198 },
-  { name: 'Jeu', profit: 245 },
-  { name: 'Ven', profit: 310 },
-  { name: 'Sam', profit: 380 },
-  { name: 'Dim', profit: 450 },
-];
-
-const livePayments = [
-  { user: "User***78", amount: 45, time: "Il y a 2 min" },
-  { user: "Crypto***92", amount: 120, time: "Il y a 5 min" },
-  { user: "Block***14", amount: 25, time: "Il y a 8 min" },
-];
+  Wallet, 
+  TrendingUp, 
+  Users, 
+  Activity, 
+  Clock, 
+  Zap,
+  ShieldCheck
+} from "lucide-react";
+import { type Contract, type Machine } from "@shared/schema";
+import { format } from "date-fns";
+import { Link } from "wouter";
 
 export default function Overview() {
-  const { user } = useAuth();
-  const { data: contracts } = useContracts();
-  const { data: stats } = useStats();
-  
-  const dailyEarnings = contracts?.reduce((acc, contract) => {
-    if (contract.status === 'active') {
-      const machineRate = 2.5; 
-      return acc + (Number(contract.amount) * (machineRate / 100));
-    }
-    return acc;
-  }, 0) || 0;
+  const { data: user } = useQuery({ queryKey: ["/api/user"] });
+  const { data: contracts } = useQuery<Contract[]>({ queryKey: ["/api/contracts"] });
+  const { data: machines } = useQuery<Machine[]>({ queryKey: ["/api/machines"] });
 
-  const activeContractsCount = contracts?.filter(c => c.status === 'active').length || 0;
+  const activeContracts = contracts?.filter(c => c.status === "active") || [];
+  
+  const getMachine = (id: number) => machines?.find(m => m.id === id);
+
+  const renderContract = (contract: Contract) => {
+    const machine = getMachine(contract.machineId);
+    if (!machine) return null;
+
+    const progress = machine.type === "rent" 
+      ? Math.min(100, (Number(contract.accumulatedRewards) / Number(machine.minDeposit)) * 100)
+      : null;
+
+    return (
+      <Card key={contract.id} className="border-white/5 bg-white/[0.02]">
+        <CardContent className="pt-6">
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                {machine.type === "rent" ? <Zap className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />}
+              </div>
+              <div>
+                <h3 className="font-bold">{machine.name}</h3>
+                <p className="text-xs text-muted-foreground">ID: #{contract.id}</p>
+              </div>
+            </div>
+            <Badge variant={contract.status === "active" ? "default" : "secondary"}>
+              {contract.status === "active" ? "Actif" : "Suspendu"}
+            </Badge>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
+            <div>
+              <p className="text-muted-foreground">Rendement/jour</p>
+              <p className="font-bold text-emerald-400">{machine.dailyRate}%</p>
+            </div>
+            <div>
+              <p className="text-muted-foreground">Gains cumulés</p>
+              <p className="font-bold">${Number(contract.accumulatedRewards).toFixed(2)}</p>
+            </div>
+          </div>
+
+          {machine.type === "rent" && progress !== null && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span>Maturité du retrait (Min $30)</span>
+                <span>{progress.toFixed(0)}%</span>
+              </div>
+              <Progress value={progress} className="h-2" />
+              <p className="text-[10px] text-muted-foreground text-center">
+                {progress >= 100 ? "Frais de retrait : 4%" : "Frais de retrait : 19%"}
+              </p>
+            </div>
+          )}
+
+          <div className="mt-4 pt-4 border-t border-white/5 flex justify-between text-xs text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <Clock className="w-3 h-3" />
+              {format(new Date(contract.startDate), "dd/MM/yyyy")}
+            </div>
+            <span>Frais mensuels: $3.00</span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
     <DashboardLayout>
-      <div className="mb-8">
-        <h1 className="text-3xl font-display font-bold">Tableau de bord</h1>
-        <p className="text-muted-foreground">Ravi de vous revoir, {user?.email}</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <StatCard
-          title="Solde Total"
-          value={`$${Number(user?.balance).toFixed(2)}`}
-          icon={DollarSign}
-          className="border-primary/20 bg-gradient-to-br from-card to-primary/5"
-        />
-        <StatCard
-          title="Gains du jour"
-          value={`$${dailyEarnings.toFixed(2)}`}
-          icon={TrendingUp}
-          trend="+5.2% aujourd'hui"
-        />
-        <StatCard
-          title="Grade Affiliation"
-          value={user?.affiliationGrade || "Bronze"}
-          icon={Activity}
-          className="border-emerald-500/20"
-        />
-        <StatCard
-          title="Filleuls Actifs"
-          value={user?.activeReferrals || 0}
-          icon={TrendingUp}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <Card className="lg:col-span-2 border-white/5 bg-card/50">
-          <CardHeader>
-            <CardTitle>Historique de Profit</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData}>
-                  <defs>
-                    <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
-                  <Tooltip contentStyle={{ backgroundColor: '#020617', borderColor: '#1e293b' }} itemStyle={{ color: '#10b981' }} />
-                  <Area type="monotone" dataKey="profit" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorProfit)" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="space-y-8">
-          <Card className="border-white/5 bg-card/50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="w-4 h-4 text-primary" />
-                Paiements en live
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {livePayments.map((p, i) => (
-                  <div key={i} className="flex items-center justify-between text-sm">
-                    <div>
-                      <span className="font-medium">{p.user}</span>
-                      <p className="text-xs text-muted-foreground">{p.time}</p>
-                    </div>
-                    <span className="text-emerald-400 font-bold">+${p.amount}</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-white/5 bg-card/50">
-            <CardHeader>
-              <CardTitle>Contrats Actifs</CardTitle>
-            </CardHeader>
-            <CardContent>
-                  <div className="space-y-4">
-                {contracts?.slice(0, 5).map((contract) => (
-                  <div key={contract.id} className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <Cpu className="w-4 h-4 text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">{(contract as any).machineName || (contract as any).machine?.name}</p>
-                        <p className="text-xs text-muted-foreground">Actif</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-bold">${Number(contract.amount).toFixed(0)}</p>
-                      <div className="flex items-center gap-2 justify-end">
-                        <p className="text-xs text-emerald-400 font-medium">
-                          +${Number(contract.accumulatedRewards).toFixed(2)}
-                        </p>
-                        <Button size="sm" variant="ghost" className="h-6 px-1 text-[10px] hover:bg-primary/10">
-                          Réinvestir
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {(!contracts || contracts.length === 0) && (
-                  <p className="text-sm text-muted-foreground text-center py-4">Aucun contrat actif</p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+      <div className="mb-8 flex justify-between items-end">
+        <div>
+          <h1 className="text-3xl font-display font-bold">Tableau de Bord</h1>
+          <p className="text-muted-foreground">Suivez vos performances de minage en temps réel.</p>
+        </div>
+        <div className="flex gap-2">
+          <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary py-1 px-3">
+            Grade: {user?.affiliationGrade || "Bronze"}
+          </Badge>
         </div>
       </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <Card className="border-white/5 bg-white/[0.02] hover-elevate">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Solde Total</CardTitle>
+            <Wallet className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold font-display">${Number(user?.balance || 0).toFixed(2)}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Prêt pour investissement
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-white/5 bg-white/[0.02] hover-elevate">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Revenus 24h</CardTitle>
+            <TrendingUp className="h-4 w-4 text-emerald-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold font-display text-emerald-400">+$24.15</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              +5.2% vs hier
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-white/5 bg-white/[0.02] hover-elevate">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Affiliés Actifs</CardTitle>
+            <Users className="h-4 w-4 text-blue-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold font-display">{user?.activeReferrals || 0}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Récompenses: $12.50
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-white/5 bg-white/[0.02] hover-elevate">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">État Système</CardTitle>
+            <Activity className="h-4 w-4 text-emerald-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold font-display">En Ligne</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Uptime: 99.99%
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Tabs defaultValue="rent" className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-display font-bold">Mes Machines</h2>
+          <TabsList className="bg-white/5 border border-white/10 p-1">
+            <TabsTrigger value="rent">Louées</TabsTrigger>
+            <TabsTrigger value="buy">Achetées</TabsTrigger>
+          </TabsList>
+        </div>
+
+        <TabsContent value="rent">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {activeContracts.filter(c => getMachine(c.machineId)?.type === "rent").length > 0 ? (
+              activeContracts.filter(c => getMachine(c.machineId)?.type === "rent").map(renderContract)
+            ) : (
+              <Card className="col-span-full py-12 border-dashed border-white/10 bg-transparent text-center">
+                <p className="text-muted-foreground mb-4">Vous n'avez pas de machines louées.</p>
+                <Link href="/dashboard/machines">
+                  <Button variant="outline" size="sm">Voir le catalogue</Button>
+                </Link>
+              </Card>
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="buy">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {activeContracts.filter(c => getMachine(c.machineId)?.type === "buy").length > 0 ? (
+              activeContracts.filter(c => getMachine(c.machineId)?.type === "buy").map(renderContract)
+            ) : (
+              <Card className="col-span-full py-12 border-dashed border-white/10 bg-transparent text-center">
+                <p className="text-muted-foreground mb-4">Vous n'avez pas de machines achetées.</p>
+                <Link href="/dashboard/machines">
+                  <Button variant="outline" size="sm">Voir le catalogue</Button>
+                </Link>
+              </Card>
+            )}
+          </div>
+        </TabsContent>
+      </Tabs>
     </DashboardLayout>
   );
 }

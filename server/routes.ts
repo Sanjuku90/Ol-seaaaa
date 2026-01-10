@@ -39,16 +39,24 @@ export async function registerRoutes(
       const machine = await storage.getMachine(input.machineId);
       if (!machine) return res.status(404).json({ message: "Machine non trouvée" });
 
-      if (Number(user.balance) < input.amount) {
+      const existingContracts = await storage.getContracts((req.user as any).id);
+      const machineContracts = existingContracts.filter(c => c.machineId === input.machineId && c.status === "active");
+      if (machineContracts.length >= 2) {
+        return res.status(400).json({ message: "Vous avez déjà atteint la limite de 2 machines de ce type." });
+      }
+
+      const totalCost = machine.type === "rent" ? Number(machine.rentalPrice) + input.amount : Number(machine.buyPrice);
+
+      if (Number(user.balance) < totalCost) {
         return res.status(400).json({ message: "Solde insuffisant pour effectuer cet achat." });
       }
 
-      if (input.amount < machine.minDeposit) {
+      if (machine.type === "rent" && input.amount < machine.minDeposit) {
         return res.status(400).json({ message: `Le montant minimum pour cette machine est de ${machine.minDeposit} $` });
       }
       
       // Deduct balance
-      await storage.updateUserBalance((req.user as any).id, -input.amount);
+      await storage.updateUserBalance((req.user as any).id, -totalCost);
 
       const contract = await storage.createContract(
         (req.user as any).id, 
@@ -58,7 +66,7 @@ export async function registerRoutes(
       );
 
       // Create transaction record
-      await storage.createTransaction((req.user as any).id, "purchase", input.amount);
+      await storage.createTransaction((req.user as any).id, "purchase", totalCost);
       
       res.status(201).json(contract);
     } catch (e) {
@@ -123,66 +131,17 @@ async function seedDatabase() {
   const existingMachines = await storage.getMachines();
   if (existingMachines.length === 0) {
     await db.insert(machines).values([
-      { 
-        name: "Starter", 
-        minDeposit: 20, 
-        durationDays: 30, 
-        dailyRate: "2.0", 
-        maxDailyRate: "2.5", 
-        maintenanceFee: "0.3", 
-        electricityFee: "0.4",
-        withdrawalFee: "3.0",
-        activationFee: "2.0",
-        description: "Pour débutants - Test de la plateforme, petit budget."
-      },
-      { 
-        name: "Standard", 
-        minDeposit: 50, 
-        durationDays: 60, 
-        dailyRate: "2.5", 
-        maxDailyRate: "3.0", 
-        maintenanceFee: "0.35", 
-        electricityFee: "0.45",
-        withdrawalFee: "2.5",
-        activationFee: "2.0",
-        description: "Pour utilisateurs réguliers - Bon équilibre rendement / durée."
-      },
-      { 
-        name: "Pro", 
-        minDeposit: 200, 
-        durationDays: 90, 
-        dailyRate: "3.0", 
-        maxDailyRate: "3.5", 
-        maintenanceFee: "0.4", 
-        electricityFee: "0.5",
-        withdrawalFee: "2.0",
-        activationFee: "2.0",
-        description: "Pour investisseurs sérieux - Stratégie de réinvestissement."
-      },
-      { 
-        name: "Elite", 
-        minDeposit: 500, 
-        durationDays: 180, 
-        dailyRate: "3.5", 
-        maxDailyRate: "4.0", 
-        maintenanceFee: "0.45", 
-        electricityFee: "0.55",
-        withdrawalFee: "1.5",
-        activationFee: "2.0",
-        description: "Pour gros capitaux - Investisseurs long terme, retraits fréquents."
-      },
-      { 
-        name: "VIP", 
-        minDeposit: 1000, 
-        durationDays: 30, 
-        dailyRate: "4.0", 
-        maxDailyRate: "4.5", 
-        maintenanceFee: "0.5", 
-        electricityFee: "0.6",
-        withdrawalFee: "1.0",
-        activationFee: "2.0",
-        description: "Haut rendement – Places limitées, ROI rapide."
-      },
+      // Rental Machines
+      { name: "Rent Mini", type: "rent", rentalPrice: "4.99", minDeposit: 30, dailyRate: "2.3", durationDays: 30, description: "Location abordable pour débuter." },
+      { name: "Rent Starter", type: "rent", rentalPrice: "14.99", minDeposit: 30, dailyRate: "2.3", durationDays: 30, description: "Idéal pour booster vos premiers gains." },
+      { name: "Rent Standard", type: "rent", rentalPrice: "24.99", minDeposit: 30, dailyRate: "2.8", durationDays: 30, description: "Bon équilibre entre coût et rendement." },
+      { name: "Rent Pro", type: "rent", rentalPrice: "29.99", minDeposit: 30, dailyRate: "3.3", durationDays: 30, description: "Pour les mineurs avertis." },
+      { name: "Rent Elite", type: "rent", rentalPrice: "49.99", minDeposit: 30, dailyRate: "3.8", durationDays: 30, description: "Performance maximale en location." },
+      // Purchase Machines
+      { name: "Starter Buy", type: "buy", buyPrice: "180", minDeposit: 0, dailyRate: "2.8", durationDays: 365, description: "Achat unique, minage permanent." },
+      { name: "Standard Buy", type: "buy", buyPrice: "450", minDeposit: 0, dailyRate: "3.3", durationDays: 365, description: "Rendement supérieur pour investisseurs." },
+      { name: "Pro Buy", type: "buy", buyPrice: "1100", minDeposit: 0, dailyRate: "3.8", durationDays: 365, description: "Gains optimisés sur le long terme." },
+      { name: "Elite Buy", type: "buy", buyPrice: "2800", minDeposit: 0, dailyRate: "4.3", durationDays: 365, description: "Le top de la performance BlockMint." },
     ]);
   }
 }

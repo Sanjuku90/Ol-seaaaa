@@ -1,0 +1,100 @@
+🔹 Modèle final – modifications détaillées avec barre de progression et limite d’achat
+
+⸻
+
+1️⃣ Deux modes : Location ou Achat
+
+Location
+	•	L’utilisateur paie l’abonnement mensuel pour la machine.
+	•	Dépôt minimum 30 $ pour activer le minage.
+	•	Frais d’électricité + maintenance : 3 $ / mois par machine
+	•	Gains générés quotidiennement
+	•	Frais de retrait :
+	•	Capital miné < 30 $ → 19%
+	•	Capital miné ≥ 30 $ → 4%
+	•	Barre de progression : indique le pourcentage du dépôt miné → visualisation directe pour savoir si l’utilisateur peut retirer sans frais élevés.
+
+Achat
+	•	Paiement unique pour la machine.
+	•	Rendement plus élevé que la location : 2.8% → 4.3% selon machine
+	•	Frais mensuels : 3 $ / machine (électricité + maintenance)
+	•	Aucun autre dépôt requis
+	•	Retraits simples : 4%
+	•	Pas de barre de progression nécessaire (pas de dépôt minimum)
+
+⸻
+
+2️⃣ Limite d’achat ou location
+	•	Chaque utilisateur peut acheter ou louer une même machine maximum 2 fois
+	•	Permet de limiter le risque et la concentration sur une seule machine
+
+⸻
+
+3️⃣ Machines – Location (dépôt minimum 30 $)
+
+Machine	Prix location / mois	Dépôt minimum	Rendement / jour	Frais mensuels
+Rent Mini	4.99 $	30 $	2.3%	3 $
+Rent Starter	14.99 $	30 $	2.3%	3 $
+Rent Standard	24.99 $	30 $	2.8%	3 $
+Rent Pro	29.99 $	30 $	3.3%	3 $
+Rent Elite	49.99 $	30 $	3.8%	3 $
+
+	•	Barre de progression visible sur le dashboard :
+Capital miné / dépôt minimum (%) → permet de savoir si l’utilisateur peut retirer avec frais 4%
+
+⸻
+
+4️⃣ Machines – Achat
+
+Machine	Prix Achat	Rendement / jour	Frais mensuels
+Starter Buy	180 $	2.8%	3 $
+Standard Buy	450 $	3.3%	3 $
+Pro Buy	1 100 $	3.8%	3 $
+Elite Buy	2 800 $	4.3%	3 $
+
+	•	Achat maximal : 2 machines identiques par utilisateur
+	•	Pas de barre de progression nécessaire, pas de dépôt minimum
+
+⸻
+
+5️⃣ Dashboard utilisateur
+
+Onglets :
+	1.	Machines louées
+	•	Nom / type
+	•	Rendement / jour
+	•	Capital miné / dépôt minimum
+	•	Barre de progression maturité
+	•	Gains cumulés
+	•	Frais mensuels : 3 $
+	•	Statut : actif / suspendu
+	•	Bouton renouveler
+	2.	Machines achetées
+	•	Nom / type
+	•	Rendement / jour
+	•	Gains cumulés
+	•	Frais mensuels : 3 $
+	•	Statut : actif / suspendu
+
+⸻
+
+6️⃣ Texte marketing pour site
+
+Louez ou achetez une machine de minage et commencez à générer des gains chaque jour !
+
+🔹 Location : payez l’abonnement mensuel et un dépôt minimum de 30 $ pour activer votre machine.
+La barre de progression vous indique quand vous pouvez retirer avec des frais réduits (4%). Frais d’électricité et maintenance inclus : 3 $ / mois.
+
+🔹 Achat : payez une seule fois pour une machine permanente avec rendement supérieur.
+Frais d’électricité et maintenance : 3 $ / mois. Retraits simples 4%.
+
+⚠️ Chaque machine peut être achetée ou louée maximum 2 fois par utilisateur.
+
+⸻
+
+7️⃣ Points clés
+	•	Méthode unifiée pour tout : gains automatiques via la machine, pas d’investissement supplémentaire après l’activation.
+	•	Rendements : location < achat pour motiver l’achat
+	•	Frais simplifiés : 3 $ / machine par mois
+	•	Dépôt minimum pour location : 30 $ → barre de progression pour visualiser maturité
+	•	Limite d’achat/location : 2 machines identiques par utilisateur
