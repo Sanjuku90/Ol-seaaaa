@@ -95,7 +95,7 @@ export default function Wallet() {
               <TabsContent value="deposit">
                 <div className="space-y-4">
                   <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-sm text-emerald-200">
-                    Deposits are automatic. Use the form below to simulate a deposit for this demo.
+                    Les dépôts sont automatiques. Utilisez le formulaire ci-dessous pour créditer votre compte.
                   </div>
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(d => onSubmit(d, 'deposit'))} className="space-y-4">

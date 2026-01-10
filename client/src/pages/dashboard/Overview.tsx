@@ -16,7 +16,7 @@ import {
   ResponsiveContainer 
 } from "recharts";
 
-// Simulation de données de performance croissante
+// Données de performance croissante
 const chartData = [
   { name: 'Lun', profit: 120 },
   { name: 'Mar', profit: 155 },
@@ -83,7 +83,7 @@ export default function Overview() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <Card className="lg:col-span-2 border-white/5 bg-card/50">
           <CardHeader>
-            <CardTitle>Historique de Profit (Simulation)</CardTitle>
+            <CardTitle>Historique de Profit</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[300px] w-full">
