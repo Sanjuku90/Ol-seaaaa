@@ -69,14 +69,15 @@ export default function Overview() {
           trend="+5.2% aujourd'hui"
         />
         <StatCard
-          title="Machines Actives"
-          value={activeContractsCount}
-          icon={Cpu}
+          title="Grade Affiliation"
+          value={user?.affiliationGrade || "Bronze"}
+          icon={Activity}
+          className="border-emerald-500/20"
         />
         <StatCard
-          title="Puissance Totale"
-          value={`${stats?.totalPower || 4520} TH/s`}
-          icon={Activity}
+          title="Filleuls Actifs"
+          value={user?.activeReferrals || 0}
+          icon={TrendingUp}
         />
       </div>
 

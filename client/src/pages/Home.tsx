@@ -77,10 +77,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { label: "Active Miners", value: "12,450+" },
-              { label: "Total Distributed", value: "$4.2M+" },
-              { label: "Uptime", value: "99.99%" },
-              { label: "Supported Coins", value: "15+" },
+              { label: "Utilisateurs Actifs", value: "12,450+" },
+              { label: "Gains Distribués", value: "$4.2M+" },
+              { label: "Puissance Totale", value: "85.2 PH/s" },
+              { label: "Uptime Système", value: "99.99%" },
             ].map((stat, i) => (
               <div key={i} className="text-center">
                 <div className="text-3xl font-display font-bold text-foreground mb-1">{stat.value}</div>
