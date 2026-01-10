@@ -1,0 +1,31 @@
+2. Structure et Pages du Site
+A. Espace Public (Vitrine)
+• Page d'accueil : Un design technologique et moderne. Mise en avant de la sécurité et de la rentabilité.
+• Calculateur de revenus dynamique : Un curseur où l'utilisateur choisit son investissement et voit instantanément ses gains estimés (jour/mois/an).
+• Statistiques en direct : Affichage du nombre d'utilisateurs actifs, de la puissance totale du parc et du total des paiements effectués.
+• Page "Notre Ferme" : Photos ou vidéos (réelles de préférence) des serveurs pour prouver que l'activité existe.
+B. Tableau de bord Utilisateur (Dashboard)
+C'est le cœur de l'expérience utilisateur. Il doit être simple et visuel :
+• Solde actuel : Mis à jour en temps réel.
+• Graphique de performance : Courbe montrant l'évolution des gains quotidiens.
+• Gestion des machines : Liste des contrats actifs avec le temps restant et la puissance produite.
+• Bouton "Réinvestir" : Permet d'utiliser ses gains pour racheter de la puissance sans retirer l'argent (accélère les intérêts composés).
+
+4. Fonctionnalités Indispensables
+Système de Parrainage (Affiliation)
+C’est le meilleur moyen de faire grandir votre site sans publicité payante.
+• Offrez un pourcentage (ex: 5% à 10%) sur les dépôts des amis invités.
+• Créez un système de grades (Bronze, Argent, Or) pour les meilleurs parrains.
+Sécurité Totale
+• Système KYC : Demander une pièce d'identité pour les gros retraits (évite le blanchiment).
+• Notifications : Alertes par email ou Telegram à chaque dépôt ou retrait réussi.
+• Historique des transactions : Transparence totale sur les entrées et sorties de fonds.
+Support Client
+• Live Chat : Pour répondre aux questions avant l'achat.
+• FAQ complète : Expliquant comment fonctionne le minage, comment retirer ses gains, etc.
+5. La partie "Back-Office" (Pour vous, l'Admin)
+Vous avez besoin d'une interface de gestion pour :
+• Valider les dépôts manuels (si nécessaire).
+• Bannir les utilisateurs frauduleux.
+• Modifier les taux de rendement en fonction du marché des cryptos.
+• Envoyer des newsletters aux utilisateurs
