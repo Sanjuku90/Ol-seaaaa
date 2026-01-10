@@ -13,6 +13,7 @@ import Register from "@/pages/auth/Register";
 import Overview from "@/pages/dashboard/Overview";
 import Wallet from "@/pages/dashboard/Wallet";
 import Machines from "@/pages/dashboard/Machines";
+import Affiliate from "@/pages/dashboard/Affiliate";
 import AdminUsers from "@/pages/admin/Users";
 
 function ProtectedRoute({ component: Component, adminOnly = false }: { component: React.ComponentType, adminOnly?: boolean }) {
@@ -53,6 +54,9 @@ function Router() {
       </Route>
       <Route path="/dashboard/machines">
         {() => <ProtectedRoute component={Machines} />}
+      </Route>
+      <Route path="/dashboard/affiliate">
+        {() => <ProtectedRoute component={Affiliate} />}
       </Route>
 
       {/* Admin Routes */}

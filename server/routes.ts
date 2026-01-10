@@ -152,6 +152,13 @@ export async function registerRoutes(
     res.json(user);
   });
 
+  // --- REFERRAL ROUTES ---
+  app.get("/api/referrals", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const referrals = await db.select().from(users).where(eq(users.referredBy, (req.user as any).id));
+    res.json(referrals);
+  });
+
   // Seed data function
   await seedDatabase();
 
