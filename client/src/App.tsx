@@ -63,6 +63,9 @@ function Router() {
       <Route path="/admin">
         {() => <ProtectedRoute component={AdminUsers} adminOnly={true} />}
       </Route>
+      <Route path="/admin/">
+        {() => <ProtectedRoute component={AdminUsers} adminOnly={true} />}
+      </Route>
       <Route path="/admin/users">
         {() => <ProtectedRoute component={AdminUsers} adminOnly={true} />}
       </Route>
