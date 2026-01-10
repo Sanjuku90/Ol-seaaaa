@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Cpu, Menu, X, LogOut, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { api } from "@shared/routes";
 
 export function Navbar() {
   const { user, logout } = useAuth();

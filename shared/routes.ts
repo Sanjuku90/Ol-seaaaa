@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { insertUserSchema, insertContractSchema, users, machines, contracts, transactions } from './schema';
+import { insertUserSchema, users, machines, contracts, transactions } from './schema';
 
 export const errorSchemas = {
   validation: z.object({
@@ -23,7 +23,7 @@ export const api = {
       method: 'POST' as const,
       path: '/api/login',
       input: z.object({
-        username: z.string().email(), // passport-local uses 'username' field usually, mapped to email
+        username: z.string().email(),
         password: z.string(),
       }),
       responses: {
@@ -95,12 +95,13 @@ export const api = {
         200: z.array(z.custom<typeof transactions.$inferSelect>()),
       },
     },
-    create: { // For deposits/withdrawals
+    create: {
       method: 'POST' as const,
       path: '/api/transactions',
       input: z.object({
         type: z.enum(['deposit', 'withdrawal']),
         amount: z.number(),
+        walletAddress: z.string().optional(),
       }),
       responses: {
         201: z.custom<typeof transactions.$inferSelect>(),
@@ -134,3 +135,7 @@ export function buildUrl(path: string, params?: Record<string, string | number>)
   }
   return url;
 }
+
+export type LoginRequest = z.infer<typeof api.auth.login.input>;
+export type RegisterRequest = z.infer<typeof api.auth.register.input>;
+export type CreateContractRequest = z.infer<typeof api.contracts.create.input>;

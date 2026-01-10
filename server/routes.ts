@@ -23,8 +23,8 @@ export async function registerRoutes(
   // Contracts
   app.get(api.contracts.list.path, async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
-    const contracts = await storage.getContracts(req.user!.id);
-    res.json(contracts);
+    const contractsList = await storage.getContracts((req.user as any).id);
+    res.json(contractsList);
   });
 
   app.post(api.contracts.create.path, async (req, res) => {
@@ -33,7 +33,7 @@ export async function registerRoutes(
     try {
       const input = api.contracts.create.input.parse(req.body);
       
-      const user = await storage.getUser(req.user!.id);
+      const user = await storage.getUser((req.user as any).id);
       if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
       
       const machine = await storage.getMachine(input.machineId);
@@ -48,17 +48,17 @@ export async function registerRoutes(
       }
       
       // Deduct balance
-      await storage.updateUserBalance(req.user!.id, -input.amount);
+      await storage.updateUserBalance((req.user as any).id, -input.amount);
 
       const contract = await storage.createContract(
-        req.user!.id, 
+        (req.user as any).id, 
         input.machineId, 
         input.amount, 
         input.autoReinvest
       );
 
       // Create transaction record
-      await storage.createTransaction(req.user!.id, "purchase", input.amount);
+      await storage.createTransaction((req.user as any).id, "purchase", input.amount);
       
       res.status(201).json(contract);
     } catch (e) {
@@ -69,7 +69,7 @@ export async function registerRoutes(
   // Transactions
   app.get(api.transactions.list.path, async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
-    const txs = await storage.getTransactions(req.user!.id);
+    const txs = await storage.getTransactions((req.user as any).id);
     res.json(txs);
   });
 
@@ -82,16 +82,16 @@ export async function registerRoutes(
       const status = input.type === 'withdrawal' ? 'pending' : 'completed';
       
       if (input.type === 'withdrawal') {
-        const user = await storage.getUser(req.user!.id);
+        const user = await storage.getUser((req.user as any).id);
         if (!user || Number(user.balance) < input.amount) {
           return res.status(400).json({ message: "Solde insuffisant pour le retrait" });
         }
         // Deduct balance immediately for withdrawal request
-        await storage.updateUserBalance(req.user!.id, -input.amount);
+        await storage.updateUserBalance((req.user as any).id, -input.amount);
       }
 
       const tx = await storage.createTransaction(
-        req.user!.id, 
+        (req.user as any).id, 
         input.type, 
         input.amount, 
         (req.body as any).walletAddress,

@@ -5,6 +5,7 @@ import { StatCard } from "@/components/ui/StatCard";
 import { DollarSign, Cpu, TrendingUp, Activity, Bell } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CountUp from "react-countup";
+import { api } from "@shared/routes";
 import { 
   AreaChart, 
   Area, 
@@ -57,13 +58,13 @@ export default function Overview() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
           title="Solde Total"
-          value={<CountUp end={Number(user?.balance)} decimals={2} prefix="$" duration={2} />}
+          value={`$${Number(user?.balance).toFixed(2)}`}
           icon={DollarSign}
           className="border-primary/20 bg-gradient-to-br from-card to-primary/5"
         />
         <StatCard
           title="Gains du jour"
-          value={<CountUp end={dailyEarnings || 0.45} decimals={2} prefix="$" duration={5} preserveValue />}
+          value={`$${dailyEarnings.toFixed(2)}`}
           icon={TrendingUp}
           trend="+5.2% aujourd'hui"
         />
@@ -141,7 +142,7 @@ export default function Overview() {
                         <Cpu className="w-4 h-4 text-primary" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium">{contract.machineName}</p>
+                        <p className="text-sm font-medium">{(contract as any).machineName || (contract as any).machine?.name}</p>
                         <p className="text-xs text-muted-foreground">Actif</p>
                       </div>
                     </div>

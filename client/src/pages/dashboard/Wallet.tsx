@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { useAuth } from "@/hooks/use-auth";
-import { useCreateTransaction, useTransactions } from "@/hooks/use-platform";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,7 +10,10 @@ import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { useCreateTransaction, useTransactions } from "@/hooks/use-platform";
+import { api } from "@shared/routes";
 
 const transactionSchema = z.object({
   amount: z.coerce.number().min(10, "Le montant minimum est de 10 $"),
