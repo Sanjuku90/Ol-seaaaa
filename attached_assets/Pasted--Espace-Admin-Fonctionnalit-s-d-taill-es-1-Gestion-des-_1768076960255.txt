@@ -1,0 +1,106 @@
+⸻
+
+🔹 Espace Admin – Fonctionnalités détaillées
+
+⸻
+
+1️⃣ Gestion des utilisateurs
+	•	Liste complète des utilisateurs
+	•	Nom, email, téléphone
+	•	Statut (actif / suspendu / banni)
+	•	Machines louées / achetées
+	•	Dépôt minimum versé / capital miné
+	•	Actions sur les utilisateurs
+	•	Suspendre ou bannir un utilisateur (fraude, non-respect)
+	•	Réinitialiser mot de passe
+	•	Ajouter manuellement des gains ou bonus
+	•	Filtrage et recherche
+	•	Filtrer par machine, date d’inscription, statut, activité
+
+⸻
+
+2️⃣ Gestion des machines
+	•	Catalogue complet des machines
+	•	Nom, type (Location / Achat)
+	•	Rendement / jour
+	•	Prix / abonnement / prix achat
+	•	Frais mensuels
+	•	Limite d’achat / location par utilisateur (max 2)
+	•	Actions admin
+	•	Ajouter une nouvelle machine
+	•	Modifier les paramètres d’une machine (rendement, prix, frais)
+	•	Supprimer ou désactiver une machine
+
+⸻
+
+3️⃣ Gestion des dépôts et retraits
+	•	Suivi des dépôts minimum pour location
+	•	Vérifier si l’utilisateur a atteint le capital miné pour frais 4%
+	•	Validation des dépôts manuels (si nécessaire)
+	•	Historique des retraits
+	•	Montant demandé, montant payé
+	•	Frais appliqués (4% / 19%)
+	•	Gestion des paiements
+	•	Bloquer ou approuver un retrait suspect
+	•	Envoi de notifications automatiques à l’utilisateur
+
+⸻
+
+4️⃣ Gestion des gains et rendements
+	•	Modifier les rendements par machine si nécessaire
+	•	Activer/désactiver le minage automatique d’une machine
+	•	Calcul automatique des gains quotidiens et des barre de progression pour la location
+
+⸻
+
+5️⃣ Statistiques et suivi
+	•	Nombre d’utilisateurs actifs
+	•	Nombre de machines louées / achetées
+	•	Total des paiements effectués
+	•	Total des gains versés
+	•	Performance de la plateforme (ROI global, rentabilité moyenne des utilisateurs)
+
+⸻
+
+6️⃣ Système d’affiliation / parrainage
+	•	Liste des affiliés et de leurs filleuls
+	•	Commission payée / à payer
+	•	Gestion des grades : Bronze / Argent / Or selon performance
+	•	Historique des paiements d’affiliation
+
+⸻
+
+7️⃣ Support client intégré
+	•	Tickets utilisateurs
+	•	Voir et répondre aux demandes
+	•	Live chat admin
+	•	Pour répondre en direct aux utilisateurs
+	•	FAQ à mettre à jour
+
+⸻
+
+8️⃣ Gestion du contenu du site
+	•	Modifier textes marketing : pages Accueil, Location, Achat, FAQ
+	•	Mettre à jour images / vidéos des machines
+	•	Gestion des notifications et newsletters
+
+⸻
+
+9️⃣ Sécurité
+	•	Gestion KYC : vérifier pièces d’identité pour gros retraits
+	•	Historique des connexions admin
+	•	Alertes en cas de comportement suspect
+
+⸻
+
+🔹 Résumé
+
+L’admin peut :
+	1.	Suivre et gérer tous les utilisateurs
+	2.	Gérer machines, rendements et limites
+	3.	Valider dépôts et retraits
+	4.	Suivre les statistiques et performances
+	5.	Gérer le système d’affiliation
+	6.	Fournir support client
+	7.	Mettre à jour le contenu marketing et notifications
+	8.	Contrôler la sécurité
