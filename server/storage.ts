@@ -1,38 +1,120 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
+import { db } from "./db";
+import {
+  users, machines, contracts, transactions,
+  type User, type InsertUser, type Machine, type Contract, type Transaction
+} from "@shared/schema";
+import { eq, desc } from "drizzle-orm";
+import session from "express-session";
+import connectPg from "connect-pg-simple";
+import { pool } from "./db";
 
-// modify the interface with any CRUD methods
-// you might need
+const PostgresSessionStore = connectPg(session);
 
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  getUser(id: number): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  createUser(user: InsertUser & { referralCode?: string }): Promise<User>;
+  
+  getMachines(): Promise<Machine[]>;
+  getMachine(id: number): Promise<Machine | undefined>;
+  
+  getContracts(userId: number): Promise<(Contract & { machine: Machine })[]>;
+  createContract(userId: number, machineId: number, amount: number, autoReinvest: boolean): Promise<Contract>;
+  
+  getTransactions(userId: number): Promise<Transaction[]>;
+  createTransaction(userId: number, type: string, amount: number): Promise<Transaction>;
+  
+  sessionStore: session.Store;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
+export class DatabaseStorage implements IStorage {
+  sessionStore: session.Store;
 
   constructor() {
-    this.users = new Map();
+    this.sessionStore = new PostgresSessionStore({
+      pool,
+      createTableIfMissing: true,
+    });
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+
+  async createUser(insertUser: InsertUser & { referralCode?: string }): Promise<User> {
+    const [user] = await db.insert(users).values(insertUser).returning();
+    return user;
+  }
+
+  async getMachines(): Promise<Machine[]> {
+    return await db.select().from(machines);
+  }
+
+  async getMachine(id: number): Promise<Machine | undefined> {
+    const [machine] = await db.select().from(machines).where(eq(machines.id, id));
+    return machine;
+  }
+
+  async getContracts(userId: number): Promise<(Contract & { machine: Machine })[]> {
+    return await db.select({
+      id: contracts.id,
+      userId: contracts.userId,
+      machineId: contracts.machineId,
+      amount: contracts.amount,
+      startDate: contracts.startDate,
+      endDate: contracts.endDate,
+      status: contracts.status,
+      autoReinvest: contracts.autoReinvest,
+      accumulatedRewards: contracts.accumulatedRewards,
+      machine: machines
+    })
+    .from(contracts)
+    .innerJoin(machines, eq(contracts.machineId, machines.id))
+    .where(eq(contracts.userId, userId));
+  }
+
+  async createContract(userId: number, machineId: number, amount: number, autoReinvest: boolean): Promise<Contract> {
+    const machine = await this.getMachine(machineId);
+    if (!machine) throw new Error("Machine not found");
+
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + machine.durationDays);
+
+    const [contract] = await db.insert(contracts).values({
+      userId,
+      machineId,
+      amount: amount.toString(),
+      endDate,
+      autoReinvest,
+      status: "active",
+      accumulatedRewards: "0"
+    }).returning();
+    
+    return contract;
+  }
+
+  async getTransactions(userId: number): Promise<Transaction[]> {
+    return await db.select()
+      .from(transactions)
+      .where(eq(transactions.userId, userId))
+      .orderBy(desc(transactions.createdAt));
+  }
+
+  async createTransaction(userId: number, type: string, amount: number): Promise<Transaction> {
+    const [transaction] = await db.insert(transactions).values({
+      userId,
+      type,
+      amount: amount.toString(),
+      status: "completed"
+    }).returning();
+    return transaction;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
