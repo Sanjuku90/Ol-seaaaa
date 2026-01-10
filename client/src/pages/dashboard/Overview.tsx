@@ -4,6 +4,7 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { StatCard } from "@/components/ui/StatCard";
 import { DollarSign, Cpu, TrendingUp, Activity, Bell } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import CountUp from "react-countup";
 import { api } from "@shared/routes";
 import { 
@@ -135,7 +136,7 @@ export default function Overview() {
               <CardTitle>Contrats Actifs</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+                  <div className="space-y-4">
                 {contracts?.slice(0, 5).map((contract) => (
                   <div key={contract.id} className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
                     <div className="flex items-center space-x-3">
@@ -149,7 +150,14 @@ export default function Overview() {
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-bold">${Number(contract.amount).toFixed(0)}</p>
-                      <p className="text-xs text-emerald-400">En cours</p>
+                      <div className="flex items-center gap-2 justify-end">
+                        <p className="text-xs text-emerald-400 font-medium">
+                          +${Number(contract.accumulatedRewards).toFixed(2)}
+                        </p>
+                        <Button size="sm" variant="ghost" className="h-6 px-1 text-[10px] hover:bg-primary/10">
+                          Réinvestir
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
