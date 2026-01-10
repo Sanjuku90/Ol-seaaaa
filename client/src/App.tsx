@@ -79,6 +79,17 @@ function Router() {
 }
 
 function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <AppContent />
+        <Toaster />
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
+
+function AppContent() {
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -89,27 +100,24 @@ function App() {
     const socket = new WebSocket(`${protocol}//${window.location.host}/ws`);
 
     socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.payload?.userId === user.id) {
-        toast({
-          title: data.type === "PROFIT_GENERATED" ? "Profit Généré" : "Transaction Mise à Jour",
-          description: data.payload.message,
-          variant: data.type === "PROFIT_GENERATED" ? "default" : (data.payload.status === "completed" ? "default" : "destructive"),
-        });
+      try {
+        const data = JSON.parse(event.data);
+        if (data && data.payload && data.payload.userId === user.id) {
+          toast({
+            title: data.type === "PROFIT_GENERATED" ? "Profit Généré" : "Transaction Mise à Jour",
+            description: data.payload.message,
+            variant: data.type === "PROFIT_GENERATED" ? "default" : (data.payload.status === "completed" ? "default" : "destructive"),
+          });
+        }
+      } catch (e) {
+        console.error("Failed to parse WebSocket message", e);
       }
     };
 
     return () => socket.close();
   }, [user, toast]);
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Router />
-        <Toaster />
-      </TooltipProvider>
-    </QueryClientProvider>
-  );
+  return <Router />;
 }
 
 export default App;
