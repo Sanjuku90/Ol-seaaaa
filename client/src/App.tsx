@@ -61,13 +61,13 @@ function Router() {
 
       {/* Admin Routes */}
       <Route path="/admin">
-        {() => <ProtectedRoute component={AdminUsers} adminOnly={true} />}
+        {() => <ProtectedRoute component={AdminUsers} />}
       </Route>
       <Route path="/admin/">
-        {() => <ProtectedRoute component={AdminUsers} adminOnly={true} />}
+        {() => <ProtectedRoute component={AdminUsers} />}
       </Route>
       <Route path="/admin/users">
-        {() => <ProtectedRoute component={AdminUsers} adminOnly={true} />}
+        {() => <ProtectedRoute component={AdminUsers} />}
       </Route>
       
       {/* Fallback */}
