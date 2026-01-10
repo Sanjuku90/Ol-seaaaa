@@ -114,10 +114,13 @@ export default function Machines() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsOpen(false)}>Cancel</Button>
-            <Button onClick={handleBuy} disabled={isPending}>
+            <Button variant="outline" onClick={() => setIsOpen(false)}>Annuler</Button>
+            <Button 
+              onClick={handleBuy} 
+              disabled={isPending || Number(user?.balance) < Number(investAmount)}
+            >
               {isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-              Confirm Purchase
+              {Number(user?.balance) < Number(investAmount) ? "Solde insuffisant" : "Confirmer l'achat"}
             </Button>
           </DialogFooter>
         </DialogContent>

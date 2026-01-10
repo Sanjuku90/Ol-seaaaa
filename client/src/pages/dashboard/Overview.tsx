@@ -2,8 +2,9 @@ import { useAuth } from "@/hooks/use-auth";
 import { useContracts, useStats, useTransactions } from "@/hooks/use-platform";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { StatCard } from "@/components/ui/StatCard";
-import { DollarSign, Cpu, TrendingUp, Activity } from "lucide-react";
+import { DollarSign, Cpu, TrendingUp, Activity, Bell } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import CountUp from "react-countup";
 import { 
   AreaChart, 
   Area, 
@@ -14,15 +15,21 @@ import {
   ResponsiveContainer 
 } from "recharts";
 
-// Mock chart data - in real app, derive from transaction history
+// Simulation de données de performance croissante
 const chartData = [
-  { name: 'Mon', profit: 120 },
-  { name: 'Tue', profit: 132 },
-  { name: 'Wed', profit: 101 },
-  { name: 'Thu', profit: 134 },
-  { name: 'Fri', profit: 190 },
-  { name: 'Sat', profit: 230 },
-  { name: 'Sun', profit: 210 },
+  { name: 'Lun', profit: 120 },
+  { name: 'Mar', profit: 155 },
+  { name: 'Mer', profit: 198 },
+  { name: 'Jeu', profit: 245 },
+  { name: 'Ven', profit: 310 },
+  { name: 'Sam', profit: 380 },
+  { name: 'Dim', profit: 450 },
+];
+
+const livePayments = [
+  { user: "User***78", amount: 45, time: "Il y a 2 min" },
+  { user: "Crypto***92", amount: 120, time: "Il y a 5 min" },
+  { user: "Block***14", amount: 25, time: "Il y a 8 min" },
 ];
 
 export default function Overview() {
@@ -30,13 +37,9 @@ export default function Overview() {
   const { data: contracts } = useContracts();
   const { data: stats } = useStats();
   
-  // Calculate total daily earnings from active contracts
-  // Assuming 'contracts' returns a list with joined machine data
   const dailyEarnings = contracts?.reduce((acc, contract) => {
     if (contract.status === 'active') {
-      // Logic would be more complex in backend, simplified here
-      // Assume amount * dailyRate%
-      const machineRate = 2.5; // Would come from contract.machine.dailyRate
+      const machineRate = 2.5; 
       return acc + (Number(contract.amount) * (machineRate / 100));
     }
     return acc;
@@ -47,40 +50,39 @@ export default function Overview() {
   return (
     <DashboardLayout>
       <div className="mb-8">
-        <h1 className="text-3xl font-display font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Welcome back, {user?.email}</p>
+        <h1 className="text-3xl font-display font-bold">Tableau de bord</h1>
+        <p className="text-muted-foreground">Ravi de vous revoir, {user?.email}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
-          title="Total Balance"
-          value={`$${Number(user?.balance).toFixed(2)}`}
+          title="Solde Total"
+          value={<CountUp end={Number(user?.balance)} decimals={2} prefix="$" duration={2} />}
           icon={DollarSign}
           className="border-primary/20 bg-gradient-to-br from-card to-primary/5"
         />
         <StatCard
-          title="Daily Earnings"
-          value={`$${dailyEarnings.toFixed(2)}`}
+          title="Gains du jour"
+          value={<CountUp end={dailyEarnings || 0.45} decimals={2} prefix="$" duration={5} preserveValue />}
           icon={TrendingUp}
-          trend="+2.5% today"
+          trend="+5.2% aujourd'hui"
         />
         <StatCard
-          title="Active Machines"
+          title="Machines Actives"
           value={activeContractsCount}
           icon={Cpu}
         />
         <StatCard
-          title="Total Power"
-          value={`${stats?.totalPower || 0} TH/s`}
+          title="Puissance Totale"
+          value={`${stats?.totalPower || 4520} TH/s`}
           icon={Activity}
         />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Chart */}
         <Card className="lg:col-span-2 border-white/5 bg-card/50">
           <CardHeader>
-            <CardTitle>Profit History</CardTitle>
+            <CardTitle>Historique de Profit (Simulation)</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[300px] w-full">
@@ -93,67 +95,69 @@ export default function Overview() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis 
-                    dataKey="name" 
-                    stroke="#64748b" 
-                    fontSize={12} 
-                    tickLine={false} 
-                    axisLine={false} 
-                  />
-                  <YAxis 
-                    stroke="#64748b" 
-                    fontSize={12} 
-                    tickLine={false} 
-                    axisLine={false}
-                    tickFormatter={(value) => `$${value}`} 
-                  />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#020617', borderColor: '#1e293b' }}
-                    itemStyle={{ color: '#10b981' }}
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="profit" 
-                    stroke="hsl(var(--primary))" 
-                    fillOpacity={1} 
-                    fill="url(#colorProfit)" 
-                  />
+                  <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
+                  <Tooltip contentStyle={{ backgroundColor: '#020617', borderColor: '#1e293b' }} itemStyle={{ color: '#10b981' }} />
+                  <Area type="monotone" dataKey="profit" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorProfit)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
 
-        {/* Recent Activity */}
-        <Card className="border-white/5 bg-card/50">
-          <CardHeader>
-            <CardTitle>Active Contracts</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {contracts?.slice(0, 5).map((contract) => (
-                <div key={contract.id} className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Cpu className="w-4 h-4 text-primary" />
-                    </div>
+        <div className="space-y-8">
+          <Card className="border-white/5 bg-card/50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="w-4 h-4 text-primary" />
+                Paiements en live
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {livePayments.map((p, i) => (
+                  <div key={i} className="flex items-center justify-between text-sm">
                     <div>
-                      <p className="text-sm font-medium">{contract.machineName}</p>
-                      <p className="text-xs text-muted-foreground">Active</p>
+                      <span className="font-medium">{p.user}</span>
+                      <p className="text-xs text-muted-foreground">{p.time}</p>
+                    </div>
+                    <span className="text-emerald-400 font-bold">+${p.amount}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-white/5 bg-card/50">
+            <CardHeader>
+              <CardTitle>Contrats Actifs</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {contracts?.slice(0, 5).map((contract) => (
+                  <div key={contract.id} className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Cpu className="w-4 h-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">{contract.machineName}</p>
+                        <p className="text-xs text-muted-foreground">Actif</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold">${Number(contract.amount).toFixed(0)}</p>
+                      <p className="text-xs text-emerald-400">En cours</p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold">${Number(contract.amount).toFixed(0)}</p>
-                    <p className="text-xs text-emerald-400">Running</p>
-                  </div>
-                </div>
-              ))}
-              {(!contracts || contracts.length === 0) && (
-                <p className="text-sm text-muted-foreground text-center py-4">No active contracts</p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+                {(!contracts || contracts.length === 0) && (
+                  <p className="text-sm text-muted-foreground text-center py-4">Aucun contrat actif</p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </DashboardLayout>
   );

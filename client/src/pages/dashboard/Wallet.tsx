@@ -15,7 +15,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 const transactionSchema = z.object({
-  amount: z.coerce.number().min(10, "Minimum amount is $10"),
+  amount: z.coerce.number().min(10, "Le montant minimum est de 10 $"),
+  walletAddress: z.string().optional(),
 });
 
 export default function Wallet() {
@@ -26,44 +27,57 @@ export default function Wallet() {
   
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),
-    defaultValues: { amount: 0 },
+    defaultValues: { amount: 0, walletAddress: "" },
   });
 
   const onSubmit = (data: z.infer<typeof transactionSchema>, type: 'deposit' | 'withdrawal') => {
-    createTransaction({ type, amount: data.amount });
+    if (type === 'withdrawal' && !data.walletAddress) {
+      toast({ title: "Erreur", description: "Veuillez saisir une adresse de réception", variant: "destructive" });
+      return;
+    }
+    createTransaction({ type, amount: data.amount, walletAddress: data.walletAddress });
     form.reset();
   };
 
-  const copyAddress = () => {
-    navigator.clipboard.writeText("0x1234...5678");
-    toast({ title: "Copied!", description: "Wallet address copied to clipboard" });
+  const copyAddress = (address: string) => {
+    navigator.clipboard.writeText(address);
+    toast({ title: "Copié !", description: "L'adresse a été copiée dans le presse-papiers" });
   };
+
+  const depositAddresses = [
+    { label: "USDT TRC20", address: "TAB1oeEKDS5NATwFAaUrTioDU9djX7anyS" },
+    { label: "USDT ERC20", address: "0x4dc2eac23fa51001d5acc94889177ec066cc389c" },
+    { label: "Bitcoin", address: "122paUVfGYrJUVVfhiYk5fJUieZgzCkPco" },
+    { label: "Bnb BEP20", address: "0x4dc2eac23fa51001d5acc94889177ec066cc389c" },
+  ];
 
   return (
     <DashboardLayout>
       <div className="mb-8">
-        <h1 className="text-3xl font-display font-bold">Wallet</h1>
-        <p className="text-muted-foreground">Manage your deposits and withdrawals.</p>
+        <h1 className="text-3xl font-display font-bold">Portefeuille</h1>
+        <p className="text-muted-foreground">Gérez vos dépôts et vos retraits.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Balance Card */}
         <Card className="lg:col-span-1 border-white/5 bg-gradient-to-br from-primary/20 to-card">
           <CardHeader>
-            <CardTitle className="text-muted-foreground text-sm font-medium">Available Balance</CardTitle>
+            <CardTitle className="text-muted-foreground text-sm font-medium">Solde Disponible</CardTitle>
             <div className="text-4xl font-bold font-display mt-2">${Number(user?.balance).toFixed(2)}</div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="bg-background/40 p-3 rounded-lg flex items-center justify-between border border-white/5">
-                <span className="text-xs text-muted-foreground">USDT Address</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono">0x1234...5678</span>
-                  <Button variant="ghost" size="icon" className="h-6 w-6" onClick={copyAddress}>
-                    <Copy className="h-3 w-3" />
-                  </Button>
+              {depositAddresses.map((item) => (
+                <div key={item.label} className="bg-background/40 p-3 rounded-lg flex flex-col gap-2 border border-white/5">
+                  <span className="text-xs text-muted-foreground">{item.label}</span>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-mono break-all">{item.address}</span>
+                    <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => copyAddress(item.address)}>
+                      <Copy className="h-3 w-3" />
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           </CardContent>
         </Card>
@@ -115,7 +129,7 @@ export default function Wallet() {
                         name="amount"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Amount (USDT)</FormLabel>
+                            <FormLabel>Montant (USDT)</FormLabel>
                             <FormControl>
                               <Input type="number" placeholder="100" {...field} className="bg-background" />
                             </FormControl>
@@ -123,9 +137,25 @@ export default function Wallet() {
                           </FormItem>
                         )}
                       />
+                      <FormField
+                        control={form.control}
+                        name="walletAddress"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Adresse de réception</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Entrez votre adresse crypto" {...field} className="bg-background" />
+                            </FormControl>
+                            <FormDescription>
+                              L'adresse sur laquelle vous souhaitez recevoir vos fonds.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                       <Button type="submit" variant="destructive" disabled={isPending} className="w-full">
                         {isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2"/> : <ArrowUpRight className="w-4 h-4 mr-2" />}
-                        Request Withdrawal
+                        Demander un retrait
                       </Button>
                     </form>
                   </Form>
@@ -162,8 +192,8 @@ export default function Wallet() {
                   </TableCell>
                   <TableCell>${Number(tx.amount).toFixed(2)}</TableCell>
                   <TableCell>
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-secondary text-muted-foreground">
-                      {tx.status}
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${tx.status === 'pending' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-secondary text-muted-foreground'}`}>
+                      {tx.status === 'pending' ? 'En attente' : tx.status}
                     </span>
                   </TableCell>
                   <TableCell className="text-right text-muted-foreground">

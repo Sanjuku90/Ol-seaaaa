@@ -43,9 +43,9 @@ export const transactions = pgTable("transactions", {
   userId: integer("user_id").notNull(),
   type: text("type").notNull(), 
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
-  status: text("status").default("completed"), 
-  walletAddress: text("wallet_address"), // For withdrawals
-  createdAt: timestamp("created_at").defaultNow(),
+  status: text("status").default("completed").notNull(), 
+  walletAddress: text("wallet_address"), 
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // === RELATIONS ===
