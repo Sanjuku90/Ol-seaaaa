@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { setupAuth } from "./auth";
 import { storage } from "./storage";
@@ -6,6 +6,13 @@ import { db } from "./db";
 import { machines, users } from "@shared/schema";
 import { api } from "@shared/routes";
 import { z } from "zod";
+
+function isAdmin(req: Request, res: Response, next: NextFunction) {
+  if (req.isAuthenticated() && (req.user as any).isAdmin) {
+    return next();
+  }
+  res.status(403).json({ message: "Accès refusé. Droits administrateur requis." });
+}
 
 export async function registerRoutes(
   httpServer: Server,
@@ -119,6 +126,30 @@ export async function registerRoutes(
       totalDistributed: 1250000, // $
       activeMiners: 850
     });
+  });
+
+  // --- ADMIN ROUTES ---
+  app.get("/api/admin/users", isAdmin, async (req, res) => {
+    const usersList = await storage.getUsers();
+    res.json(usersList);
+  });
+
+  app.patch("/api/admin/users/:id/status", isAdmin, async (req, res) => {
+    const { status } = req.body;
+    const user = await storage.updateUserStatus(Number(req.params.id), status);
+    res.json(user);
+  });
+
+  app.patch("/api/admin/users/:id/admin", isAdmin, async (req, res) => {
+    const { isAdmin } = req.body;
+    const user = await storage.updateUserAdmin(Number(req.params.id), isAdmin);
+    res.json(user);
+  });
+
+  app.post("/api/admin/users/:id/balance", isAdmin, async (req, res) => {
+    const { amount } = req.body;
+    const user = await storage.updateUserBalanceAdmin(Number(req.params.id), Number(amount));
+    res.json(user);
   });
 
   // Seed data function

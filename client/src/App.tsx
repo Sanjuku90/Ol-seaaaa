@@ -13,8 +13,9 @@ import Register from "@/pages/auth/Register";
 import Overview from "@/pages/dashboard/Overview";
 import Wallet from "@/pages/dashboard/Wallet";
 import Machines from "@/pages/dashboard/Machines";
+import AdminUsers from "@/pages/admin/Users";
 
-function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
+function ProtectedRoute({ component: Component, adminOnly = false }: { component: React.ComponentType, adminOnly?: boolean }) {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
@@ -29,6 +30,10 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
     return <Redirect to="/login" />;
   }
 
+  if (adminOnly && !user.isAdmin) {
+    return <Redirect to="/dashboard" />;
+  }
+
   return <Component />;
 }
 
@@ -41,13 +46,18 @@ function Router() {
       
       {/* Dashboard Routes */}
       <Route path="/dashboard">
-        <ProtectedRoute component={Overview} />
+        {() => <ProtectedRoute component={Overview} />}
       </Route>
       <Route path="/dashboard/wallet">
-        <ProtectedRoute component={Wallet} />
+        {() => <ProtectedRoute component={Wallet} />}
       </Route>
       <Route path="/dashboard/machines">
-        <ProtectedRoute component={Machines} />
+        {() => <ProtectedRoute component={Machines} />}
+      </Route>
+
+      {/* Admin Routes */}
+      <Route path="/admin/users">
+        {() => <ProtectedRoute component={AdminUsers} adminOnly={true} />}
       </Route>
       
       {/* Fallback */}

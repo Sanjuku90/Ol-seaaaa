@@ -25,6 +25,12 @@ export interface IStorage {
   getTransactions(userId: number): Promise<Transaction[]>;
   createTransaction(userId: number, type: string, amount: number, walletAddress?: string, status?: string): Promise<Transaction>;
   
+  // Admin Methods
+  getUsers(): Promise<User[]>;
+  updateUserStatus(id: number, status: string): Promise<User>;
+  updateUserAdmin(id: number, isAdmin: boolean): Promise<User>;
+  updateUserBalanceAdmin(id: number, amount: number): Promise<User>;
+
   sessionStore: session.Store;
 }
 
@@ -122,6 +128,29 @@ export class DatabaseStorage implements IStorage {
       walletAddress
     }).returning();
     return transaction;
+  }
+
+  // Admin Methods implementation
+  async getUsers(): Promise<User[]> {
+    return await db.select().from(users).orderBy(desc(users.createdAt));
+  }
+
+  async updateUserStatus(id: number, status: string): Promise<User> {
+    const [user] = await db.update(users).set({ status }).where(eq(users.id, id)).returning();
+    return user;
+  }
+
+  async updateUserAdmin(id: number, isAdmin: boolean): Promise<User> {
+    const [user] = await db.update(users).set({ isAdmin }).where(eq(users.id, id)).returning();
+    return user;
+  }
+
+  async updateUserBalanceAdmin(id: number, amount: number): Promise<User> {
+    const [user] = await db.update(users)
+      .set({ balance: sql`${users.balance} + ${amount.toString()}` })
+      .where(eq(users.id, id))
+      .returning();
+    return user;
   }
 }
 

@@ -31,6 +31,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: 'Affiliate', href: '/dashboard/affiliate', icon: Users },
   ];
 
+  if (user.isAdmin) {
+    navigation.push({ name: 'Admin Users', href: '/admin/users', icon: Settings });
+  }
+
   const SidebarContent = () => (
     <div className="flex flex-col h-full bg-card border-r border-border">
       <div className="p-6">

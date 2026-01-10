@@ -15,6 +15,9 @@ export const users = pgTable("users", {
   referredBy: integer("referred_by"), 
   kycStatus: text("kyc_status").default("pending"), 
   affiliationGrade: text("affiliation_grade").default("Bronze"),
+  isAdmin: boolean("is_admin").default(false),
+  status: text("status").default("active"),
+  phone: text("phone"),
   activeReferrals: integer("active_referrals").default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -28,7 +31,7 @@ export const machines = pgTable("machines", {
   minDeposit: integer("min_deposit").notNull(),
   durationDays: integer("duration_days").notNull().default(30),
   dailyRate: decimal("daily_rate", { precision: 5, scale: 2 }).notNull(), 
-  monthlyFee: decimal("monthly_fee", { precision: 10, scale: 2 }).default("3.0"),
+  monthlyFee: decimal("monthly_fee", { precision: 10, scale: 2 }).default("3.00"),
   description: text("description"),
 });
 
@@ -61,7 +64,7 @@ export const transactions = pgTable("transactions", {
 });
 
 // === RELATIONS ===
-export const usersRelations = relations(users, ({ one, many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   contracts: many(contracts),
   transactions: many(transactions),
   referrer: one(users, {
@@ -118,7 +121,7 @@ export type CreateContractRequest = {
   autoReinvest: boolean;
 };
 
-export type ContractResponse = Contract & { machineName: string };
+export type ContractResponse = Contract & { machine: Machine };
 
 export type StatsResponse = {
   totalPower: number;

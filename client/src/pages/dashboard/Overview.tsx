@@ -14,12 +14,12 @@ import {
   Zap,
   ShieldCheck
 } from "lucide-react";
-import { type Contract, type Machine } from "@shared/schema";
+import { type Contract, type Machine, type User } from "@shared/schema";
 import { format } from "date-fns";
 import { Link } from "wouter";
 
 export default function Overview() {
-  const { data: user } = useQuery({ queryKey: ["/api/user"] });
+  const { data: user } = useQuery<User>({ queryKey: ["/api/user"] });
   const { data: contracts } = useQuery<Contract[]>({ queryKey: ["/api/contracts"] });
   const { data: machines } = useQuery<Machine[]>({ queryKey: ["/api/machines"] });
 
@@ -80,7 +80,7 @@ export default function Overview() {
           <div className="mt-4 pt-4 border-t border-white/5 flex justify-between text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <Clock className="w-3 h-3" />
-              {format(new Date(contract.startDate), "dd/MM/yyyy")}
+              {format(new Date(contract.startDate!), "dd/MM/yyyy")}
             </div>
             <span>Frais mensuels: $3.00</span>
           </div>
