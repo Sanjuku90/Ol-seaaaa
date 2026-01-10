@@ -55,11 +55,13 @@ export default function AdminUsers() {
   const [isBonusOpen, setIsBonusOpen] = useState(false);
 
   const { data: users, isLoading: usersLoading } = useQuery<User[]>({
-    queryKey: ["/api/admin/users"]
+    queryKey: ["/api/admin/users"],
+    refetchInterval: 5000, // Refresh every 5 seconds
   });
 
   const { data: transactions, isLoading: txLoading } = useQuery<Transaction[]>({
-    queryKey: ["/api/admin/transactions"]
+    queryKey: ["/api/admin/transactions"],
+    refetchInterval: 5000, // Refresh every 5 seconds
   });
 
   const updateStatusMutation = useMutation({

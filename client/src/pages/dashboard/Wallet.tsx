@@ -26,6 +26,18 @@ export default function Wallet() {
   const { mutate: createTransaction, isPending } = useCreateTransaction();
   const { toast } = useToast();
   
+  // Custom polling for transactions
+  const { refetch: refetchTransactions } = useTransactions();
+  const { refetch: refetchUser } = useAuth();
+  
+  useState(() => {
+    const interval = setInterval(() => {
+      refetchTransactions();
+      refetchUser();
+    }, 5000);
+    return () => clearInterval(interval);
+  });
+  
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),
     defaultValues: { amount: 0, walletAddress: "" },
