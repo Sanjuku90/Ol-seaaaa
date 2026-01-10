@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/use-auth";
-import { Copy, Users, TrendingUp, Gift, Link as LinkIcon, Share2 } from "lucide-react";
+import { Copy, Users, TrendingUp, Gift, Link as LinkIcon, Share2, QrCode } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function Affiliate() {
   const { user } = useAuth();
@@ -22,33 +23,33 @@ export default function Affiliate() {
 
   const stats = [
     {
-      label: "Affiliés Actifs",
+      label: "Affiliés Directs",
       value: user?.activeReferrals || 0,
       icon: Users,
       color: "text-blue-400",
       bg: "bg-blue-400/10",
     },
     {
-      label: "Gains de Parrainage",
+      label: "Gains Directs (Lvl 1)",
       value: `$${Number(user?.referralEarnings || 0).toFixed(2)}`,
       icon: TrendingUp,
       color: "text-emerald-400",
       bg: "bg-emerald-400/10",
     },
     {
-      label: "Grade Actuel",
-      value: user?.affiliationGrade || "Bronze",
-      icon: Gift,
-      color: "text-purple-400",
-      bg: "bg-purple-400/10",
+      label: "Gains Indirects (Lvl 2)",
+      value: `$${Number((user as any)?.indirectReferralEarnings || 0).toFixed(2)}`,
+      icon: TrendingUp,
+      color: "text-orange-400",
+      bg: "bg-orange-400/10",
     },
   ];
 
   return (
     <DashboardLayout>
       <div className="mb-8">
-        <h1 className="text-3xl font-display font-bold">Programme d'Affiliation</h1>
-        <p className="text-muted-foreground">Invitez vos amis et gagnez des commissions sur chaque dépôt.</p>
+        <h1 className="text-3xl font-display font-bold">Programme d'Affiliation Avancé</h1>
+        <p className="text-muted-foreground">Maximisez vos revenus grâce à notre système de parrainage à deux niveaux.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -72,10 +73,14 @@ export default function Affiliate() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card className="border-white/5 bg-white/[0.02]">
           <CardHeader>
-            <CardTitle>Votre Lien de Parrainage</CardTitle>
-            <CardDescription>Partagez ce lien pour commencer à gagner des commissions.</CardDescription>
+            <CardTitle>Votre Lien & QR Code</CardTitle>
+            <CardDescription>Partagez votre lien ou faites scanner votre QR code.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
+            <div className="flex justify-center p-4 bg-white rounded-xl w-fit mx-auto">
+              <QRCodeSVG value={referralLink} size={150} />
+            </div>
+
             <div className="flex items-center gap-2 p-4 bg-background/50 border border-white/5 rounded-xl">
               <LinkIcon className="w-4 h-4 text-muted-foreground shrink-0" />
               <code className="text-sm font-mono truncate flex-1">{referralLink}</code>
@@ -93,55 +98,45 @@ export default function Affiliate() {
                 Code: {user?.referralCode}
               </Badge>
             </div>
-
-            <div className="space-y-4 pt-4 border-t border-white/5">
-              <h4 className="font-semibold text-sm">Comment ça marche ?</h4>
-              <div className="grid gap-4">
-                {[
-                  { step: "1", text: "Partagez votre lien unique avec votre réseau." },
-                  { step: "2", text: "Vos amis s'inscrivent et louent des machines." },
-                  { step: "3", text: "Recevez 10% de commission sur chaque investissement." },
-                ].map((item) => (
-                  <div key={item.step} className="flex gap-3 text-sm">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs">
-                      {item.step}
-                    </span>
-                    <p className="text-muted-foreground">{item.text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
           </CardContent>
         </Card>
 
         <Card className="border-white/5 bg-white/[0.02]">
           <CardHeader>
-            <CardTitle>Niveaux d'Affiliation</CardTitle>
-            <CardDescription>Augmentez votre grade pour débloquer plus d'avantages.</CardDescription>
+            <CardTitle>Structure des Gains par Niveau</CardTitle>
+            <CardDescription>Gagnez sur vos filleuls et sur les filleuls de vos amis.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { grade: "Bronze", requirement: "0-5 Affiliés", commission: "10%", active: user?.affiliationGrade === "Bronze" },
-                { grade: "Silver", requirement: "6-20 Affiliés", commission: "12%", active: user?.affiliationGrade === "Silver" },
-                { grade: "Gold", requirement: "21-50 Affiliés", commission: "15%", active: user?.affiliationGrade === "Gold" },
-                { grade: "Platinum", requirement: "50+ Affiliés", commission: "20%", active: user?.affiliationGrade === "Platinum" },
-              ].map((tier) => (
-                <div 
-                  key={tier.grade} 
-                  className={`p-4 rounded-xl border transition-all ${
-                    tier.active 
-                      ? "bg-primary/10 border-primary/50 shadow-lg shadow-primary/10" 
-                      : "bg-white/[0.01] border-white/5 opacity-60"
-                  }`}
-                >
-                  <div className="flex justify-between items-center mb-1">
-                    <span className={`font-bold ${tier.active ? "text-primary" : ""}`}>{tier.grade}</span>
-                    <Badge variant={tier.active ? "default" : "outline"}>{tier.commission}</Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground">{tier.requirement}</p>
+            <div className="space-y-6">
+              <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-bold text-emerald-400">Niveau 1 (Direct)</span>
+                  <Badge className="bg-emerald-500">10%</Badge>
                 </div>
-              ))}
+                <p className="text-xs text-muted-foreground">Commission sur chaque dépôt effectué par vos filleuls directs.</p>
+              </div>
+
+              <div className="p-4 rounded-xl border border-orange-500/30 bg-orange-500/5">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-bold text-orange-400">Niveau 2 (Indirect)</span>
+                  <Badge className="bg-orange-500">5%</Badge>
+                </div>
+                <p className="text-xs text-muted-foreground">Commission sur les dépôts des filleuls de vos propres filleuls.</p>
+              </div>
+
+              <div className="pt-4 border-t border-white/5">
+                <h4 className="font-semibold text-sm mb-3">Tableau Récapitulatif</h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs p-2 bg-white/[0.02] rounded">
+                    <span className="text-muted-foreground">Filleuls Directs</span>
+                    <span className="font-bold">{user?.activeReferrals || 0}</span>
+                  </div>
+                  <div className="flex justify-between text-xs p-2 bg-white/[0.02] rounded">
+                    <span className="text-muted-foreground">Filleuls Indirects</span>
+                    <span className="font-bold">À venir...</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
