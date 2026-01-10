@@ -1,0 +1,163 @@
+
+Plateforme “BlockMint”
+
+Concept
+
+Investissez dans le minage crypto sans matériel et sans connaissances techniques grâce à nos contrats de puissance (hashrate).
+Vous choisissez une machine, versez votre dépôt dès 20 $, et recevez vos gains quotidiennement, avec possibilité de réinvestir ou retirer à tout moment.
+
+⸻
+
+1. Offres principales – Nos Machines
+
+Chaque machine représente une part de notre infrastructure de minage. Les gains dépendent de la machine choisie, de la durée du contrat et des bonus activés.
+
+Catalogue officiel
+
+Machine	Dépôt min	Durée	Rendement affiché / jour	Rendement max possible / jour*
+Starter	20 $	30 jours	2.0%	2.5%
+Standard	50 $	60 jours	2.5%	3.0%
+Pro	200 $	90 jours	3.0%	3.5%
+Elite	500 $	180 jours	3.5%	4.0%
+VIP	1 000 $	21–30 jours	4.0%	4.5%
+
+*Le rendement max dépend des bonus activés : réinvestissement automatique, fidélité, montant élevé, niveau d’affiliation et promotions temporaires.
+
+⸻
+
+Bonus / Boosts disponibles
+	•	Réinvestissement automatique : +0.2 à +0.3% / jour
+	•	Fidélité / activité : +0.1 à +0.2% / jour
+	•	Contrat élevé : +0.1% / jour
+	•	Affiliation (grade) : +0.1 à +0.2% / jour
+	•	Promotions limitées : +0.1 à +0.2% / jour
+
+Exemple : Machine Pro 3.0% + réinvestissement 0.3% + fidélité 0.2% → 3.5% / jour (max raisonnable)
+
+⸻
+
+2. Frais & transparence
+
+Pour garantir la stabilité et la maintenance de nos infrastructures :
+
+Type de frais	Montant
+Dépôt crypto	0%
+Activation machine	2%
+Retrait standard	1–3% selon niveau
+Retrait rapide	+2–5%
+Maintenance	0.3–0.5% / jour (inclus dans le rendement)
+Électricité	0.3–0.6% / jour (inclus dans le rendement)
+Annulation contrat	20% du capital restant
+Inactivité > 60j	1% / mois
+Boost rendement optionnel	payant
+Retrait prioritaire	5 $
+
+Exemple concret :
+Dépôt 20 $, activation 2% → 19.60 $ investis
+Rendement brut 3% / jour – maintenance 0.4% – électricité 0.5% → rendement net 2.1% / jour
+Retrait 10 $ avec 2% frais → utilisateur reçoit 9.80 $
+
+⸻
+
+3. Calculateur de revenus
+
+Permet à l’utilisateur de simuler ses gains :
+	•	Montant investi
+	•	Type de machine
+	•	Durée
+	•	Scénario : prudent / normal / optimisé
+
+Le calcul prend en compte :
+	•	Rendement affiché (base = max possible)
+	•	Frais d’électricité et maintenance
+	•	Bonus réinvestissement
+
+⸻
+
+4. Tableau de bord utilisateur
+
+Sections principales :
+	•	Solde : disponible / investi / gains du jour
+	•	Mes machines : cartes pour chaque contrat avec :
+	•	puissance / hashrate
+	•	jours restants
+	•	gains cumulés
+	•	bouton réinvestir
+	•	Réinvestissement : manuel ou automatique
+	•	Dépôt & retrait : historique + notifications
+	•	Affiliation : lien, statistiques, commissions, grades (Bronze/Argent/Or)
+	•	Sécurité : 2FA, KYC pour gros retraits
+
+⸻
+
+5. Système d’affiliation
+	•	Niveau 1 : 7%
+	•	Niveau 2 : 2%
+
+Grades
+
+Grade	Filleuls actifs	Bonus rendement
+Bronze	5	+0.2%
+Argent	20	+0.4%
+Or	50	+0.7%
+
+
+⸻
+
+6. Statistiques & transparence ( ça doit être une simulation ) 
+	
+	•	Puissance totale louée
+	•	Total des gains distribués
+	•	Derniers paiements en live
+	•	Historique public des transactions
+
+⸻
+
+7. Back-office administrateur
+
+Fonctionnalités :
+	•	Gestion utilisateurs
+	•	Validation KYC
+	•	Gestion contrats & machines
+	•	Modification des rendements
+	•	Gestion retraits & plafonds
+	•	Contrôle affiliation & grades
+	•	Newsletters
+	•	Blocage comptes frauduleux
+	•	Suivi de la maintenance et des coûts d’électricité
+    * Validation manuelle des dépôts et retraits par l’admin dans l’espace admin 
+
+⸻
+
+8. Pages publiques (vitrine)
+	•	Accueil : concept, avantages, machines
+	•	Calculateur interactif
+	•	Notre ferme : photos / vidéos
+	•	FAQ complète : fonctionnement, retraits, risques
+	•	CGU & mentions légales
+	•	Contact / support live
+
+⸻
+
+9. Marketing & accroche
+	•	Slogan :
+
+“Investissez dans le minage crypto sans matériel et recevez vos gains chaque jour.”
+
+	•	Variante :
+
+“Transformez votre capital en puissance de calcul rentable dès 20 $.”
+
+⸻
+
+10. Résumé final
+
+Plateforme d’investissement crypto accessible dès 20 $, offrant :
+	•	Rendements quotidiens maximisés mais raisonnables
+	•	Bonus réinvestissement et fidélité
+	•	Affiliation multi-niveaux gamifiée
+	•	Dashboard complet et intuitif
+	•	Frais transparents incluant maintenance et électricité
+	•	Gestion back-office avancée
+
+⸻
