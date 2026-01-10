@@ -76,32 +76,17 @@ export default function Wallet() {
         <p className="text-muted-foreground">Gérez vos dépôts et vos retraits.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 gap-8">
         {/* Balance Card */}
-        <Card className="lg:col-span-1 border-white/5 bg-gradient-to-br from-primary/20 to-card">
+        <Card className="border-white/5 bg-gradient-to-br from-primary/20 to-card">
           <CardHeader>
             <CardTitle className="text-muted-foreground text-sm font-medium">Solde Disponible</CardTitle>
             <div className="text-4xl font-bold font-display mt-2">${Number(user?.balance).toFixed(2)}</div>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {depositAddresses.map((item) => (
-                <div key={item.label} className="bg-background/40 p-3 rounded-lg flex flex-col gap-2 border border-white/5">
-                  <span className="text-xs text-muted-foreground">{item.label}</span>
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-[10px] font-mono break-all">{item.address}</span>
-                    <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => copyAddress(item.address)}>
-                      <Copy className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
         </Card>
 
         {/* Actions Tabs */}
-        <Card className="lg:col-span-2 border-white/5 bg-card/50">
+        <Card className="lg:col-span-3 border-white/5 bg-card/50">
           <CardContent className="pt-6">
             <Tabs defaultValue="deposit">
               <TabsList className="grid w-full grid-cols-2 mb-6">
