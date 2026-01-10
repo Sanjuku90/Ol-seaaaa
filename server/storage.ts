@@ -3,7 +3,7 @@ import {
   users, machines, contracts, transactions,
   type User, type InsertUser, type Machine, type Contract, type Transaction
 } from "@shared/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db";
@@ -14,6 +14,7 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser & { referralCode?: string }): Promise<User>;
+  updateUserBalance(id: number, amount: number): Promise<void>;
   
   getMachines(): Promise<Machine[]>;
   getMachine(id: number): Promise<Machine | undefined>;
@@ -22,7 +23,7 @@ export interface IStorage {
   createContract(userId: number, machineId: number, amount: number, autoReinvest: boolean): Promise<Contract>;
   
   getTransactions(userId: number): Promise<Transaction[]>;
-  createTransaction(userId: number, type: string, amount: number): Promise<Transaction>;
+  createTransaction(userId: number, type: string, amount: number, walletAddress?: string, status?: string): Promise<Transaction>;
   
   sessionStore: session.Store;
 }
@@ -50,6 +51,12 @@ export class DatabaseStorage implements IStorage {
   async createUser(insertUser: InsertUser & { referralCode?: string }): Promise<User> {
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
+  }
+
+  async updateUserBalance(id: number, amount: number): Promise<void> {
+    await db.update(users)
+      .set({ balance: sql`${users.balance} + ${amount.toString()}` })
+      .where(eq(users.id, id));
   }
 
   async getMachines(): Promise<Machine[]> {
@@ -106,12 +113,13 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(transactions.createdAt));
   }
 
-  async createTransaction(userId: number, type: string, amount: number): Promise<Transaction> {
+  async createTransaction(userId: number, type: string, amount: number, walletAddress?: string, status: string = "completed"): Promise<Transaction> {
     const [transaction] = await db.insert(transactions).values({
       userId,
       type,
       amount: amount.toString(),
-      status: "completed"
+      status,
+      walletAddress
     }).returning();
     return transaction;
   }

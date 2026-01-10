@@ -7,22 +7,22 @@ import { z } from "zod";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  email: text("email").notNull().unique(), // Using email as username
+  email: text("email").notNull().unique(), 
   password: text("password").notNull(),
-  role: text("role").default("user").notNull(), // 'user' | 'admin'
+  role: text("role").default("user").notNull(), 
   balance: decimal("balance", { precision: 10, scale: 2 }).default("0").notNull(),
   referralCode: text("referral_code").unique(),
-  referredBy: integer("referred_by"), // ID of the referrer
-  kycStatus: text("kyc_status").default("pending"), // 'pending' | 'verified' | 'rejected'
+  referredBy: integer("referred_by"), 
+  kycStatus: text("kyc_status").default("pending"), 
   createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const machines = pgTable("machines", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(), // Starter, Standard, Pro, Elite, VIP
+  name: text("name").notNull(), 
   minDeposit: integer("min_deposit").notNull(),
   durationDays: integer("duration_days").notNull(),
-  dailyRate: decimal("daily_rate", { precision: 5, scale: 2 }).notNull(), // 2.0 to 4.5
+  dailyRate: decimal("daily_rate", { precision: 5, scale: 2 }).notNull(), 
   maxDailyRate: decimal("max_daily_rate", { precision: 5, scale: 2 }).notNull(),
 });
 
@@ -33,7 +33,7 @@ export const contracts = pgTable("contracts", {
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
   startDate: timestamp("start_date").defaultNow(),
   endDate: timestamp("end_date").notNull(),
-  status: text("status").default("active"), // 'active' | 'completed' | 'cancelled'
+  status: text("status").default("active"), 
   autoReinvest: boolean("auto_reinvest").default(false),
   accumulatedRewards: decimal("accumulated_rewards", { precision: 10, scale: 2 }).default("0"),
 });
@@ -41,9 +41,10 @@ export const contracts = pgTable("contracts", {
 export const transactions = pgTable("transactions", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull(),
-  type: text("type").notNull(), // 'deposit', 'withdrawal', 'earnings', 'referral', 'reinvest'
+  type: text("type").notNull(), 
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
-  status: text("status").default("completed"), // 'pending' | 'completed' | 'failed'
+  status: text("status").default("completed"), 
+  walletAddress: text("wallet_address"), // For withdrawals
   createdAt: timestamp("created_at").defaultNow(),
 });
 

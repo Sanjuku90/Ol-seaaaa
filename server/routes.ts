@@ -33,17 +33,36 @@ export async function registerRoutes(
     try {
       const input = api.contracts.create.input.parse(req.body);
       
-      // Basic validation logic (check balance would go here)
+      const user = await storage.getUser(req.user!.id);
+      if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
+      
+      const machine = await storage.getMachine(input.machineId);
+      if (!machine) return res.status(404).json({ message: "Machine non trouvée" });
+
+      if (Number(user.balance) < input.amount) {
+        return res.status(400).json({ message: "Solde insuffisant pour effectuer cet achat." });
+      }
+
+      if (input.amount < machine.minDeposit) {
+        return res.status(400).json({ message: `Le montant minimum pour cette machine est de ${machine.minDeposit} $` });
+      }
+      
+      // Deduct balance
+      await storage.updateUserBalance(req.user!.id, -input.amount);
+
       const contract = await storage.createContract(
         req.user!.id, 
         input.machineId, 
         input.amount, 
         input.autoReinvest
       );
+
+      // Create transaction record
+      await storage.createTransaction(req.user!.id, "purchase", input.amount);
       
       res.status(201).json(contract);
     } catch (e) {
-      res.status(400).json({ message: "Invalid input" });
+      res.status(400).json({ message: "Entrée invalide" });
     }
   });
 
@@ -59,10 +78,28 @@ export async function registerRoutes(
     
     try {
       const input = api.transactions.create.input.parse(req.body);
-      const tx = await storage.createTransaction(req.user!.id, input.type, input.amount);
+      // For withdrawals, status is pending
+      const status = input.type === 'withdrawal' ? 'pending' : 'completed';
+      
+      if (input.type === 'withdrawal') {
+        const user = await storage.getUser(req.user!.id);
+        if (!user || Number(user.balance) < input.amount) {
+          return res.status(400).json({ message: "Solde insuffisant pour le retrait" });
+        }
+        // Deduct balance immediately for withdrawal request
+        await storage.updateUserBalance(req.user!.id, -input.amount);
+      }
+
+      const tx = await storage.createTransaction(
+        req.user!.id, 
+        input.type, 
+        input.amount, 
+        (req.body as any).walletAddress,
+        status
+      );
       res.status(201).json(tx);
     } catch (e) {
-      res.status(400).json({ message: "Invalid input" });
+      res.status(400).json({ message: "Entrée invalide" });
     }
   });
   
