@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useCreateTransaction, useTransactions } from "@/hooks/use-platform";
 import { api } from "@shared/routes";
@@ -21,22 +21,22 @@ const transactionSchema = z.object({
 });
 
 export default function Wallet() {
-  const { user } = useAuth();
-  const { data: transactions } = useTransactions();
+  const { user, refetch: refetchUser } = useAuth();
+  const { data: transactions, refetch: refetchTransactions } = useTransactions();
   const { mutate: createTransaction, isPending } = useCreateTransaction();
   const { toast } = useToast();
   
-  // Custom polling for transactions
-  const { refetch: refetchTransactions } = useTransactions();
-  const { refetch: refetchUser } = useAuth();
-  
-  useState(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
-      refetchTransactions();
-      refetchUser();
+      if (typeof refetchTransactions === 'function') {
+        refetchTransactions();
+      }
+      if (typeof refetchUser === 'function') {
+        refetchUser();
+      }
     }, 5000);
     return () => clearInterval(interval);
-  });
+  }, [refetchTransactions, refetchUser]);
   
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),

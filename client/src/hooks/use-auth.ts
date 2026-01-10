@@ -21,10 +21,8 @@ export function useAuth() {
   });
 
   const loginMutation = useMutation({
-    mutationFn: async (credentials: LoginRequest) => {
-      // Note: mapping {email} to {username} for backend compatibility if needed
-      // based on shared/routes which expects 'username'
-      const payload = { username: credentials.email, password: credentials.password };
+    mutationFn: async (credentials: any) => {
+      const payload = { username: credentials.email || credentials.username, password: credentials.password };
       const res = await fetch(api.auth.login.path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -38,7 +36,7 @@ export function useAuth() {
       }
       return api.auth.login.responses[200].parse(await res.json());
     },
-    onSuccess: (user) => {
+    onSuccess: (user: any) => {
       queryClient.setQueryData([api.auth.me.path], user);
       toast({ title: "Welcome back!", description: `Logged in as ${user.email}` });
       setLocation("/dashboard");
@@ -70,7 +68,7 @@ export function useAuth() {
       }
       return api.auth.register.responses[201].parse(await res.json());
     },
-    onSuccess: (user) => {
+    onSuccess: (user: any) => {
       queryClient.setQueryData([api.auth.me.path], user);
       toast({ title: "Account created!", description: "Welcome to BlockMint." });
       setLocation("/dashboard");
@@ -99,6 +97,7 @@ export function useAuth() {
   return {
     user: userQuery.data,
     isLoading: userQuery.isLoading,
+    refetch: userQuery.refetch as any,
     login: loginMutation,
     register: registerMutation,
     logout: logoutMutation,

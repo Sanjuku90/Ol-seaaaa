@@ -19,8 +19,14 @@ import { format } from "date-fns";
 import { Link } from "wouter";
 
 export default function Overview() {
-  const { data: user } = useQuery<User>({ queryKey: ["/api/user"] });
-  const { data: contracts } = useQuery<Contract[]>({ queryKey: ["/api/contracts"] });
+  const { data: user, refetch: refetchUser } = useQuery<User>({ 
+    queryKey: ["/api/user"],
+    refetchInterval: 5000 
+  });
+  const { data: contracts, refetch: refetchContracts } = useQuery<Contract[]>({ 
+    queryKey: ["/api/contracts"],
+    refetchInterval: 5000
+  });
   const { data: machines } = useQuery<Machine[]>({ queryKey: ["/api/machines"] });
 
   const activeContracts = contracts?.filter(c => c.status === "active") || [];
