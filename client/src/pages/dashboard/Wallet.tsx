@@ -17,6 +17,7 @@ import { api } from "@shared/routes";
 
 const transactionSchema = z.object({
   amount: z.coerce.number().min(10, "Le montant minimum est de 10 $"),
+  crypto: z.string().min(1, "Veuillez choisir une cryptomonnaie"),
   walletAddress: z.string().optional(),
 });
 
@@ -40,7 +41,7 @@ export default function Wallet() {
   
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),
-    defaultValues: { amount: 0, walletAddress: "" },
+    defaultValues: { amount: 0, crypto: "USDT TRC20", walletAddress: "" },
   });
 
   const onSubmit = (data: z.infer<typeof transactionSchema>, type: 'deposit' | 'withdrawal') => {
@@ -111,16 +112,55 @@ export default function Wallet() {
               <TabsContent value="deposit">
                 <div className="space-y-4">
                   <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-sm text-emerald-200">
-                    Les dépôts sont automatiques. Utilisez le formulaire ci-dessous pour créditer votre compte.
+                    Choisissez votre cryptomonnaie, saisissez le montant, puis effectuez le transfert à l'adresse indiquée.
                   </div>
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(d => onSubmit(d, 'deposit'))} className="space-y-4">
                       <FormField
                         control={form.control}
+                        name="crypto"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Cryptomonnaie</FormLabel>
+                            <FormControl>
+                              <select 
+                                {...field} 
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                              >
+                                {depositAddresses.map(addr => (
+                                  <option key={addr.label} value={addr.label}>{addr.label}</option>
+                                ))}
+                              </select>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <div className="bg-background/40 p-4 rounded-lg border border-white/5 space-y-2">
+                        <p className="text-xs text-muted-foreground">Adresse de dépôt pour {form.watch("crypto")}:</p>
+                        <div className="flex items-center justify-between gap-2">
+                          <code className="text-[10px] font-mono break-all text-primary">
+                            {depositAddresses.find(a => a.label === form.watch("crypto"))?.address}
+                          </code>
+                          <Button 
+                            type="button"
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8 shrink-0" 
+                            onClick={() => copyAddress(depositAddresses.find(a => a.label === form.watch("crypto"))?.address || "")}
+                          >
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      <FormField
+                        control={form.control}
                         name="amount"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Amount (USDT)</FormLabel>
+                            <FormLabel>Montant (USDT)</FormLabel>
                             <FormControl>
                               <Input type="number" placeholder="100" {...field} className="bg-background" />
                             </FormControl>
@@ -130,7 +170,7 @@ export default function Wallet() {
                       />
                       <Button type="submit" disabled={isPending} className="w-full">
                         {isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2"/> : <ArrowDownLeft className="w-4 h-4 mr-2" />}
-                        Deposit Funds
+                        Deposition Fund
                       </Button>
                     </form>
                   </Form>
