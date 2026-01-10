@@ -24,6 +24,14 @@ export default function Machines() {
   const [selectedMachine, setSelectedMachine] = useState<Machine | null>(null);
   const [amount, setAmount] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [calcAmount, setCalcAmount] = useState("100");
+
+  const calculateProfit = (machine: Machine, amount: number) => {
+    const daily = (amount * Number(machine.dailyRate)) / 100;
+    const weekly = daily * 7;
+    const monthly = daily * 30;
+    return { daily, weekly, monthly };
+  };
 
   const { data: machines, isLoading } = useQuery<Machine[]>({
     queryKey: ["/api/machines"]
@@ -68,57 +76,88 @@ export default function Machines() {
     });
   };
 
-  const renderMachineCard = (machine: Machine) => (
-    <Card key={machine.id} className="overflow-hidden border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
-      <CardHeader>
-        <div className="flex justify-between items-start gap-2">
-          <div>
-            <CardTitle className="text-xl font-display">{machine.name}</CardTitle>
-            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{machine.description}</p>
-          </div>
-          <div className="p-2 rounded-lg bg-primary/10 text-primary">
-            {machine.type === "rent" ? <Zap className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />}
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="text-3xl font-bold font-display text-primary">
-          {machine.type === "rent" ? (
-            <>${machine.rentalPrice}<span className="text-sm text-muted-foreground font-sans font-normal ml-1">/ mois</span></>
-          ) : (
-            <>${machine.buyPrice}<span className="text-sm text-muted-foreground font-sans font-normal ml-1">unique</span></>
-          )}
-        </div>
-        <div className="space-y-2 text-sm text-muted-foreground">
-          <div className="flex justify-between">
-            <span>Rendement</span>
-            <span className="text-emerald-400 font-bold">{machine.dailyRate}% / jour</span>
-          </div>
-          {machine.type === "rent" && (
-            <div className="flex justify-between">
-              <span>Dépôt Min.</span>
-              <span className="text-foreground">${machine.minDeposit}</span>
+  const renderMachineCard = (machine: Machine) => {
+    const profits = calculateProfit(machine, Number(calcAmount) || 0);
+    return (
+      <Card key={machine.id} className="overflow-hidden border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+        <CardHeader>
+          <div className="flex justify-between items-start gap-2">
+            <div>
+              <CardTitle className="text-xl font-display">{machine.name}</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{machine.description}</p>
             </div>
-          )}
-          <div className="flex justify-between border-t border-white/5 pt-2">
-            <span>Frais Mensuels</span>
-            <span className="text-foreground">${machine.monthlyFee} / machine</span>
+            <div className="p-2 rounded-lg bg-primary/10 text-primary">
+              {machine.type === "rent" ? <Zap className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />}
+            </div>
           </div>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button className="w-full" onClick={() => openPurchaseDialog(machine)} disabled={purchaseMutation.isPending}>
-          {machine.type === "rent" ? "Louer Maintenant" : "Acheter Maintenant"}
-        </Button>
-      </CardFooter>
-    </Card>
-  );
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="text-3xl font-bold font-display text-primary">
+            {machine.type === "rent" ? (
+              <>${machine.rentalPrice}<span className="text-sm text-muted-foreground font-sans font-normal ml-1">/ mois</span></>
+            ) : (
+              <>${machine.buyPrice}<span className="text-sm text-muted-foreground font-sans font-normal ml-1">unique</span></>
+            )}
+          </div>
+          <div className="space-y-2 text-sm text-muted-foreground">
+            <div className="flex justify-between">
+              <span>Rendement</span>
+              <span className="text-emerald-400 font-bold">{machine.dailyRate}% / jour</span>
+            </div>
+            {machine.type === "rent" && (
+              <div className="flex justify-between">
+                <span>Dépôt Min.</span>
+                <span className="text-foreground">${machine.minDeposit}</span>
+              </div>
+            )}
+            <div className="pt-2 border-t border-white/5">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Estimation des gains</p>
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-background/50 p-2 rounded text-center">
+                  <p className="text-[10px]">Jour</p>
+                  <p className="font-bold text-emerald-400">${profits.daily.toFixed(2)}</p>
+                </div>
+                <div className="bg-background/50 p-2 rounded text-center">
+                  <p className="text-[10px]">Semaine</p>
+                  <p className="font-bold text-emerald-400">${profits.weekly.toFixed(2)}</p>
+                </div>
+                <div className="bg-background/50 p-2 rounded text-center">
+                  <p className="text-[10px]">Mois</p>
+                  <p className="font-bold text-emerald-400">${profits.monthly.toFixed(2)}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button className="w-full" onClick={() => openPurchaseDialog(machine)} disabled={purchaseMutation.isPending}>
+            {machine.type === "rent" ? "Louer Maintenant" : "Acheter Maintenant"}
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  };
 
   return (
     <DashboardLayout>
-      <div className="mb-8">
-        <h1 className="text-3xl font-display font-bold">Catalogue des Machines</h1>
-        <p className="text-muted-foreground">Location flexible ou Achat permanent pour maximiser vos gains.</p>
+      <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-display font-bold">Catalogue des Machines</h1>
+          <p className="text-muted-foreground">Location flexible ou Achat permanent pour maximiser vos gains.</p>
+        </div>
+        <Card className="p-4 border-primary/20 bg-primary/5 min-w-[250px]">
+          <Label className="text-xs uppercase tracking-wider text-primary mb-2 block">Simulateur de dépôt</Label>
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-bold">$</span>
+            <Input 
+              type="number" 
+              value={calcAmount} 
+              onChange={(e) => setCalcAmount(e.target.value)}
+              className="h-8 bg-background/50 border-white/10"
+              placeholder="Montant"
+            />
+          </div>
+        </Card>
       </div>
 
       <Tabs defaultValue="rent" className="space-y-8">
