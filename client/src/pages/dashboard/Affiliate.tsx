@@ -1,169 +1,151 @@
-import { useQuery } from "@tanstack/react-query";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Users, 
-  Copy, 
-  CheckCircle2, 
-  TrendingUp, 
-  Gift,
-  Share2
-} from "lucide-react";
-import { type User } from "@shared/schema";
+import { useAuth } from "@/hooks/use-auth";
+import { Copy, Users, TrendingUp, Gift, Link as LinkIcon, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
 
 export default function Affiliate() {
+  const { user } = useAuth();
   const { toast } = useToast();
-  const { data: user } = useQuery<User>({ queryKey: ["/api/user"] });
-  const { data: referrals, isLoading } = useQuery<User[]>({ 
-    queryKey: ["/api/referrals"] 
-  });
-  const [copied, setCopied] = useState(false);
+  
+  const referralLink = `${window.location.origin}/register?ref=${user?.referralCode || ""}`;
 
-  const referralLink = `${window.location.origin}/register?ref=${user?.referralCode}`;
-
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(referralLink);
-      setCopied(true);
-      toast({
-        title: "Copié !",
-        description: "Votre lien de parrainage a été copié dans le presse-papier.",
-      });
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Impossible de copier le lien.",
-      });
-    }
+  const copyLink = () => {
+    navigator.clipboard.writeText(referralLink);
+    toast({
+      title: "Lien copié !",
+      description: "Votre lien de parrainage est prêt à être partagé.",
+    });
   };
+
+  const stats = [
+    {
+      label: "Affiliés Actifs",
+      value: user?.activeReferrals || 0,
+      icon: Users,
+      color: "text-blue-400",
+      bg: "bg-blue-400/10",
+    },
+    {
+      label: "Gains de Parrainage",
+      value: `$${Number(user?.referralEarnings || 0).toFixed(2)}`,
+      icon: TrendingUp,
+      color: "text-emerald-400",
+      bg: "bg-emerald-400/10",
+    },
+    {
+      label: "Grade Actuel",
+      value: user?.affiliationGrade || "Bronze",
+      icon: Gift,
+      color: "text-purple-400",
+      bg: "bg-purple-400/10",
+    },
+  ];
 
   return (
     <DashboardLayout>
       <div className="mb-8">
         <h1 className="text-3xl font-display font-bold">Programme d'Affiliation</h1>
-        <p className="text-muted-foreground">Invitez vos amis et gagnez des commissions sur leur minage.</p>
+        <p className="text-muted-foreground">Invitez vos amis et gagnez des commissions sur chaque dépôt.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {stats.map((stat) => (
+          <Card key={stat.label} className="border-white/5 bg-white/[0.02]">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className={`p-3 rounded-xl ${stat.bg} ${stat.color}`}>
+                  <stat.icon className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">{stat.label}</p>
+                  <p className="text-2xl font-bold font-display">{stat.value}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card className="border-white/5 bg-white/[0.02]">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Parrainés</CardTitle>
-            <Users className="h-4 w-4 text-primary" />
+          <CardHeader>
+            <CardTitle>Votre Lien de Parrainage</CardTitle>
+            <CardDescription>Partagez ce lien pour commencer à gagner des commissions.</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold font-display">{referrals?.length || 0}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {user?.activeReferrals || 0} actifs ce mois-ci
-            </p>
+          <CardContent className="space-y-6">
+            <div className="flex items-center gap-2 p-4 bg-background/50 border border-white/5 rounded-xl">
+              <LinkIcon className="w-4 h-4 text-muted-foreground shrink-0" />
+              <code className="text-sm font-mono truncate flex-1">{referralLink}</code>
+              <Button size="icon" variant="ghost" onClick={copyLink} className="shrink-0 hover-elevate">
+                <Copy className="w-4 h-4" />
+              </Button>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <Button className="flex-1 gap-2" onClick={copyLink}>
+                <Share2 className="w-4 h-4" />
+                Partager
+              </Button>
+              <Badge variant="outline" className="py-2 px-4 border-primary/20 bg-primary/5 text-primary">
+                Code: {user?.referralCode}
+              </Badge>
+            </div>
+
+            <div className="space-y-4 pt-4 border-t border-white/5">
+              <h4 className="font-semibold text-sm">Comment ça marche ?</h4>
+              <div className="grid gap-4">
+                {[
+                  { step: "1", text: "Partagez votre lien unique avec votre réseau." },
+                  { step: "2", text: "Vos amis s'inscrivent et louent des machines." },
+                  { step: "3", text: "Recevez 10% de commission sur chaque investissement." },
+                ].map((item) => (
+                  <div key={item.step} className="flex gap-3 text-sm">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs">
+                      {item.step}
+                    </span>
+                    <p className="text-muted-foreground">{item.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
+
         <Card className="border-white/5 bg-white/[0.02]">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Commissions Totales</CardTitle>
-            <TrendingUp className="h-4 w-4 text-emerald-400" />
+          <CardHeader>
+            <CardTitle>Niveaux d'Affiliation</CardTitle>
+            <CardDescription>Augmentez votre grade pour débloquer plus d'avantages.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold font-display text-emerald-400">$0.00</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Prochain paiement: Automatique
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="border-white/5 bg-white/[0.02]">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Bonus Actuel</CardTitle>
-            <Gift className="h-4 w-4 text-blue-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold font-display">10%</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Sur chaque dépôt de vos filleuls
-            </p>
+            <div className="space-y-4">
+              {[
+                { grade: "Bronze", requirement: "0-5 Affiliés", commission: "10%", active: user?.affiliationGrade === "Bronze" },
+                { grade: "Silver", requirement: "6-20 Affiliés", commission: "12%", active: user?.affiliationGrade === "Silver" },
+                { grade: "Gold", requirement: "21-50 Affiliés", commission: "15%", active: user?.affiliationGrade === "Gold" },
+                { grade: "Platinum", requirement: "50+ Affiliés", commission: "20%", active: user?.affiliationGrade === "Platinum" },
+              ].map((tier) => (
+                <div 
+                  key={tier.grade} 
+                  className={`p-4 rounded-xl border transition-all ${
+                    tier.active 
+                      ? "bg-primary/10 border-primary/50 shadow-lg shadow-primary/10" 
+                      : "bg-white/[0.01] border-white/5 opacity-60"
+                  }`}
+                >
+                  <div className="flex justify-between items-center mb-1">
+                    <span className={`font-bold ${tier.active ? "text-primary" : ""}`}>{tier.grade}</span>
+                    <Badge variant={tier.active ? "default" : "outline"}>{tier.commission}</Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{tier.requirement}</p>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
-
-      <Card className="border-primary/20 bg-primary/5 mb-8 overflow-hidden relative">
-        <div className="absolute top-0 right-0 p-8 opacity-10">
-          <Share2 className="w-24 h-24" />
-        </div>
-        <CardContent className="pt-6">
-          <h3 className="text-lg font-bold mb-4">Votre lien de parrainage</h3>
-          <div className="flex gap-2">
-            <Input 
-              readOnly 
-              value={referralLink} 
-              className="bg-background/50 border-white/10"
-            />
-            <Button onClick={copyToClipboard} className="shrink-0">
-              {copied ? <CheckCircle2 className="w-4 h-4 mr-2" /> : <Copy className="w-4 h-4 mr-2" />}
-              {copied ? "Copié" : "Copier"}
-            </Button>
-          </div>
-          <p className="mt-4 text-sm text-muted-foreground">
-            Code de parrainage : <span className="text-foreground font-mono font-bold">{user?.referralCode}</span>
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="border-white/5 bg-white/[0.02]">
-        <CardHeader>
-          <CardTitle>Mes Filleuls</CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow className="hover:bg-transparent border-white/5">
-                <TableHead>Utilisateur</TableHead>
-                <TableHead>Date d'inscription</TableHead>
-                <TableHead>Statut</TableHead>
-                <TableHead className="text-right">Commission générée</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
-                    Chargement...
-                  </TableCell>
-                </TableRow>
-              ) : referrals?.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
-                    Vous n'avez pas encore de parrainages.
-                  </TableCell>
-                </TableRow>
-              ) : referrals?.map((ref) => (
-                <TableRow key={ref.id} className="border-white/5">
-                  <TableCell className="font-medium">{ref.email.split('@')[0]}***@{ref.email.split('@')[1]}</TableCell>
-                  <TableCell>{new Date(ref.createdAt!).toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
-                      Actif
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right font-bold">$0.00</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
     </DashboardLayout>
   );
 }
