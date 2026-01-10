@@ -6,6 +6,7 @@ import { db } from "./db";
 import { machines, users } from "@shared/schema";
 import { api } from "@shared/routes";
 import { z } from "zod";
+import { eq } from "drizzle-orm";
 
 function isAdmin(req: Request, res: Response, next: NextFunction) {
   if (req.isAuthenticated() && (req.user as any).isAdmin) {
