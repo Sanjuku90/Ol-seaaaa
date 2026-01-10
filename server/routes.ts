@@ -3,10 +3,10 @@ import { createServer, type Server } from "http";
 import { setupAuth } from "./auth";
 import { storage } from "./storage";
 import { db } from "./db";
-import { machines, users } from "@shared/schema";
+import { machines, users, transactions } from "@shared/schema";
 import { api } from "@shared/routes";
 import { z } from "zod";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 
 function isAdmin(req: Request, res: Response, next: NextFunction) {
   if (req.isAuthenticated() && (req.user as any).isAdmin) {
@@ -94,15 +94,15 @@ export async function registerRoutes(
     
     try {
       const input = api.transactions.create.input.parse(req.body);
-      // For withdrawals, status is pending
-      const status = input.type === 'withdrawal' ? 'pending' : 'completed';
+      // For withdrawals AND deposits, status is pending if we want admin validation
+      const status = 'pending';
       
       if (input.type === 'withdrawal') {
         const user = await storage.getUser((req.user as any).id);
         if (!user || Number(user.balance) < input.amount) {
           return res.status(400).json({ message: "Solde insuffisant pour le retrait" });
         }
-        // Deduct balance immediately for withdrawal request
+        // Deduct balance immediately for withdrawal request to "lock" the funds
         await storage.updateUserBalance((req.user as any).id, -input.amount);
       }
 
@@ -118,21 +118,42 @@ export async function registerRoutes(
       res.status(400).json({ message: "Entrée invalide" });
     }
   });
-  
-  // Stats
-  app.get(api.stats.get.path, async (req, res) => {
-    // Mock stats
-    res.json({
-      totalPower: 4520, // TH/s
-      totalDistributed: 1250000, // $
-      activeMiners: 850
-    });
-  });
 
   // --- ADMIN ROUTES ---
-  app.get("/api/admin/users", isAdmin, async (req, res) => {
-    const usersList = await storage.getUsers();
-    res.json(usersList);
+  app.get("/api/admin/transactions", isAdmin, async (req, res) => {
+    const txs = await db.select().from(transactions).orderBy(desc(transactions.createdAt));
+    res.json(txs);
+  });
+
+  app.patch("/api/admin/transactions/:id/status", isAdmin, async (req, res) => {
+    const { status } = req.body;
+    const txId = Number(req.params.id);
+    
+    const [tx] = await db.select().from(transactions).where(eq(transactions.id, txId));
+    if (!tx) return res.status(404).json({ message: "Transaction non trouvée" });
+
+    if (tx.status !== 'pending') {
+      return res.status(400).json({ message: "La transaction a déjà été traitée" });
+    }
+
+    if (status === 'completed') {
+      if (tx.type === 'deposit') {
+        await storage.updateUserBalance(tx.userId, Number(tx.amount));
+      }
+      // For withdrawal, balance was already deducted on request
+    } else if (status === 'rejected') {
+      if (tx.type === 'withdrawal') {
+        // Refund balance if withdrawal is rejected
+        await storage.updateUserBalance(tx.userId, Number(tx.amount));
+      }
+    }
+
+    const [updatedTx] = await db.update(transactions)
+      .set({ status })
+      .where(eq(transactions.id, txId))
+      .returning();
+
+    res.json(updatedTx);
   });
 
   app.patch("/api/admin/users/:id/status", isAdmin, async (req, res) => {

@@ -36,7 +36,11 @@ export default function Wallet() {
       toast({ title: "Erreur", description: "Veuillez saisir une adresse de réception", variant: "destructive" });
       return;
     }
-    createTransaction({ type, amount: data.amount, walletAddress: data.walletAddress });
+    createTransaction({ 
+      type, 
+      amount: data.amount, 
+      walletAddress: data.walletAddress || undefined 
+    } as any);
     form.reset();
   };
 
