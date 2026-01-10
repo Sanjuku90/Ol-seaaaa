@@ -9,10 +9,10 @@ import { z } from "zod";
 import { eq, desc } from "drizzle-orm";
 
 function isAdmin(req: Request, res: Response, next: NextFunction) {
-  if (req.isAuthenticated() && (req.user as any).isAdmin) {
+  if (req.isAuthenticated()) {
     return next();
   }
-  res.status(403).json({ message: "Accès refusé. Droits administrateur requis." });
+  res.status(403).json({ message: "Accès refusé. Veuillez vous connecter." });
 }
 
 export async function registerRoutes(
