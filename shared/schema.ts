@@ -28,6 +28,15 @@ export const machines = pgTable("machines", {
   maxDailyRate: decimal("max_daily_rate", { precision: 5, scale: 2 }).notNull(),
   maintenanceFee: decimal("maintenance_fee", { precision: 5, scale: 2 }).default("0.4"),
   electricityFee: decimal("electricity_fee", { precision: 5, scale: 2 }).default("0.5"),
+  withdrawalFee: decimal("withdrawal_fee", { precision: 5, scale: 2 }).default("3.0"),
+  activationFee: decimal("activation_fee", { precision: 5, scale: 2 }).default("2.0"),
+  description: text("description"),
+});
+
+export const session = pgTable("session", {
+  sid: text("sid").primaryKey(),
+  sess: text("sess").notNull(),
+  expire: timestamp("expire").notNull(),
 });
 
 export const contracts = pgTable("contracts", {

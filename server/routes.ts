@@ -123,11 +123,66 @@ async function seedDatabase() {
   const existingMachines = await storage.getMachines();
   if (existingMachines.length === 0) {
     await db.insert(machines).values([
-      { name: "Starter", minDeposit: 20, durationDays: 30, dailyRate: "2.0", maxDailyRate: "2.5", maintenanceFee: "0.4", electricityFee: "0.5" },
-      { name: "Standard", minDeposit: 50, durationDays: 60, dailyRate: "2.5", maxDailyRate: "3.0", maintenanceFee: "0.4", electricityFee: "0.5" },
-      { name: "Pro", minDeposit: 200, durationDays: 90, dailyRate: "3.0", maxDailyRate: "3.5", maintenanceFee: "0.4", electricityFee: "0.5" },
-      { name: "Elite", minDeposit: 500, durationDays: 180, dailyRate: "3.5", maxDailyRate: "4.0", maintenanceFee: "0.4", electricityFee: "0.5" },
-      { name: "VIP", minDeposit: 1000, durationDays: 30, dailyRate: "4.0", maxDailyRate: "4.5", maintenanceFee: "0.4", electricityFee: "0.5" },
+      { 
+        name: "Starter", 
+        minDeposit: 20, 
+        durationDays: 30, 
+        dailyRate: "2.0", 
+        maxDailyRate: "2.5", 
+        maintenanceFee: "0.3", 
+        electricityFee: "0.4",
+        withdrawalFee: "3.0",
+        activationFee: "2.0",
+        description: "Pour débutants - Test de la plateforme, petit budget."
+      },
+      { 
+        name: "Standard", 
+        minDeposit: 50, 
+        durationDays: 60, 
+        dailyRate: "2.5", 
+        maxDailyRate: "3.0", 
+        maintenanceFee: "0.35", 
+        electricityFee: "0.45",
+        withdrawalFee: "2.5",
+        activationFee: "2.0",
+        description: "Pour utilisateurs réguliers - Bon équilibre rendement / durée."
+      },
+      { 
+        name: "Pro", 
+        minDeposit: 200, 
+        durationDays: 90, 
+        dailyRate: "3.0", 
+        maxDailyRate: "3.5", 
+        maintenanceFee: "0.4", 
+        electricityFee: "0.5",
+        withdrawalFee: "2.0",
+        activationFee: "2.0",
+        description: "Pour investisseurs sérieux - Stratégie de réinvestissement."
+      },
+      { 
+        name: "Elite", 
+        minDeposit: 500, 
+        durationDays: 180, 
+        dailyRate: "3.5", 
+        maxDailyRate: "4.0", 
+        maintenanceFee: "0.45", 
+        electricityFee: "0.55",
+        withdrawalFee: "1.5",
+        activationFee: "2.0",
+        description: "Pour gros capitaux - Investisseurs long terme, retraits fréquents."
+      },
+      { 
+        name: "VIP", 
+        minDeposit: 1000, 
+        durationDays: 30, 
+        dailyRate: "4.0", 
+        maxDailyRate: "4.5", 
+        maintenanceFee: "0.5", 
+        electricityFee: "0.6",
+        withdrawalFee: "1.0",
+        activationFee: "2.0",
+        description: "Haut rendement – Places limitées, ROI rapide."
+      },
     ]);
   }
 }

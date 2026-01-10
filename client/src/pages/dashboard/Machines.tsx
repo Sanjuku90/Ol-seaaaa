@@ -38,8 +38,8 @@ export default function Machines() {
   return (
     <DashboardLayout>
       <div className="mb-8">
-        <h1 className="text-3xl font-display font-bold">Buy Machines</h1>
-        <p className="text-muted-foreground">Start a new mining contract.</p>
+        <h1 className="text-3xl font-display font-bold">Catalogue des Machines</h1>
+        <p className="text-muted-foreground">Choisissez une machine pour lancer votre contrat de minage.</p>
       </div>
 
       {isLoading ? (
@@ -64,16 +64,32 @@ export default function Machines() {
                 </div>
                 <div className="space-y-2 text-sm text-muted-foreground">
                   <div className="flex justify-between">
-                    <span>Duration</span>
-                    <span className="text-foreground">{machine.durationDays} Days</span>
+                    <span>Durée</span>
+                    <span className="text-foreground">{machine.durationDays} Jours</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Hardware</span>
-                    <span className="text-foreground">ASIC Pro</span>
+                    <span>Description</span>
+                    <span className="text-foreground text-right max-w-[150px]">{machine.description || "ASIC Pro"}</span>
+                  </div>
+                  <div className="flex justify-between border-t border-white/5 pt-2">
+                    <span>Frais Électricité</span>
+                    <span className="text-foreground">{machine.electricityFee}% / jour</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Est. Total Return</span>
-                    <span className="text-emerald-400">
+                    <span>Frais Maintenance</span>
+                    <span className="text-foreground">{machine.maintenanceFee}% / jour</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Frais Retrait</span>
+                    <span className="text-foreground">{machine.withdrawalFee}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Activation</span>
+                    <span className="text-foreground">{machine.activationFee}%</span>
+                  </div>
+                  <div className="flex justify-between border-t border-white/5 pt-2">
+                    <span>Est. Retour Total</span>
+                    <span className="text-emerald-400 font-bold">
                       {((Number(machine.dailyRate) * machine.durationDays)).toFixed(0)}%
                     </span>
                   </div>
@@ -94,9 +110,9 @@ export default function Machines() {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Purchase {selectedMachine?.name}</DialogTitle>
+            <DialogTitle>Acheter {selectedMachine?.name}</DialogTitle>
             <DialogDescription>
-              Enter the amount you wish to invest. Minimum is ${selectedMachine?.minDeposit}.
+              Entrez le montant que vous souhaitez investir. Le minimum est de ${selectedMachine?.minDeposit}.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
