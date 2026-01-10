@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
+import { useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
@@ -77,6 +79,29 @@ function Router() {
 }
 
 function App() {
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (!user) return;
+
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const socket = new WebSocket(`${protocol}//${window.location.host}/ws`);
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.payload?.userId === user.id) {
+        toast({
+          title: data.type === "PROFIT_GENERATED" ? "Profit Généré" : "Transaction Mise à Jour",
+          description: data.payload.message,
+          variant: data.type === "PROFIT_GENERATED" ? "default" : (data.payload.status === "completed" ? "default" : "destructive"),
+        });
+      }
+    };
+
+    return () => socket.close();
+  }, [user, toast]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>

@@ -7,6 +7,19 @@ import { machines, users, transactions } from "@shared/schema";
 import { api } from "@shared/routes";
 import { z } from "zod";
 import { eq, desc } from "drizzle-orm";
+import { WebSocket, WebSocketServer } from "ws";
+
+let wss: WebSocketServer;
+
+function broadcast(data: any) {
+  if (!wss) return;
+  const message = JSON.stringify(data);
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
+}
 
 function isAdmin(req: Request, res: Response, next: NextFunction) {
   if (req.isAuthenticated()) {
@@ -153,6 +166,21 @@ export async function registerRoutes(
       .where(eq(transactions.id, txId))
       .returning();
 
+    // Broadcast update via WebSocket
+    if (updatedTx) {
+      const typeLabel = tx.type === 'deposit' ? 'Dépôt' : 'Retrait';
+      const statusLabel = status === 'completed' ? 'validé' : 'rejeté';
+      broadcast({
+        type: "TRANSACTION_UPDATE",
+        payload: {
+          id: txId,
+          userId: tx.userId,
+          message: `${typeLabel} de ${tx.amount}$ ${statusLabel}`,
+          status
+        }
+      });
+    }
+
     res.json(updatedTx);
   });
 
@@ -183,6 +211,35 @@ export async function registerRoutes(
 
   // Seed data function
   await seedDatabase();
+
+  // Setup WebSocket Server
+  wss = new WebSocketServer({ server: httpServer, path: "/ws" });
+
+  wss.on("connection", (ws) => {
+    console.log("WebSocket client connected");
+  });
+
+  // Background profit generator
+  setInterval(async () => {
+    const activeContracts = await db.select().from(require("@shared/schema").contracts).where(eq(require("@shared/schema").contracts.status, "active"));
+    for (const contract of activeContracts) {
+      const machine = await storage.getMachine(contract.machineId);
+      if (machine) {
+        const profit = (Number(contract.amount) * Number(machine.dailyRate)) / 100 / (24 * 60); // Simple per-minute profit
+        if (profit > 0) {
+          await storage.updateUserBalance(contract.userId, profit);
+          broadcast({
+            type: "PROFIT_GENERATED",
+            payload: {
+              userId: contract.userId,
+              amount: profit.toFixed(4),
+              message: `Profit de ${profit.toFixed(4)}$ généré`
+            }
+          });
+        }
+      }
+    }
+  }, 60000); // Every minute
 
   return httpServer;
 }
