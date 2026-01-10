@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { useMachines } from "@/hooks/use-platform";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
@@ -44,27 +45,27 @@ export default function Home() {
             </div>
             
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-foreground mb-6 leading-tight">
-              Cloud Mining <br />
+              Minez le Futur avec <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300 text-glow">
-                Simplified & Profitable
+                BlockMint
               </span>
             </h1>
             
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground mb-10">
-              Start mining Bitcoin and other cryptocurrencies without buying hardware. 
-              Daily payouts, transparent fees, and enterprise-grade security.
+              Louez ou achetez une machine de minage et commencez à générer des gains chaque jour ! 
+              Solutions flexibles avec progression de retrait ou achat permanent.
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/register">
                 <Button size="lg" className="w-full sm:w-auto h-12 px-8 text-base shadow-xl shadow-primary/20">
-                  Start Mining Now
+                  Commencer Maintenant
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
-              <Link href="/#calculator">
+              <Link href="/dashboard/machines">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto h-12 px-8 text-base bg-white/5 border-white/10 hover:bg-white/10">
-                  Calculate Profit
+                  Voir le Catalogue
                 </Button>
               </Link>
             </div>
@@ -197,32 +198,32 @@ export default function Home() {
       {/* Features Grid */}
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {[
-              { 
-                icon: Zap, 
-                title: "Instant Payouts", 
-                desc: "Withdraw your earnings instantly once you reach the minimum threshold." 
-              },
-              { 
-                icon: ShieldCheck, 
-                title: "Secure Platform", 
-                desc: "We use bank-grade encryption and cold storage to keep your assets safe." 
-              },
-              { 
-                icon: CheckCircle2, 
-                title: "Legal Compliance", 
-                desc: "Fully registered and compliant company operating with transparency." 
-              }
-            ].map((feature, i) => (
-              <div key={i} className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mb-6">
-                  <feature.icon className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{feature.desc}</p>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <Card className="border-white/5 bg-white/[0.02] p-8">
+              <Zap className="w-12 h-12 text-primary mb-6" />
+              <h3 className="text-2xl font-display font-bold mb-4">Mode Location</h3>
+              <p className="text-muted-foreground mb-6">
+                Payez l'abonnement mensuel et un dépôt minimum de 30 $ pour activer votre machine. 
+                La barre de progression vous indique quand vous pouvez retirer avec des frais réduits (4%).
+              </p>
+              <ul className="space-y-3 text-sm">
+                <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> Frais électricité & maintenance : $3/mois</li>
+                <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> Gains générés quotidiennement</li>
+              </ul>
+            </Card>
+
+            <Card className="border-white/5 bg-white/[0.02] p-8">
+              <ShieldCheck className="w-12 h-12 text-primary mb-6" />
+              <h3 className="text-2xl font-display font-bold mb-4">Mode Achat</h3>
+              <p className="text-muted-foreground mb-6">
+                Paiement unique pour une machine permanente avec un rendement supérieur. 
+                Aucun autre dépôt requis. Retraits simples à 4%.
+              </p>
+              <ul className="space-y-3 text-sm">
+                <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> Rendement élevé : 2.8% à 4.3%</li>
+                <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> Machine permanente</li>
+              </ul>
+            </Card>
           </div>
         </div>
       </section>
