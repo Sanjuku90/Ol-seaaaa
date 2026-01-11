@@ -35,6 +35,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   if (user.isAdmin) {
     navigation.push({ name: 'Admin Users', href: '/admin/users', icon: Settings });
+    navigation.push({ name: 'Admin Support', href: '/admin/support', icon: MessageSquare });
   }
 
   const SidebarContent = () => (

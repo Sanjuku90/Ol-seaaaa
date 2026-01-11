@@ -18,6 +18,7 @@ import Machines from "@/pages/dashboard/Machines";
 import Affiliate from "@/pages/dashboard/Affiliate";
 import Support from "@/pages/dashboard/Support";
 import AdminUsers from "@/pages/admin/Users";
+import AdminSupport from "@/pages/admin/Support";
 
 function ProtectedRoute({ component: Component, adminOnly = false }: { component: React.ComponentType, adminOnly?: boolean }) {
   const { user, isLoading } = useAuth();
@@ -74,6 +75,9 @@ function Router() {
       </Route>
       <Route path="/admin/users">
         {() => <ProtectedRoute component={AdminUsers} />}
+      </Route>
+      <Route path="/admin/support">
+        {() => <ProtectedRoute component={AdminSupport} />}
       </Route>
       
       {/* Fallback */}

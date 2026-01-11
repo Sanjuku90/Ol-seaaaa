@@ -180,6 +180,11 @@ export async function registerRoutes(
   });
 
   // --- ADMIN ROUTES ---
+  app.get("/api/admin/users", isAdmin, async (req, res) => {
+    const usersList = await storage.getUsers();
+    res.json(usersList);
+  });
+
   app.get("/api/admin/transactions", isAdmin, async (req, res) => {
     const txs = await db.select().from(transactions).orderBy(desc(transactions.createdAt));
     res.json(txs);
