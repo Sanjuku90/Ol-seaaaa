@@ -83,15 +83,34 @@ export function setupAuth(app: Express) {
         // Send Welcome Email
         sendEmail(
           user.email,
-          "Bienvenue chez BlockMint !",
-          `Bonjour, Bienvenue sur BlockMint, votre plateforme de cloud mining. Votre compte est maintenant actif.`,
+          "Bienvenue chez BlockMint - Votre Aventure de Minage Commence !",
+          `Bonjour, Bienvenue sur BlockMint, votre plateforme de cloud mining sécurisée. Commencez à investir dès maintenant pour générer des revenus passifs.`,
           "Bienvenue chez BlockMint",
-          `<p>Bonjour,</p>
-           <p>Nous sommes ravis de vous compter parmi nos nouveaux investisseurs.</p>
-           <p>Votre compte est maintenant <span class="highlight">actif</span> et prêt à l'emploi. Commencez dès maintenant à miner vos premières cryptomonnaies !</p>
-           <div style="text-align: center;">
-             <a href="https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co" class="button">Accéder à mon Dashboard</a>
-           </div>`
+          `<p>Bonjour et bienvenue dans la communauté <strong>BlockMint</strong> !</p>
+           
+           <p>Nous sommes ravis de vous accompagner dans votre aventure de minage de cryptomonnaies. BlockMint est conçu pour rendre l'investissement accessible, transparent et rentable pour tous.</p>
+           
+           <div class="info-card">
+             <h3 style="margin-top: 0; color: #10b981;">Pourquoi commencer aujourd'hui ?</h3>
+             <ul style="padding-left: 20px; margin-bottom: 0;">
+               <li><strong>Revenus Passifs :</strong> Vos machines minent 24h/24, 7j/7.</li>
+               <li><strong>Flexibilité :</strong> Choisissez entre la location (Rent) ou l'achat (Buy) selon votre budget.</li>
+               <li><strong>Simplicité :</strong> Pas besoin de matériel technique, nous gérons tout pour vous.</li>
+             </ul>
+           </div>
+
+           <p><strong>Comment débuter ?</strong></p>
+           <ol>
+             <li>Effectuez un dépôt sur votre <span class="highlight">Portefeuille</span>.</li>
+             <li>Choisissez votre machine dans le <span class="highlight">Catalogue</span>.</li>
+             <li>Activez votre contrat et regardez vos profits s'accumuler en temps réel !</li>
+           </ol>
+
+           <div style="text-align: center; margin-top: 30px;">
+             <a href="https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/dashboard/machines" class="button">Découvrir les Machines</a>
+           </div>
+           
+           <p style="margin-top: 30px; font-size: 14px; border-top: 1px solid #eee; pt-15px;">Besoin d'aide ? Notre support est à votre disposition 24/7 via votre tableau de bord.</p>`
         );
         
         res.status(201).json(user);
