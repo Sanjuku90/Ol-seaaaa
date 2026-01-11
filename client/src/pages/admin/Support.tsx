@@ -24,10 +24,10 @@ export default function AdminSupport() {
 
   const { data: allMessages, isLoading } = useQuery<SupportMessage[]>({
     queryKey: ["/api/admin/support"],
-    refetchInterval: 3000,
+    refetchInterval: 2000,
   });
 
-  const chatMessages = allMessages?.filter(m => m.userId === selectedUserId) || [];
+  const chatMessages = allMessages?.filter(m => Number(m.userId) === Number(selectedUserId)) || [];
 
   const sendMutation = useMutation({
     mutationFn: async (text: string) => {
@@ -55,7 +55,7 @@ export default function AdminSupport() {
     sendMutation.mutate(message);
   };
 
-  const usersWithMessages = Array.from(new Set(allMessages?.map(m => m.userId)));
+  const usersWithMessages = Array.from(new Set(allMessages?.map(m => Number(m.userId))));
 
   return (
     <DashboardLayout>
@@ -72,8 +72,9 @@ export default function AdminSupport() {
           <ScrollArea className="flex-1">
             <div className="p-2 space-y-1">
               {usersWithMessages.map(uid => {
-                const u = users?.find(user => user.id === uid);
-                const lastMsg = allMessages?.filter(m => m.userId === uid).pop();
+                const u = users?.find(user => Number(user.id) === Number(uid));
+                const userMessages = allMessages?.filter(m => Number(m.userId) === Number(uid));
+                const lastMsg = userMessages?.[userMessages.length - 1];
                 return (
                   <button
                     key={uid}

@@ -311,6 +311,7 @@ export async function registerRoutes(
   app.get("/api/support", async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     const messages = await storage.getSupportMessages((req.user as any).id);
+    console.log(`[support] fetched ${messages.length} msgs for user ${(req.user as any).id}`);
     res.json(messages);
   });
 
@@ -322,6 +323,7 @@ export async function registerRoutes(
         message: req.body.message,
         isAdmin: false
       });
+      console.log(`[support] new msg from user ${(req.user as any).id}`);
       res.status(201).json(msg);
     } catch (e) {
       res.status(400).json({ message: "Erreur" });
@@ -330,19 +332,22 @@ export async function registerRoutes(
 
   app.get("/api/admin/support", isAdmin, async (req, res) => {
     const messages = await storage.getAllSupportMessages();
+    console.log(`[support-admin] fetched ${messages.length} total msgs`);
     res.json(messages);
   });
 
   app.post("/api/admin/support", isAdmin, async (req, res) => {
     try {
       const msg = await storage.createSupportMessage({
-        userId: req.body.userId,
+        userId: Number(req.body.userId),
         adminId: (req.user as any).id,
         message: req.body.message,
         isAdmin: true
       });
+      console.log(`[support-admin] reply to user ${req.body.userId}`);
       res.status(201).json(msg);
     } catch (e) {
+      console.error("[support-admin] error replying:", e);
       res.status(400).json({ message: "Erreur" });
     }
   });

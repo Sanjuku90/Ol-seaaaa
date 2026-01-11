@@ -18,7 +18,7 @@ export default function Support() {
 
   const { data: messages, isLoading } = useQuery<SupportMessage[]>({
     queryKey: ["/api/support"],
-    refetchInterval: 3000,
+    refetchInterval: 2000,
   });
 
   const sendMutation = useMutation({
