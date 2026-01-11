@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -17,17 +17,39 @@ import {
 import { type Contract, type Machine, type User } from "@shared/schema";
 import { format } from "date-fns";
 import { Link } from "wouter";
+import { useEffect } from "react";
 
 export default function Overview() {
-  const { data: user, refetch: refetchUser } = useQuery<User>({ 
+  const queryClient = useQueryClient();
+  const { data: user } = useQuery<User>({ 
     queryKey: ["/api/user"],
     refetchInterval: 5000 
   });
-  const { data: contracts, refetch: refetchContracts } = useQuery<Contract[]>({ 
+  const { data: contracts } = useQuery<Contract[]>({ 
     queryKey: ["/api/contracts"],
     refetchInterval: 5000
   });
   const { data: machines } = useQuery<Machine[]>({ queryKey: ["/api/machines"] });
+
+  useEffect(() => {
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    const socket = new WebSocket(wsUrl);
+
+    socket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "PROFIT_GENERATED" || data.type === "BALANCE_UPDATE") {
+          queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
+        }
+      } catch (e) {
+        console.error("WebSocket message error:", e);
+      }
+    };
+
+    return () => socket.close();
+  }, [queryClient]);
 
   const activeContracts = contracts?.filter(c => c.status === "active") || [];
   

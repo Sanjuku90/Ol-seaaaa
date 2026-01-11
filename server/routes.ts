@@ -298,6 +298,12 @@ export async function registerRoutes(
         const profit = (Number(contract.amount) * Number(machine.dailyRate)) / 100 / (24 * 60); // Simple per-minute profit
         if (profit > 0) {
           await storage.updateUserBalance(contract.userId, profit);
+          
+          // Update accumulated rewards in contract
+          await db.update(contracts)
+            .set({ accumulatedRewards: sql`ROUND((${contracts.accumulatedRewards} + ${profit.toString()})::numeric, 4)` })
+            .where(eq(contracts.id, contract.id));
+
           broadcast({
             type: "PROFIT_GENERATED",
             payload: {
