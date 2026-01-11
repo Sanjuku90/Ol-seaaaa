@@ -8,6 +8,7 @@ import { api } from "@shared/routes";
 import { z } from "zod";
 import { eq, desc } from "drizzle-orm";
 import { WebSocket, WebSocketServer } from "ws";
+import { sendEmail } from "./utils/email";
 
 let wss: WebSocketServer;
 
@@ -179,6 +180,20 @@ export async function registerRoutes(
           status
         }
       });
+
+      // Send Email Notification
+      const user = await storage.getUser(tx.userId);
+      if (user && user.email) {
+        await sendEmail(
+          user.email,
+          `Mise à jour de votre transaction - BlockMint`,
+          `Votre ${typeLabel} de ${tx.amount}$ a été ${statusLabel}.`,
+          `<h3>Mise à jour de votre transaction</h3>
+           <p>Bonjour,</p>
+           <p>Votre <strong>${typeLabel}</strong> de <strong>${tx.amount}$</strong> a été <strong>${statusLabel}</strong>.</p>
+           <p>L'équipe BlockMint</p>`
+        );
+      }
     }
 
     res.json(updatedTx);

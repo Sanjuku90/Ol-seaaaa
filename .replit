@@ -43,3 +43,9 @@ waitForPort = 5000
 
 [agent]
 expertMode = true
+
+[userenv]
+
+[userenv.shared]
+EMAIL_USER = "trackitnoww@gmail.com"
+EMAIL_PASS = "dxjp wcrk jhvu xufo"
