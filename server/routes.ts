@@ -39,7 +39,12 @@ export async function registerRoutes(
   // Machines
   app.get(api.machines.list.path, async (req, res) => {
     const machinesList = await storage.getMachines();
-    res.json(machinesList);
+    const sortedMachines = [...machinesList].sort((a, b) => {
+      const priceA = a.type === "rent" ? Number(a.rentalPrice || 0) : Number(a.buyPrice || 0);
+      const priceB = b.type === "rent" ? Number(b.rentalPrice || 0) : Number(b.buyPrice || 0);
+      return priceA - priceB;
+    });
+    res.json(sortedMachines);
   });
 
   // Contracts
