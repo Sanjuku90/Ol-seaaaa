@@ -35,6 +35,7 @@ export interface IStorage {
   getSupportMessages(userId: number): Promise<SupportMessage[]>;
   getAllSupportMessages(): Promise<SupportMessage[]>;
   createSupportMessage(message: InsertSupportMessage): Promise<SupportMessage>;
+  closeSupportConversation(userId: number): Promise<void>;
 
   sessionStore: session.Store;
 }
@@ -176,6 +177,12 @@ export class DatabaseStorage implements IStorage {
   async createSupportMessage(message: InsertSupportMessage): Promise<SupportMessage> {
     const [msg] = await db.insert(supportMessages).values(message).returning();
     return msg;
+  }
+
+  async closeSupportConversation(userId: number): Promise<void> {
+    await db.update(supportMessages)
+      .set({ status: "closed" })
+      .where(eq(supportMessages.userId, userId));
   }
 }
 

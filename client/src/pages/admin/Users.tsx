@@ -35,7 +35,9 @@ import {
   History,
   MessageSquare,
   Send,
-  User as UserIcon
+  User as UserIcon,
+  LogOut as LeaveIcon,
+  Check
 } from "lucide-react";
 import { type User, type Transaction, type SupportMessage } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -132,6 +134,17 @@ export default function AdminUsers() {
       setSupportMessage("");
       queryClient.invalidateQueries({ queryKey: ["/api/admin/support"] });
     },
+  });
+
+  const closeSupportMutation = useMutation({
+    mutationFn: async (userId: number) => {
+      await apiRequest("POST", "/api/admin/support/close", { userId });
+    },
+    onSuccess: () => {
+      setSelectedSupportUserId(null);
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/support"] });
+      toast({ title: "Conversation terminée", description: "La discussion a été marquée comme fermée." });
+    }
   });
 
   const filteredUsers = users?.filter(u => 
@@ -365,12 +378,14 @@ export default function AdminUsers() {
                     const u = users?.find(user => Number(user.id) === Number(uid));
                     const userMessages = allMessages?.filter(m => Number(m.userId) === Number(uid));
                     const lastMsg = userMessages?.[userMessages.length - 1];
+                    const isClosed = lastMsg?.status === "closed";
+                    if (isClosed && selectedSupportUserId !== uid) return null;
                     return (
                       <button
                         key={uid}
                         onClick={() => setSelectedSupportUserId(uid)}
                         className={cn(
-                          "w-full text-left p-3 rounded-lg transition-colors flex items-center gap-3",
+                          "w-full text-left p-3 rounded-lg transition-colors flex items-center gap-3 relative",
                           selectedSupportUserId === uid ? "bg-primary/20 border border-primary/20" : "hover:bg-white/5"
                         )}
                       >
@@ -381,6 +396,9 @@ export default function AdminUsers() {
                           <p className="text-sm font-medium truncate">{u?.email || `User #${uid}`}</p>
                           <p className="text-xs text-muted-foreground truncate">{lastMsg?.message}</p>
                         </div>
+                        {isClosed && (
+                          <Badge variant="outline" className="absolute top-2 right-2 text-[8px] h-4 px-1 opacity-50">Fermé</Badge>
+                        )}
                       </button>
                     );
                   })}
@@ -393,11 +411,32 @@ export default function AdminUsers() {
 
             <div className="lg:col-span-3 flex flex-col gap-4">
               <Card className="flex-1 flex flex-col overflow-hidden border-white/5 bg-card/50">
-                <CardHeader className="border-b border-white/5">
+                <CardHeader className="border-b border-white/5 flex flex-row items-center justify-between">
                   <CardTitle className="text-sm font-medium flex items-center gap-2">
                     <MessageSquare className="w-4 h-4 text-primary" />
                     {selectedSupportUserId ? `Chat avec ${users?.find(u => Number(u.id) === Number(selectedSupportUserId))?.email}` : "Sélectionnez une conversation"}
                   </CardTitle>
+                  {selectedSupportUserId && (
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 text-xs gap-1 text-muted-foreground hover:text-foreground"
+                        onClick={() => setSelectedSupportUserId(null)}
+                      >
+                        <LeaveIcon className="w-3 h-3" /> Quitter
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 text-xs gap-1 text-emerald-500 hover:text-emerald-400"
+                        onClick={() => closeSupportMutation.mutate(selectedSupportUserId)}
+                        disabled={closeSupportMutation.isPending}
+                      >
+                        <Check className="w-3 h-3" /> Terminer
+                      </Button>
+                    </div>
+                  )}
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col p-0">
                   <ScrollArea className="flex-1 p-4" ref={scrollRef}>

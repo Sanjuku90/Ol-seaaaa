@@ -352,6 +352,16 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/admin/support/close", isAdmin, async (req, res) => {
+    try {
+      const { userId } = req.body;
+      await storage.closeSupportConversation(Number(userId));
+      res.sendStatus(200);
+    } catch (e) {
+      res.status(400).json({ message: "Erreur lors de la fermeture" });
+    }
+  });
+
   // Seed data function
   await seedDatabase();
 

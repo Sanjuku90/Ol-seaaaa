@@ -11,6 +11,7 @@ export const supportMessages = pgTable("support_messages", {
   adminId: integer("admin_id"),
   message: text("message").notNull(),
   isAdmin: boolean("is_admin").default(false).notNull(),
+  status: text("status").default("active").notNull(), // active, closed
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
