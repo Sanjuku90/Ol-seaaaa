@@ -140,7 +140,7 @@ export default function Overview() {
             <Wallet className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold font-display">${Number(user?.balance || 0).toFixed(2)}</div>
+            <div className="text-2xl font-bold font-display">${Number(user?.balance || 0).toFixed(4)}</div>
             <p className="text-xs text-muted-foreground mt-1">
               Prêt pour investissement
             </p>

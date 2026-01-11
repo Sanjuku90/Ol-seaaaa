@@ -81,7 +81,7 @@ export default function Wallet() {
         <Card className="border-white/5 bg-gradient-to-br from-primary/20 to-card">
           <CardHeader>
             <CardTitle className="text-muted-foreground text-sm font-medium">Solde Disponible</CardTitle>
-            <div className="text-4xl font-bold font-display mt-2">${Number(user?.balance).toFixed(2)}</div>
+            <div className="text-4xl font-bold font-display mt-2">${Number(user?.balance).toFixed(4)}</div>
           </CardHeader>
         </Card>
 
