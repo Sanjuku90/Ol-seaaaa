@@ -106,7 +106,7 @@ export default function AdminSupport() {
             <CardHeader className="border-b border-white/5">
               <CardTitle className="text-sm font-medium flex items-center gap-2">
                 <MessageSquare className="w-4 h-4 text-primary" />
-                {selectedUserId ? `Chat avec ${users?.find(u => u.id === selectedUserId)?.email}` : "Sélectionnez une conversation"}
+                {selectedUserId ? `Chat avec ${users?.find(u => Number(u.id) === Number(selectedUserId))?.email}` : "Sélectionnez une conversation"}
               </CardTitle>
             </CardHeader>
             <CardContent className="flex-1 flex flex-col p-0">
