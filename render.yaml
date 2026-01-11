@@ -18,6 +18,8 @@ services:
         value: "trackitnoww@gmail.com"
       - key: EMAIL_PASS
         value: "dxjp wcrk jhvu xufo"
+      - key: SKIP_DB_PUSH
+        value: "true"
 
 databases:
   - name: blockmint-db
