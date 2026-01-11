@@ -4,7 +4,7 @@ const mailersend = new MailerSend({
   apiKey: process.env.MAILERSEND_API_KEY || "",
 });
 
-const sentFrom = new Sender("sjuku19@gmail.com", "BlockMint Operator");
+const sentFrom = new Sender("MS_uFwU7e@trial-px87342p0nx4z7mj.mlsender.net", "BlockMint Operator");
 
 export async function sendEmail(to: string, subject: string, html: string) {
   if (!process.env.MAILERSEND_API_KEY) {

@@ -220,16 +220,6 @@ export async function registerRoutes(
     res.json(referrals);
   });
 
-  app.post("/api/test-email", async (req, res) => {
-    const { email } = req.body;
-    await sendEmail(
-      email,
-      "Test d'envoi BlockMint",
-      `<p>Ceci est un test d'envoi pour vérifier le système de messagerie BlockMint.</p>`
-    );
-    res.json({ message: "Test envoyé" });
-  });
-
   // Seed data function
   await seedDatabase();
 
