@@ -69,9 +69,14 @@ export default function Machines() {
 
   const handlePurchase = () => {
     if (!selectedMachine) return;
+    
+    // For "buy" type machines, amount is 0 in the contract but buyPrice is deducted
+    // For "rent" type, amount is the user's chosen deposit
+    const purchaseAmount = selectedMachine.type === "buy" ? 0 : Number(amount);
+    
     purchaseMutation.mutate({
       machineId: selectedMachine.id,
-      amount: Number(amount),
+      amount: purchaseAmount,
       autoReinvest: false
     });
   };

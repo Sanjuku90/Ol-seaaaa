@@ -289,33 +289,37 @@ export async function registerRoutes(
     console.log("WebSocket client connected");
   });
 
-  // Background profit generator
-  setInterval(async () => {
-    const activeContracts = await db.select().from(contracts).where(eq(contracts.status, "active"));
-    for (const contract of activeContracts) {
-      const machine = await storage.getMachine(contract.machineId);
-      if (machine) {
-        const profit = (Number(contract.amount) * Number(machine.dailyRate)) / 100 / (24 * 60); // Simple per-minute profit
-        if (profit > 0) {
-          await storage.updateUserBalance(contract.userId, profit);
-          
-          // Update accumulated rewards in contract
-          await db.update(contracts)
-            .set({ accumulatedRewards: sql`ROUND((${contracts.accumulatedRewards} + ${profit.toString()})::numeric, 4)` })
-            .where(eq(contracts.id, contract.id));
+    // Background profit generator
+    setInterval(async () => {
+      const activeContracts = await db.select().from(contracts).where(eq(contracts.status, "active"));
+      for (const contract of activeContracts) {
+        const machine = await storage.getMachine(contract.machineId);
+        if (machine) {
+          // Calculate 1 minute of profit based on daily rate
+          const dailyProfit = (Number(contract.amount || 0) * Number(machine.dailyRate)) / 100;
+          const profit = dailyProfit / (24 * 60); 
 
-          broadcast({
-            type: "PROFIT_GENERATED",
-            payload: {
-              userId: contract.userId,
-              amount: profit.toFixed(4),
-              message: `Profit de ${profit.toFixed(4)}$ généré`
-            }
-          });
+          if (profit > 0) {
+            // Update user global balance
+            await storage.updateUserBalance(contract.userId, profit);
+            
+            // Update accumulated rewards in contract for progress bar tracking
+            await db.update(contracts)
+              .set({ accumulatedRewards: sql`ROUND((${contracts.accumulatedRewards} + ${profit.toString()})::numeric, 4)` })
+              .where(eq(contracts.id, contract.id));
+
+            broadcast({
+              type: "PROFIT_GENERATED",
+              payload: {
+                userId: contract.userId,
+                amount: profit.toFixed(4),
+                message: `Profit de ${profit.toFixed(4)}$ généré`
+              }
+            });
+          }
         }
       }
-    }
-  }, 60000); // Every minute
+    }, 10000); // Check every 10 seconds for more visible progress
 
   return httpServer;
 }
