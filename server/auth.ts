@@ -5,7 +5,6 @@ import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
-import { sendEmail } from "./email";
 import { User } from "@shared/schema";
 
 const scryptAsync = promisify(scrypt);
@@ -69,13 +68,6 @@ export function setupAuth(app: Express) {
         ...req.body,
         password: hashedPassword,
       });
-
-      // Send welcome email
-      await sendEmail(
-        user.email,
-        "Bienvenue chez BlockMint !",
-        `<p>Bonjour,</p><p>Bienvenue sur BlockMint ! Votre compte a été créé avec succès.</p><p>Vous pouvez maintenant commencer à investir dans nos machines de minage.</p>`
-      );
 
       req.login(user, (err) => {
         if (err) return next(err);

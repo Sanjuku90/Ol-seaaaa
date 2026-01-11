@@ -3,12 +3,11 @@ import { createServer, type Server } from "http";
 import { setupAuth } from "./auth";
 import { storage } from "./storage";
 import { db } from "./db";
-import { machines, users, transactions, contracts as contractsTable } from "@shared/schema";
+import { machines, users, transactions } from "@shared/schema";
 import { api } from "@shared/routes";
 import { z } from "zod";
 import { eq, desc } from "drizzle-orm";
 import { WebSocket, WebSocketServer } from "ws";
-import { sendEmail } from "./email";
 
 let wss: WebSocketServer;
 
@@ -180,16 +179,6 @@ export async function registerRoutes(
           status
         }
       });
-
-      // Send email notification
-      const user = await storage.getUser(tx.userId);
-      if (user) {
-        await sendEmail(
-          user.email,
-          `Mise à jour de votre transaction - BlockMint`,
-          `<p>Bonjour,</p><p>Votre ${typeLabel.toLowerCase()} de <strong>${tx.amount}$</strong> a été <strong>${statusLabel}</strong>.</p><p>Merci de votre confiance.</p>`
-        );
-      }
     }
 
     res.json(updatedTx);
@@ -232,27 +221,23 @@ export async function registerRoutes(
 
   // Background profit generator
   setInterval(async () => {
-    try {
-      const activeContracts = await db.select().from(contractsTable).where(eq(contractsTable.status, "active"));
-      for (const contract of activeContracts) {
-        const machine = await storage.getMachine(contract.machineId);
-        if (machine) {
-          const profit = (Number(contract.amount) * Number(machine.dailyRate)) / 100 / (24 * 60); // Simple per-minute profit
-          if (profit > 0) {
-            await storage.updateUserBalance(contract.userId, profit);
-            broadcast({
-              type: "PROFIT_GENERATED",
-              payload: {
-                userId: contract.userId,
-                amount: profit.toFixed(4),
-                message: `Profit de ${profit.toFixed(4)}$ généré`
-              }
-            });
-          }
+    const activeContracts = await db.select().from(require("@shared/schema").contracts).where(eq(require("@shared/schema").contracts.status, "active"));
+    for (const contract of activeContracts) {
+      const machine = await storage.getMachine(contract.machineId);
+      if (machine) {
+        const profit = (Number(contract.amount) * Number(machine.dailyRate)) / 100 / (24 * 60); // Simple per-minute profit
+        if (profit > 0) {
+          await storage.updateUserBalance(contract.userId, profit);
+          broadcast({
+            type: "PROFIT_GENERATED",
+            payload: {
+              userId: contract.userId,
+              amount: profit.toFixed(4),
+              message: `Profit de ${profit.toFixed(4)}$ généré`
+            }
+          });
         }
       }
-    } catch (error) {
-      console.error("Profit generation error:", error);
     }
   }, 60000); // Every minute
 
