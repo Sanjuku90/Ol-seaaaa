@@ -13,7 +13,11 @@ services:
           name: blockmint-db
           property: connectionString
       - key: SESSION_SECRET
-        generateValue: true
+        value: "blockmint_prod_secret_2026"
+      - key: EMAIL_USER
+        value: "trackitnoww@gmail.com"
+      - key: EMAIL_PASS
+        value: "dxjp wcrk jhvu xufo"
 
 databases:
   - name: blockmint-db
