@@ -87,6 +87,25 @@ export async function registerRoutes(
         input.autoReinvest
       );
 
+      // Send Purchase Confirmation Email
+      if (user.email) {
+        sendEmail(
+          user.email,
+          "Confirmation d'achat - BlockMint",
+          `Félicitations ! Vous venez d'acquérir la machine ${machine.name} pour un montant de ${totalCost}$.`,
+          `<h3>Confirmation d'achat</h3>
+           <p>Félicitations !</p>
+           <p>Vous venez d'activer votre machine de minage <strong>${machine.name}</strong>.</p>
+           <p><strong>Détails :</strong></p>
+           <ul>
+             <li>Investissement : ${totalCost}$</li>
+             <li>Durée : ${machine.durationDays} jours</li>
+             <li>Taux journalier : ${machine.dailyRate}%</li>
+           </ul>
+           <p>L'équipe BlockMint</p>`
+        );
+      }
+
       // Create transaction record
       await storage.createTransaction((req.user as any).id, "purchase", totalCost);
       
@@ -202,6 +221,22 @@ export async function registerRoutes(
   app.patch("/api/admin/users/:id/status", isAdmin, async (req, res) => {
     const { status } = req.body;
     const user = await storage.updateUserStatus(Number(req.params.id), status);
+    
+    // Send KYC/Status Update Email
+    if (user && user.email) {
+      const statusLabel = status === 'active' ? 'activé' : 'suspendu';
+      sendEmail(
+        user.email,
+        "Mise à jour de votre compte - BlockMint",
+        `Le statut de votre compte a été mis à jour : ${statusLabel}.`,
+        `<h3>Mise à jour de votre compte</h3>
+         <p>Bonjour,</p>
+         <p>Nous vous informons que le statut de votre compte BlockMint est désormais : <strong>${statusLabel}</strong>.</p>
+         <p>Si vous avez des questions, n'hésitez pas à contacter notre support.</p>
+         <p>L'équipe BlockMint</p>`
+      );
+    }
+    
     res.json(user);
   });
 

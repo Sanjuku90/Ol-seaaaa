@@ -6,6 +6,7 @@ import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
 import { User } from "@shared/schema";
+import { sendEmail } from "./utils/email";
 
 const scryptAsync = promisify(scrypt);
 
@@ -78,6 +79,20 @@ export function setupAuth(app: Express) {
 
       req.login(user, (err) => {
         if (err) return next(err);
+        
+        // Send Welcome Email
+        sendEmail(
+          user.email,
+          "Bienvenue chez BlockMint !",
+          `Bonjour ${user.email},\n\nBienvenue sur BlockMint, votre plateforme de cloud mining. Votre compte est maintenant actif.\n\nL'équipe BlockMint`,
+          `<h1>Bienvenue chez BlockMint !</h1>
+           <p>Bonjour,</p>
+           <p>Nous sommes ravis de vous compter parmi nos nouveaux investisseurs.</p>
+           <p>Votre compte est maintenant actif et prêt à l'emploi. Commencez dès maintenant à miner vos premières cryptomonnaies !</p>
+           <br/>
+           <p>L'équipe BlockMint</p>`
+        );
+        
         res.status(201).json(user);
       });
     } catch (err) {
