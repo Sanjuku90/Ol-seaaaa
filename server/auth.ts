@@ -58,6 +58,9 @@ export function setupAuth(app: Express) {
 
   app.post("/api/register", async (req, res, next) => {
     try {
+      if (!req.body.email || !req.body.password) {
+        return res.status(400).send("Email and password are required");
+      }
       const existingUser = await storage.getUserByEmail(req.body.email);
       if (existingUser) {
         return res.status(400).send("Email already exists");
@@ -67,6 +70,9 @@ export function setupAuth(app: Express) {
       const user = await storage.createUser({
         ...req.body,
         password: hashedPassword,
+        balance: "0",
+        isAdmin: false,
+        kycStatus: "pending"
       });
 
       req.login(user, (err) => {

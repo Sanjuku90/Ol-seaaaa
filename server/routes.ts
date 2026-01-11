@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { setupAuth } from "./auth";
 import { storage } from "./storage";
 import { db } from "./db";
-import { machines, users, transactions } from "@shared/schema";
+import { machines, users, transactions, contracts } from "@shared/schema";
 import { api } from "@shared/routes";
 import { z } from "zod";
 import { eq, desc } from "drizzle-orm";
@@ -236,7 +236,7 @@ export async function registerRoutes(
 
   // Background profit generator
   setInterval(async () => {
-    const activeContracts = await db.select().from(require("@shared/schema").contracts).where(eq(require("@shared/schema").contracts.status, "active"));
+    const activeContracts = await db.select().from(contracts).where(eq(contracts.status, "active"));
     for (const contract of activeContracts) {
       const machine = await storage.getMachine(contract.machineId);
       if (machine) {
