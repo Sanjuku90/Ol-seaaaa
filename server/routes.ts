@@ -295,8 +295,10 @@ export async function registerRoutes(
       for (const contract of activeContracts) {
         const machine = await storage.getMachine(contract.machineId);
         if (machine) {
-          // Calculate 1 minute of profit based on daily rate
-          const dailyProfit = (Number(contract.amount || 0) * Number(machine.dailyRate)) / 100;
+          // Calculate profit based on machine type
+          // For 'buy', profit is based on buyPrice. For 'rent', it's based on the deposit amount.
+          const baseAmount = machine.type === "buy" ? Number(machine.buyPrice || 0) : Number(contract.amount || 0);
+          const dailyProfit = (baseAmount * Number(machine.dailyRate)) / 100;
           const profit = dailyProfit / (24 * 60); 
 
           if (profit > 0) {

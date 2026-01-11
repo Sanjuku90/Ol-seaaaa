@@ -39,8 +39,8 @@ export default function Overview() {
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        // Important: check if the update is for the current user
-        if (data.type === "BALANCE_UPDATE" || data.type === "PROFIT_GENERATED") {
+        if (data.type === "BALANCE_UPDATE" || data.type === "PROFIT_GENERATED" || data.type === "TRANSACTION_UPDATE") {
+          // Force immediate invalidate and refetch
           queryClient.invalidateQueries({ queryKey: ["/api/user"] });
           queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
         }
@@ -61,10 +61,10 @@ export default function Overview() {
     if (!machine) return null;
 
     const accumulated = Number(contract.accumulatedRewards || 0);
-    const minDep = Number(machine.minDeposit || 30);
+    const minDep = machine.type === "rent" ? Number(machine.minDeposit || 30) : 1; // Dummy min for Buy machines progress
     const progress = machine.type === "rent" 
       ? Math.min(100, (accumulated / minDep) * 100)
-      : null;
+      : null; // Buy machines don't have a "maturity" progress usually, or we can show ROI progress
 
     return (
       <Card key={contract.id} className="border-white/5 bg-white/[0.02]">
