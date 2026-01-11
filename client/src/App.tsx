@@ -77,7 +77,7 @@ function Router() {
         {() => <ProtectedRoute component={AdminUsers} />}
       </Route>
       <Route path="/admin/support">
-        {() => <ProtectedRoute component={AdminSupport} />}
+        {() => <Redirect to="/admin/users" />}
       </Route>
       
       {/* Fallback */}

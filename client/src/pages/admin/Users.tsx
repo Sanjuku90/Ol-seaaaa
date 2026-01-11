@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
@@ -32,9 +32,12 @@ import {
   Search,
   Loader2,
   XCircle,
-  History
+  History,
+  MessageSquare,
+  Send,
+  User as UserIcon
 } from "lucide-react";
-import { type User, type Transaction } from "@shared/schema";
+import { type User, type Transaction, type SupportMessage } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -46,6 +49,9 @@ import {
   DialogDescription
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export default function AdminUsers() {
   const { toast } = useToast();
@@ -53,15 +59,25 @@ export default function AdminUsers() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [bonusAmount, setBonusAmount] = useState("");
   const [isBonusOpen, setIsBonusOpen] = useState(false);
+  
+  // Support state
+  const [selectedSupportUserId, setSelectedSupportUserId] = useState<number | null>(null);
+  const [supportMessage, setSupportMessage] = useState("");
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const { data: users, isLoading: usersLoading } = useQuery<User[]>({
     queryKey: ["/api/admin/users"],
-    refetchInterval: 5000, // Refresh every 5 seconds
+    refetchInterval: 5000,
   });
 
   const { data: transactions, isLoading: txLoading } = useQuery<Transaction[]>({
     queryKey: ["/api/admin/transactions"],
-    refetchInterval: 5000, // Refresh every 5 seconds
+    refetchInterval: 5000,
+  });
+
+  const { data: allMessages, isLoading: messagesLoading } = useQuery<SupportMessage[]>({
+    queryKey: ["/api/admin/support"],
+    refetchInterval: 3000,
   });
 
   const updateStatusMutation = useMutation({
@@ -107,6 +123,17 @@ export default function AdminUsers() {
     }
   });
 
+  const sendSupportMutation = useMutation({
+    mutationFn: async ({ userId, message }: { userId: number; message: string }) => {
+      const res = await apiRequest("POST", "/api/admin/support", { userId, message });
+      return res.json();
+    },
+    onSuccess: () => {
+      setSupportMessage("");
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/support"] });
+    },
+  });
+
   const filteredUsers = users?.filter(u => 
     u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (u.phone && u.phone.includes(searchTerm))
@@ -130,12 +157,15 @@ export default function AdminUsers() {
     }
   };
 
+  const chatMessages = allMessages?.filter(m => Number(m.userId) === Number(selectedSupportUserId)) || [];
+  const usersWithMessages = Array.from(new Set(allMessages?.map(m => Number(m.userId))));
+
   return (
     <DashboardLayout>
       <div className="mb-8 flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-display font-bold">Administration</h1>
-          <p className="text-muted-foreground">Gérez les utilisateurs et les transactions.</p>
+          <p className="text-muted-foreground">Gérez les utilisateurs, transactions et support.</p>
         </div>
       </div>
 
@@ -148,6 +178,10 @@ export default function AdminUsers() {
           <TabsTrigger value="transactions">
             <History className="w-4 h-4 mr-2" />
             Transactions
+          </TabsTrigger>
+          <TabsTrigger value="support">
+            <MessageSquare className="w-4 h-4 mr-2" />
+            Support Client
           </TabsTrigger>
         </TabsList>
 
@@ -317,6 +351,123 @@ export default function AdminUsers() {
               </Table>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="support">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 h-[600px]">
+            <Card className="lg:col-span-1 border-white/5 bg-card/50 overflow-hidden flex flex-col">
+              <CardHeader className="border-b border-white/5">
+                <CardTitle className="text-sm">Conversations</CardTitle>
+              </CardHeader>
+              <ScrollArea className="flex-1">
+                <div className="p-2 space-y-1">
+                  {usersWithMessages.map(uid => {
+                    const u = users?.find(user => Number(user.id) === Number(uid));
+                    const userMessages = allMessages?.filter(m => Number(m.userId) === Number(uid));
+                    const lastMsg = userMessages?.[userMessages.length - 1];
+                    return (
+                      <button
+                        key={uid}
+                        onClick={() => setSelectedSupportUserId(uid)}
+                        className={cn(
+                          "w-full text-left p-3 rounded-lg transition-colors flex items-center gap-3",
+                          selectedSupportUserId === uid ? "bg-primary/20 border border-primary/20" : "hover:bg-white/5"
+                        )}
+                      >
+                        <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+                          <UserIcon className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{u?.email || `User #${uid}`}</p>
+                          <p className="text-xs text-muted-foreground truncate">{lastMsg?.message}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                  {!messagesLoading && usersWithMessages.length === 0 && (
+                    <p className="text-center py-8 text-xs text-muted-foreground">Aucun message</p>
+                  )}
+                </div>
+              </ScrollArea>
+            </Card>
+
+            <div className="lg:col-span-3 flex flex-col gap-4">
+              <Card className="flex-1 flex flex-col overflow-hidden border-white/5 bg-card/50">
+                <CardHeader className="border-b border-white/5">
+                  <CardTitle className="text-sm font-medium flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-primary" />
+                    {selectedSupportUserId ? `Chat avec ${users?.find(u => Number(u.id) === Number(selectedSupportUserId))?.email}` : "Sélectionnez une conversation"}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col p-0">
+                  <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+                    <div className="space-y-4">
+                      {messagesLoading ? (
+                        <div className="flex items-center justify-center h-full">
+                          <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                        </div>
+                      ) : !selectedSupportUserId ? (
+                        <div className="text-center py-8 text-muted-foreground">
+                          Sélectionnez un utilisateur pour voir les messages.
+                        </div>
+                      ) : chatMessages.length === 0 ? (
+                        <div className="text-center py-8 text-muted-foreground">
+                          Aucun message dans cette conversation.
+                        </div>
+                      ) : (
+                        chatMessages.map((msg) => (
+                          <div
+                            key={msg.id}
+                            className={`flex ${msg.isAdmin ? "justify-end" : "justify-start"}`}
+                          >
+                            <div
+                              className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                                msg.isAdmin
+                                  ? "bg-primary text-primary-foreground rounded-tr-none"
+                                  : "bg-secondary text-foreground rounded-tl-none"
+                              }`}
+                            >
+                              <p className="text-sm">{msg.message}</p>
+                              <p className="text-[10px] opacity-70 mt-1 text-right">
+                                {format(new Date(msg.createdAt), "HH:mm")}
+                              </p>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </ScrollArea>
+                  {selectedSupportUserId && (
+                    <div className="p-4 border-t border-white/5">
+                      <form 
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          if (!supportMessage.trim() || sendSupportMutation.isPending) return;
+                          sendSupportMutation.mutate({ userId: selectedSupportUserId, message: supportMessage });
+                        }} 
+                        className="flex gap-2"
+                      >
+                        <Input
+                          placeholder="Répondre au client..."
+                          value={supportMessage}
+                          onChange={(e) => setSupportMessage(e.target.value)}
+                          disabled={sendSupportMutation.isPending}
+                          className="bg-background/50 border-white/10"
+                        />
+                        <Button type="submit" size="icon" disabled={!supportMessage.trim() || sendSupportMutation.isPending}>
+                          {sendSupportMutation.isPending ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Send className="w-4 h-4" />
+                          )}
+                        </Button>
+                      </form>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
 
