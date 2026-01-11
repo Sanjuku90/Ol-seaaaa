@@ -55,7 +55,8 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createUser(insertUser: InsertUser & { referralCode?: string }): Promise<User> {
-    const [user] = await db.insert(users).values(insertUser).returning();
+    const referralCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const [user] = await db.insert(users).values({ ...insertUser, referralCode }).returning();
     return user;
   }
 
