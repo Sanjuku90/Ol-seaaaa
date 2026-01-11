@@ -306,7 +306,7 @@ async function seedDatabase() {
   if (existingMachines.length === 0) {
     await db.insert(machines).values([
       // Rental Machines
-      { name: "Rent Mini", type: "rent", rentalPrice: "4.99", minDeposit: 30, dailyRate: "2.3", durationDays: 30, description: "Location abordable pour débuter." },
+      { name: "Rent Mini", type: "rent", rentalPrice: "4.99", minDeposit: 30, dailyRate: "1.9", durationDays: 30, description: "Location abordable pour débuter." },
       { name: "Rent Starter", type: "rent", rentalPrice: "14.99", minDeposit: 30, dailyRate: "2.3", durationDays: 30, description: "Idéal pour booster vos premiers gains." },
       { name: "Rent Standard", type: "rent", rentalPrice: "24.99", minDeposit: 30, dailyRate: "2.8", durationDays: 30, description: "Bon équilibre entre coût et rendement." },
       { name: "Rent Pro", type: "rent", rentalPrice: "29.99", minDeposit: 30, dailyRate: "3.3", durationDays: 30, description: "Pour les mineurs avertis." },
