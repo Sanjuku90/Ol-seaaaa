@@ -309,7 +309,7 @@ export async function registerRoutes(
               .where(eq(contracts.id, contract.id));
 
             broadcast({
-              type: "PROFIT_GENERATED",
+              type: "BALANCE_UPDATE",
               payload: {
                 userId: contract.userId,
                 amount: profit.toFixed(4),

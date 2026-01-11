@@ -39,7 +39,8 @@ export default function Overview() {
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        if (data.type === "PROFIT_GENERATED" || data.type === "BALANCE_UPDATE") {
+        // Important: check if the update is for the current user
+        if (data.type === "BALANCE_UPDATE" || data.type === "PROFIT_GENERATED") {
           queryClient.invalidateQueries({ queryKey: ["/api/user"] });
           queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
         }
