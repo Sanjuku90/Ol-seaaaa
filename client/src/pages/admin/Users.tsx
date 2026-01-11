@@ -253,7 +253,7 @@ export default function AdminUsers() {
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent border-white/5">
-                    <TableHead>ID</TableHead>
+                    <TableHead>Ticket</TableHead>
                     <TableHead>Utilisateur</TableHead>
                     <TableHead>Type</TableHead>
                     <TableHead>Montant</TableHead>
@@ -277,7 +277,7 @@ export default function AdminUsers() {
                     </TableRow>
                   ) : transactions?.map((tx) => (
                     <TableRow key={tx.id} className="border-white/5">
-                      <TableCell>#{tx.id}</TableCell>
+                      <TableCell className="font-mono text-xs">{tx.ticketNumber || `#${tx.id}`}</TableCell>
                       <TableCell>{users?.find(u => u.id === tx.userId)?.email || `User #${tx.userId}`}</TableCell>
                       <TableCell className="capitalize">
                         <span className={tx.type === 'deposit' ? 'text-emerald-400' : 'text-red-400'}>

@@ -120,12 +120,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createTransaction(userId: number, type: string, amount: number, walletAddress?: string, status: string = "completed"): Promise<Transaction> {
+    const ticketNumber = `TX-${Math.random().toString(36).substring(2, 8).toUpperCase()}-${Date.now().toString().slice(-4)}`;
     const [transaction] = await db.insert(transactions).values({
       userId,
       type,
       amount: amount.toString(),
       status,
-      walletAddress
+      walletAddress,
+      ticketNumber
     }).returning();
     return transaction;
   }

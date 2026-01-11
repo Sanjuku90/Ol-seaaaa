@@ -62,6 +62,7 @@ export const transactions = pgTable("transactions", {
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
   status: text("status").default("completed").notNull(), 
   walletAddress: text("wallet_address"), 
+  ticketNumber: text("ticket_number"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

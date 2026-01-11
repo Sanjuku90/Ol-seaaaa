@@ -150,6 +150,29 @@ export async function registerRoutes(
         (req.body as any).walletAddress,
         status
       );
+
+      // Send Transaction Email
+      const user = await storage.getUser((req.user as any).id);
+      if (user && user.email) {
+        const typeLabel = input.type === 'deposit' ? 'Dépôt' : 'Retrait';
+        sendEmail(
+          user.email,
+          `Confirmation de votre demande de ${typeLabel} - BlockMint`,
+          `Votre demande de ${typeLabel} de ${input.amount}$ a été enregistrée avec le ticket n° ${tx.ticketNumber}.`,
+          "Détails de votre Transaction",
+          `<p>Bonjour,</p>
+           <p>Nous avons bien reçu votre demande de <strong>${typeLabel}</strong>.</p>
+           <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e2e8f0;">
+             <p style="margin: 5px 0;"><strong>Numéro de Ticket :</strong> <span style="color: #10b981; font-weight: bold;">${tx.ticketNumber}</span></p>
+             <p style="margin: 5px 0;"><strong>Type :</strong> ${typeLabel}</p>
+             <p style="margin: 5px 0;"><strong>Montant :</strong> ${input.amount}$</p>
+             <p style="margin: 5px 0;"><strong>Statut :</strong> En attente de validation</p>
+           </div>
+           <p>Veuillez conserver ce numéro de ticket pour toute communication avec notre service client.</p>
+           <p>Nos équipes traitent votre demande dans les plus brefs délais.</p>`
+        );
+      }
+
       res.status(201).json(tx);
     } catch (e) {
       res.status(400).json({ message: "Entrée invalide" });

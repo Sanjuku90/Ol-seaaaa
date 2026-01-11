@@ -218,6 +218,7 @@ export default function Wallet() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Ticket</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead>Status</TableHead>
@@ -227,6 +228,7 @@ export default function Wallet() {
             <TableBody>
               {transactions?.map((tx) => (
                 <TableRow key={tx.id}>
+                  <TableCell className="font-mono text-[10px] text-muted-foreground">{tx.ticketNumber || `#${tx.id}`}</TableCell>
                   <TableCell className="capitalize font-medium">
                     <span className={tx.type === 'deposit' ? 'text-emerald-400' : 'text-red-400'}>
                       {tx.type}
