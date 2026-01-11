@@ -5,22 +5,7 @@ import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
-import { User } from "@shared/schema";
-
-const scryptAsync = promisify(scrypt);
-
-async function hashPassword(password: string) {
-  const salt = randomBytes(16).toString("hex");
-  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
-  return `${buf.toString("hex")}.${salt}`;
-}
-
-async function comparePasswords(supplied: string, stored: string) {
-  const [hashed, salt] = stored.split(".");
-  const hashedBuf = Buffer.from(hashed, "hex");
-  const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
-  return timingSafeEqual(hashedBuf, suppliedBuf);
-}
+import { sendEmail } from "./email";
 
 export function setupAuth(app: Express) {
   const sessionSettings: session.SessionOptions = {
@@ -68,6 +53,13 @@ export function setupAuth(app: Express) {
         ...req.body,
         password: hashedPassword,
       });
+
+      // Send welcome email
+      await sendEmail(
+        user.email,
+        "Bienvenue chez BlockMint !",
+        `<p>Bonjour,</p><p>Bienvenue sur BlockMint ! Votre compte a été créé avec succès.</p><p>Vous pouvez maintenant commencer à investir dans nos machines de minage.</p>`
+      );
 
       req.login(user, (err) => {
         if (err) return next(err);
