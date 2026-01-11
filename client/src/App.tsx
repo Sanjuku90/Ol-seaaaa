@@ -103,11 +103,14 @@ function AppContent() {
       try {
         const data = JSON.parse(event.data);
         if (data && data.payload && data.payload.userId === user.id) {
-          toast({
-            title: data.type === "PROFIT_GENERATED" ? "Profit Généré" : "Transaction Mise à Jour",
-            description: data.payload.message,
-            variant: data.type === "PROFIT_GENERATED" ? "default" : (data.payload.status === "completed" ? "default" : "destructive"),
-          });
+          // Only show notification for transaction updates, not for periodic profit generation
+          if (data.type === "TRANSACTION_UPDATE") {
+            toast({
+              title: "Transaction Mise à Jour",
+              description: data.payload.message,
+              variant: data.payload.status === "completed" ? "default" : "destructive",
+            });
+          }
         }
       } catch (e) {
         console.error("Failed to parse WebSocket message", e);

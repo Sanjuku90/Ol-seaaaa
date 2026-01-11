@@ -314,8 +314,7 @@ export async function registerRoutes(
               type: "BALANCE_UPDATE",
               payload: {
                 userId: contract.userId,
-                amount: profit.toFixed(4),
-                message: `Profit de ${profit.toFixed(4)}$ généré`
+                amount: profit.toFixed(4)
               }
             });
           }
