@@ -203,6 +203,14 @@ export async function registerRoutes(
           status
         }
       });
+      
+      // Update WebSocket for profit/balance refresh
+      broadcast({
+        type: "BALANCE_UPDATE",
+        payload: {
+          userId: tx.userId
+        }
+      });
 
       // Send Email Notification
       const user = await storage.getUser(tx.userId);

@@ -37,8 +37,10 @@ export default function Overview() {
     const machine = getMachine(contract.machineId);
     if (!machine) return null;
 
+    const accumulated = Number(contract.accumulatedRewards || 0);
+    const minDep = Number(machine.minDeposit || 30);
     const progress = machine.type === "rent" 
-      ? Math.min(100, (Number(contract.accumulatedRewards) / Number(machine.minDeposit)) * 100)
+      ? Math.min(100, (accumulated / minDep) * 100)
       : null;
 
     return (
@@ -66,14 +68,14 @@ export default function Overview() {
             </div>
             <div>
               <p className="text-muted-foreground">Gains cumulés</p>
-              <p className="font-bold">${Number(contract.accumulatedRewards).toFixed(2)}</p>
+              <p className="font-bold">${accumulated.toFixed(4)}</p>
             </div>
           </div>
 
           {machine.type === "rent" && progress !== null && (
             <div className="space-y-2">
               <div className="flex justify-between text-xs">
-                <span>Maturité du retrait (Min $30)</span>
+                <span>Maturité du retrait (Min ${minDep})</span>
                 <span>{progress.toFixed(0)}%</span>
               </div>
               <Progress value={progress} className="h-2" />

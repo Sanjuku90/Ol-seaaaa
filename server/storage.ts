@@ -61,7 +61,7 @@ export class DatabaseStorage implements IStorage {
 
   async updateUserBalance(id: number, amount: number): Promise<void> {
     await db.update(users)
-      .set({ balance: sql`${users.balance} + ${amount.toString()}` })
+      .set({ balance: sql`ROUND((${users.balance} + ${amount.toString()})::numeric, 4)` })
       .where(eq(users.id, id));
   }
 

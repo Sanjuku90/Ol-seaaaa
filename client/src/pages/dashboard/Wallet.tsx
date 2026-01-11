@@ -45,16 +45,16 @@ export default function Wallet() {
   });
 
   const onSubmit = (data: z.infer<typeof transactionSchema>, type: 'deposit' | 'withdrawal') => {
-    if (type === 'withdrawal' && !data.walletAddress) {
+    if (type === 'withdrawal' && (!data.walletAddress || data.walletAddress.trim() === "")) {
       toast({ title: "Erreur", description: "Veuillez saisir une adresse de réception", variant: "destructive" });
       return;
     }
     createTransaction({ 
       type, 
       amount: data.amount, 
-      walletAddress: data.walletAddress || undefined 
+      walletAddress: data.walletAddress?.trim() || undefined 
     } as any);
-    form.reset();
+    form.reset({ amount: 0, crypto: data.crypto, walletAddress: "" });
   };
 
   const copyAddress = (address: string) => {
