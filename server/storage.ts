@@ -1,7 +1,8 @@
 import { db } from "./db";
 import {
-  users, machines, contracts, transactions,
-  type User, type InsertUser, type Machine, type Contract, type Transaction
+  users, machines, contracts, transactions, supportMessages,
+  type User, type InsertUser, type Machine, type Contract, type Transaction,
+  type SupportMessage, type InsertSupportMessage
 } from "@shared/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import session from "express-session";
@@ -30,6 +31,10 @@ export interface IStorage {
   updateUserStatus(id: number, status: string): Promise<User>;
   updateUserAdmin(id: number, isAdmin: boolean): Promise<User>;
   updateUserBalanceAdmin(id: number, amount: number): Promise<User>;
+
+  getSupportMessages(userId: number): Promise<SupportMessage[]>;
+  getAllSupportMessages(): Promise<SupportMessage[]>;
+  createSupportMessage(message: InsertSupportMessage): Promise<SupportMessage>;
 
   sessionStore: session.Store;
 }
@@ -153,6 +158,24 @@ export class DatabaseStorage implements IStorage {
       .where(eq(users.id, id))
       .returning();
     return user;
+  }
+
+  async getSupportMessages(userId: number): Promise<SupportMessage[]> {
+    return await db.select()
+      .from(supportMessages)
+      .where(eq(supportMessages.userId, userId))
+      .orderBy(supportMessages.createdAt);
+  }
+
+  async getAllSupportMessages(): Promise<SupportMessage[]> {
+    return await db.select()
+      .from(supportMessages)
+      .orderBy(desc(supportMessages.createdAt));
+  }
+
+  async createSupportMessage(message: InsertSupportMessage): Promise<SupportMessage> {
+    const [msg] = await db.insert(supportMessages).values(message).returning();
+    return msg;
   }
 }
 

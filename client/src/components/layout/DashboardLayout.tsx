@@ -5,6 +5,7 @@ import {
   Cpu, 
   Wallet, 
   Users, 
+  MessageSquare,
   Settings, 
   LogOut,
   Menu,
@@ -29,6 +30,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: 'My Machines', href: '/dashboard/machines', icon: Cpu },
     { name: 'Wallet', href: '/dashboard/wallet', icon: Wallet },
     { name: 'Affiliate', href: '/dashboard/affiliate', icon: Users },
+    { name: 'Support', href: '/dashboard/support', icon: MessageSquare },
   ];
 
   if (user.isAdmin) {

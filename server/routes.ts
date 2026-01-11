@@ -302,6 +302,46 @@ export async function registerRoutes(
     res.json(referrals);
   });
 
+  // Support Routes
+  app.get("/api/support", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const messages = await storage.getSupportMessages((req.user as any).id);
+    res.json(messages);
+  });
+
+  app.post("/api/support", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    try {
+      const msg = await storage.createSupportMessage({
+        userId: (req.user as any).id,
+        message: req.body.message,
+        isAdmin: false
+      });
+      res.status(201).json(msg);
+    } catch (e) {
+      res.status(400).json({ message: "Erreur" });
+    }
+  });
+
+  app.get("/api/admin/support", isAdmin, async (req, res) => {
+    const messages = await storage.getAllSupportMessages();
+    res.json(messages);
+  });
+
+  app.post("/api/admin/support", isAdmin, async (req, res) => {
+    try {
+      const msg = await storage.createSupportMessage({
+        userId: req.body.userId,
+        adminId: (req.user as any).id,
+        message: req.body.message,
+        isAdmin: true
+      });
+      res.status(201).json(msg);
+    } catch (e) {
+      res.status(400).json({ message: "Erreur" });
+    }
+  });
+
   // Seed data function
   await seedDatabase();
 

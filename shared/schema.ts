@@ -5,6 +5,15 @@ import { z } from "zod";
 
 // === TABLE DEFINITIONS ===
 
+export const supportMessages = pgTable("support_messages", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  adminId: integer("admin_id"),
+  message: text("message").notNull(),
+  isAdmin: boolean("is_admin").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   email: text("email").notNull().unique(), 
@@ -67,6 +76,13 @@ export const transactions = pgTable("transactions", {
 });
 
 // === RELATIONS ===
+export const supportMessagesRelations = relations(supportMessages, ({ one }) => ({
+  user: one(users, {
+    fields: [supportMessages.userId],
+    references: [users.id],
+  }),
+}));
+
 export const usersRelations = relations(users, ({ many, one }) => ({
   contracts: many(contracts),
   transactions: many(transactions),
@@ -89,6 +105,14 @@ export const contractsRelations = relations(contracts, ({ one }) => ({
 }));
 
 // === BASE SCHEMAS ===
+export const insertSupportMessageSchema = createInsertSchema(supportMessages).omit({ 
+  id: true, 
+  createdAt: true 
+});
+
+export type SupportMessage = typeof supportMessages.$inferSelect;
+export type InsertSupportMessage = z.infer<typeof insertSupportMessageSchema>;
+
 export const insertUserSchema = createInsertSchema(users).omit({ 
   id: true, 
   balance: true, 

@@ -16,6 +16,7 @@ import Overview from "@/pages/dashboard/Overview";
 import Wallet from "@/pages/dashboard/Wallet";
 import Machines from "@/pages/dashboard/Machines";
 import Affiliate from "@/pages/dashboard/Affiliate";
+import Support from "@/pages/dashboard/Support";
 import AdminUsers from "@/pages/admin/Users";
 
 function ProtectedRoute({ component: Component, adminOnly = false }: { component: React.ComponentType, adminOnly?: boolean }) {
@@ -59,6 +60,9 @@ function Router() {
       </Route>
       <Route path="/dashboard/affiliate">
         {() => <ProtectedRoute component={Affiliate} />}
+      </Route>
+      <Route path="/dashboard/support">
+        {() => <ProtectedRoute component={Support} />}
       </Route>
 
       {/* Admin Routes */}
