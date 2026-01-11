@@ -72,7 +72,8 @@ export function setupAuth(app: Express) {
         password: hashedPassword,
         balance: "0",
         isAdmin: false,
-        kycStatus: "pending"
+        kycStatus: "pending",
+        referralCode: Math.random().toString(36).substring(2, 8).toUpperCase()
       });
 
       req.login(user, (err) => {
