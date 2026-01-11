@@ -6,7 +6,7 @@ import { db } from "./db";
 import { machines, users, transactions, contracts } from "@shared/schema";
 import { api } from "@shared/routes";
 import { z } from "zod";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 import { WebSocket, WebSocketServer } from "ws";
 import { sendEmail } from "./utils/email";
 
