@@ -31,7 +31,7 @@ COPY . .
 RUN npm run build
 
 # Remove development dependencies
-RUN npm prune --omit=dev
+# RUN npm prune --omit=dev
 
 
 # Final stage for app image
