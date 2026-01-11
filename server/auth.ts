@@ -84,13 +84,14 @@ export function setupAuth(app: Express) {
         sendEmail(
           user.email,
           "Bienvenue chez BlockMint !",
-          `Bonjour ${user.email},\n\nBienvenue sur BlockMint, votre plateforme de cloud mining. Votre compte est maintenant actif.\n\nL'équipe BlockMint`,
-          `<h1>Bienvenue chez BlockMint !</h1>
-           <p>Bonjour,</p>
+          `Bonjour, Bienvenue sur BlockMint, votre plateforme de cloud mining. Votre compte est maintenant actif.`,
+          "Bienvenue chez BlockMint",
+          `<p>Bonjour,</p>
            <p>Nous sommes ravis de vous compter parmi nos nouveaux investisseurs.</p>
-           <p>Votre compte est maintenant actif et prêt à l'emploi. Commencez dès maintenant à miner vos premières cryptomonnaies !</p>
-           <br/>
-           <p>L'équipe BlockMint</p>`
+           <p>Votre compte est maintenant <span class="highlight">actif</span> et prêt à l'emploi. Commencez dès maintenant à miner vos premières cryptomonnaies !</p>
+           <div style="text-align: center;">
+             <a href="https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co" class="button">Accéder à mon Dashboard</a>
+           </div>`
         );
         
         res.status(201).json(user);

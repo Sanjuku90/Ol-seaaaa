@@ -93,16 +93,15 @@ export async function registerRoutes(
           user.email,
           "Confirmation d'achat - BlockMint",
           `Félicitations ! Vous venez d'acquérir la machine ${machine.name} pour un montant de ${totalCost}$.`,
-          `<h3>Confirmation d'achat</h3>
-           <p>Félicitations !</p>
-           <p>Vous venez d'activer votre machine de minage <strong>${machine.name}</strong>.</p>
-           <p><strong>Détails :</strong></p>
-           <ul>
-             <li>Investissement : ${totalCost}$</li>
-             <li>Durée : ${machine.durationDays} jours</li>
-             <li>Taux journalier : ${machine.dailyRate}%</li>
-           </ul>
-           <p>L'équipe BlockMint</p>`
+          "Confirmation d'Achat",
+          `<p>Félicitations !</p>
+           <p>Vous venez d'activer votre machine de minage <span class="highlight">${machine.name}</span>.</p>
+           <div style="background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 8px; margin: 20px 0;">
+             <p style="margin: 5px 0;"><strong>Investissement :</strong> ${totalCost}$</p>
+             <p style="margin: 5px 0;"><strong>Durée :</strong> ${machine.durationDays} jours</p>
+             <p style="margin: 5px 0;"><strong>Rendement :</strong> ${machine.dailyRate}% / jour</p>
+           </div>
+           <p>Vos profits commenceront à s'accumuler dès maintenant.</p>`
         );
       }
 
@@ -203,14 +202,19 @@ export async function registerRoutes(
       // Send Email Notification
       const user = await storage.getUser(tx.userId);
       if (user && user.email) {
-        await sendEmail(
+        const isSuccess = status === 'completed';
+        sendEmail(
           user.email,
           `Mise à jour de votre transaction - BlockMint`,
           `Votre ${typeLabel} de ${tx.amount}$ a été ${statusLabel}.`,
-          `<h3>Mise à jour de votre transaction</h3>
-           <p>Bonjour,</p>
-           <p>Votre <strong>${typeLabel}</strong> de <strong>${tx.amount}$</strong> a été <strong>${statusLabel}</strong>.</p>
-           <p>L'équipe BlockMint</p>`
+          "Mise à jour Transaction",
+          `<p>Bonjour,</p>
+           <p>Votre demande de <strong>${typeLabel}</strong> a été traitée.</p>
+           <div style="padding: 20px; border-radius: 8px; text-align: center; background: ${isSuccess ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; border: 1px solid ${isSuccess ? '#10b981' : '#ef4444'}; margin: 20px 0;">
+             <p style="font-size: 18px; margin: 0;">Montant : <span style="font-weight: bold;">${tx.amount}$</span></p>
+             <p style="font-size: 20px; margin: 10px 0; color: ${isSuccess ? '#10b981' : '#ef4444'}; text-transform: uppercase; font-weight: bold;">${statusLabel}</p>
+           </div>
+           <p>Vous pouvez consulter votre historique complet sur votre compte.</p>`
         );
       }
     }
@@ -224,16 +228,19 @@ export async function registerRoutes(
     
     // Send KYC/Status Update Email
     if (user && user.email) {
-      const statusLabel = status === 'active' ? 'activé' : 'suspendu';
+      const isSuccess = status === 'active';
+      const statusLabel = isSuccess ? 'activé' : 'suspendu';
       sendEmail(
         user.email,
         "Mise à jour de votre compte - BlockMint",
         `Le statut de votre compte a été mis à jour : ${statusLabel}.`,
-        `<h3>Mise à jour de votre compte</h3>
-         <p>Bonjour,</p>
-         <p>Nous vous informons que le statut de votre compte BlockMint est désormais : <strong>${statusLabel}</strong>.</p>
-         <p>Si vous avez des questions, n'hésitez pas à contacter notre support.</p>
-         <p>L'équipe BlockMint</p>`
+        "Statut de votre Compte",
+        `<p>Bonjour,</p>
+         <p>Nous vous informons que le statut de votre compte BlockMint a été mis à jour.</p>
+         <div style="padding: 15px; border-radius: 8px; text-align: center; background: ${isSuccess ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; margin: 20px 0;">
+           <p style="font-size: 18px; margin: 0;">Nouveau statut : <span style="font-weight: bold; color: ${isSuccess ? '#10b981' : '#ef4444'};">${statusLabel.toUpperCase()}</span></p>
+         </div>
+         <p>Si vous avez des questions concernant ce changement, n'hésitez pas à contacter notre support.</p>`
       );
     }
     
