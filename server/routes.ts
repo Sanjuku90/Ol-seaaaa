@@ -23,10 +23,10 @@ function broadcast(data: any) {
 }
 
 function isAdmin(req: Request, res: Response, next: NextFunction) {
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated() && (req.user as any).isAdmin) {
     return next();
   }
-  res.status(403).json({ message: "Accès refusé. Veuillez vous connecter." });
+  res.status(403).json({ message: "Accès refusé. Droits administrateur requis." });
 }
 
 export async function registerRoutes(

@@ -33,7 +33,9 @@ export default function Overview() {
 
   useEffect(() => {
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    // Construct WebSocket URL correctly for Replit environment
+    const host = window.location.host;
+    const wsUrl = `${protocol}//${host}/ws`;
     const socket = new WebSocket(wsUrl);
 
     socket.onmessage = (event) => {
@@ -47,6 +49,10 @@ export default function Overview() {
       } catch (e) {
         console.error("WebSocket message error:", e);
       }
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
     };
 
     return () => socket.close();
