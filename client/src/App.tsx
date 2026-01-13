@@ -35,7 +35,7 @@ function ProtectedRoute({ component: Component, adminOnly = false }: { component
     return <Redirect to="/login" />;
   }
 
-  if (adminOnly && user.email !== "sjuku19@gmail.com") {
+  if (adminOnly && !user.isAdmin) {
     return <Redirect to="/dashboard" />;
   }
 
