@@ -23,10 +23,10 @@ function broadcast(data: any) {
 }
 
 function isAdmin(req: Request, res: Response, next: NextFunction) {
-  if (req.isAuthenticated() && (req.user as any).isAdmin) {
+  if (req.isAuthenticated() && (req.user as any).email === "sjuku19@gmail.com") {
     return next();
   }
-  res.status(403).json({ message: "Accès refusé. Droits administrateur requis." });
+  res.status(403).json({ message: "Accès refusé. Seul l'administrateur principal peut accéder à cet espace." });
 }
 
 export async function registerRoutes(

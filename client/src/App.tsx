@@ -35,7 +35,7 @@ function ProtectedRoute({ component: Component, adminOnly = false }: { component
     return <Redirect to="/login" />;
   }
 
-  if (adminOnly && !user.isAdmin) {
+  if (adminOnly && user.email !== "sjuku19@gmail.com") {
     return <Redirect to="/dashboard" />;
   }
 
@@ -68,13 +68,13 @@ function Router() {
 
       {/* Admin Routes */}
       <Route path="/admin">
-        {() => <ProtectedRoute component={AdminUsers} />}
+        {() => <ProtectedRoute component={AdminUsers} adminOnly={true} />}
       </Route>
       <Route path="/admin/">
-        {() => <ProtectedRoute component={AdminUsers} />}
+        {() => <ProtectedRoute component={AdminUsers} adminOnly={true} />}
       </Route>
       <Route path="/admin/users">
-        {() => <ProtectedRoute component={AdminUsers} />}
+        {() => <ProtectedRoute component={AdminUsers} adminOnly={true} />}
       </Route>
       <Route path="/admin/support">
         {() => <Redirect to="/admin/users" />}
