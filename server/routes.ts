@@ -182,11 +182,30 @@ export async function registerRoutes(
   // --- ADMIN ROUTES ---
   app.get("/api/admin/users", isAdmin, async (req, res) => {
     const usersList = await storage.getUsers();
+    // Log for debugging
+    console.log(`[admin] fetched ${usersList.length} users`);
     res.json(usersList);
   });
 
   app.get("/api/admin/transactions", isAdmin, async (req, res) => {
-    const txs = await db.select().from(transactions).orderBy(desc(transactions.createdAt));
+    const txs = await db.select({
+      id: transactions.id,
+      userId: transactions.userId,
+      type: transactions.type,
+      amount: transactions.amount,
+      status: transactions.status,
+      walletAddress: transactions.walletAddress,
+      ticketNumber: transactions.ticketNumber,
+      createdAt: transactions.createdAt,
+      user: {
+        email: users.email
+      }
+    })
+    .from(transactions)
+    .innerJoin(users, eq(transactions.userId, users.id))
+    .orderBy(desc(transactions.createdAt));
+    
+    console.log(`[admin] fetched ${txs.length} transactions`);
     res.json(txs);
   });
 

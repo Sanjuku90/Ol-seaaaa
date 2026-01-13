@@ -325,7 +325,7 @@ export default function AdminUsers() {
                   ) : transactions?.map((tx) => (
                     <TableRow key={tx.id} className="border-white/5">
                       <TableCell className="font-mono text-xs">{tx.ticketNumber || `#${tx.id}`}</TableCell>
-                      <TableCell>{users?.find(u => u.id === tx.userId)?.email || `User #${tx.userId}`}</TableCell>
+                      <TableCell>{(tx as any).user?.email || `User #${tx.userId}`}</TableCell>
                       <TableCell className="capitalize">
                         <span className={tx.type === 'deposit' ? 'text-emerald-400' : 'text-red-400'}>
                           {tx.type}
