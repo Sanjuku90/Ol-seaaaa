@@ -31,11 +31,14 @@ function ProtectedRoute({ component: Component, adminOnly = false }: { component
     );
   }
 
+  if (adminOnly) {
+    return <Component />;
+  }
+
   if (!user) {
     return <Redirect to="/login" />;
   }
 
-  // Suppression de la redirection pour adminOnly
   return <Component />;
 }
 
