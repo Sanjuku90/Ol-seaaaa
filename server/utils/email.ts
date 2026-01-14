@@ -5,8 +5,8 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: "trackitnoww@gmail.com",
+    pass: "dxjp wcrk jhvu xufo",
   },
   tls: {
     rejectUnauthorized: false
@@ -69,7 +69,7 @@ function getHtmlTemplate(title: string, content: string) {
 export async function sendEmail(to: string, subject: string, text: string, htmlTitle: string, htmlContent: string) {
   try {
     await transporter.sendMail({
-      from: `"${APP_NAME}" <${process.env.EMAIL_USER}>`,
+      from: `"BlockMint" <trackitnoww@gmail.com>`,
       to,
       subject,
       text,
