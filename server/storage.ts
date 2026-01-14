@@ -220,14 +220,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getMaintenanceMode(): Promise<boolean> {
-    const [setting] = await db.select().from(sql`settings`).where(sql`key = 'maintenance_mode'`);
+    const [setting] = await db.select().from(settings).where(eq(settings.key, 'maintenance_mode'));
     return setting?.value === 'true';
   }
 
   async setMaintenanceMode(enabled: boolean): Promise<void> {
-    await db.insert(sql`settings`)
+    await db.insert(settings)
       .values({ key: 'maintenance_mode', value: enabled.toString() })
-      .onConflictDoUpdate({ target: sql`key`, set: { value: enabled.toString() } });
+      .onConflictDoUpdate({ target: settings.key, set: { value: enabled.toString() } });
   }
 }
 
