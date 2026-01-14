@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { setupAuth } from "./auth";
 import { storage } from "./storage";
 import { db } from "./db";
-import { machines, users, transactions, contracts } from "@shared/schema";
+import { machines, users, transactions, contracts, loginAttempts } from "@shared/schema";
 import { api } from "@shared/routes";
 import { z } from "zod";
 import { eq, desc, sql } from "drizzle-orm";
@@ -554,6 +554,11 @@ export async function registerRoutes(
   app.get("/api/admin/maintenance", async (req, res) => {
     const enabled = await storage.getMaintenanceMode();
     res.json({ enabled });
+  });
+
+  app.get("/api/admin/login-attempts", async (req, res) => {
+    const attempts = await db.select().from(loginAttempts).orderBy(desc(loginAttempts.createdAt));
+    res.json(attempts);
   });
 
   app.post("/api/admin/maintenance", async (req, res) => {

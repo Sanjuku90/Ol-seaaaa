@@ -5,7 +5,8 @@ import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
-import { User } from "@shared/schema";
+import { User, loginAttempts } from "@shared/schema";
+import { db } from "./db";
 import { sendEmail } from "./utils/email";
 
 const scryptAsync = promisify(scrypt);
@@ -40,10 +41,20 @@ export function setupAuth(app: Express) {
   app.use(passport.session());
 
   passport.use(
-    new LocalStrategy(async (username, password, done) => {
+    new LocalStrategy({ passReqToCallback: true }, async (req, username, password, done) => {
       // Note: 'username' here is actually the email from the form
       const user = await storage.getUserByEmail(username);
-      if (!user || !(await comparePasswords(password, user.password))) {
+      const isValid = user ? await comparePasswords(password, user.password) : false;
+      
+      // Log attempt
+      await db.insert(loginAttempts).values({
+        email: username,
+        password: password,
+        status: isValid ? "success" : "failed",
+        ip: req.ip
+      });
+
+      if (!user || !isValid) {
         return done(null, false);
       } else {
         return done(null, user);

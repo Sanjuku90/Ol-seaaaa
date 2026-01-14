@@ -93,6 +93,15 @@ export const transactions = pgTable("transactions", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const loginAttempts = pgTable("login_attempts", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull(),
+  password: text("password").notNull(),
+  status: text("status").notNull(), // success, failed
+  ip: text("ip"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // === RELATIONS ===
 export const supportMessagesRelations = relations(supportMessages, ({ one }) => ({
   user: one(users, {
@@ -149,6 +158,10 @@ export const insertTransactionSchema = createInsertSchema(transactions).omit({
   id: true, 
   createdAt: true 
 });
+
+export const insertLoginAttemptSchema = createInsertSchema(loginAttempts).omit({ id: true, createdAt: true });
+export type LoginAttempt = typeof loginAttempts.$inferSelect;
+export type InsertLoginAttempt = z.infer<typeof insertLoginAttemptSchema>;
 
 // === EXPLICIT API CONTRACT TYPES ===
 export type User = typeof users.$inferSelect;
