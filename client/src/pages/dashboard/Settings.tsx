@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -8,16 +8,45 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Settings as SettingsIcon, User, Lock, ShieldCheck, Clock, XCircle, ChevronRight, ChevronLeft, Upload, CheckCircle2 } from "lucide-react";
+import { Loader2, Settings as SettingsIcon, User, Lock, ShieldCheck, Clock, XCircle, ChevronRight, ChevronLeft, Upload, CheckCircle2, Camera, Image as ImageIcon } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLocation } from "wouter";
+
+const countries = [
+  "Afghanistan", "Afrique du Sud", "Albanie", "Algérie", "Allemagne", "Andorre", "Angola", "Antigua-et-Barbuda", "Arabie Saoudite", "Argentine", "Arménie", "Australie", "Autriche", "Azerbaïdjan",
+  "Bahamas", "Bahreïn", "Bangladesh", "Barbade", "Belgique", "Belize", "Bénin", "Bhoutan", "Biélorussie", "Birmanie", "Bolivie", "Bosnie-Herzégovine", "Botswana", "Brésil", "Brunei", "Bulgarie", "Burkina Faso", "Burundi",
+  "Cambodge", "Cameroun", "Canada", "Cap-Vert", "Chili", "Chine", "Chypre", "Colombie", "Comores", "Congo-Brazzaville", "Congo-Kinshasa", "Corée du Nord", "Corée du Sud", "Costa Rica", "Côte d'Ivoire", "Croatie", "Cuba",
+  "Danemark", "Djibouti", "Dominique",
+  "Égypte", "Émirats Arabes Unis", "Équateur", "Érythrée", "Espagne", "Estonie", "Eswatini", "États-Unis", "Éthiopie",
+  "Fidji", "Finlande", "France",
+  "Gabon", "Gambie", "Géorgie", "Ghana", "Grèce", "Grenade", "Guatemala", "Guinée", "Guinée équatoriale", "Guinée-Bissau", "Guyana",
+  "Haïti", "Honduras", "Hongrie",
+  "Inde", "Indonésie", "Irak", "Iran", "Irlande", "Islande", "Israël", "Italie",
+  "Jamaïque", "Japon", "Jordanie",
+  "Kazakhstan", "Kenya", "Kirghizistan", "Kiribati", "Koweït",
+  "Laos", "Lesotho", "Lettonie", "Liban", "Liberia", "Libye", "Liechtenstein", "Lituanie", "Luxembourg",
+  "Macédoine du Nord", "Madagascar", "Malaisie", "Malawi", "Maldives", "Mali", "Malte", "Maroc", "Maurice", "Mauritanie", "Mexique", "Micronésie", "Moldavie", "Monaco", "Mongolie", "Monténégro", "Mozambique",
+  "Namibie", "Nauru", "Népal", "Nicaragua", "Niger", "Nigeria", "Norvège", "Nouvelle-Zélande",
+  "Oman", "Ouganda", "Ouzbékistan",
+  "Pakistan", "Palaos", "Palestine", "Panama", "Papouasie-Nouvelle-Guinée", "Paraguay", "Pays-Bas", "Pérou", "Philippines", "Pologne", "Portugal",
+  "Qatar",
+  "République Centrafricaine", "République Dominicaine", "République Tchèque", "Roumanie", "Royaume-Uni", "Russie", "Rwanda",
+  "Saint-Christophe-et-Niévès", "Sainte-Lucie", "Saint-Marin", "Saint-Vincent-et-les-Grenadines", "Salomon", "Salvador", "Samoa", "Sao Tomé-et-Principe", "Sénégal", "Serbie", "Seychelles", "Sierra Leone", "Singapour", "Slovaquie", "Slovénie", "Somalie", "Soudan", "Soudan du Sud", "Sri Lanka", "Suède", "Suisse", "Suriname", "Syrie",
+  "Tadjikistan", "Tanzanie", "Tchad", "Thaïlande", "Timor oriental", "Togo", "Tonga", "Trinité-et-Tobago", "Tunisie", "Turkménistan", "Turquie", "Tuvalu",
+  "Ukraine", "Uruguay",
+  "Vanuatu", "Vatican", "Venezuela", "Vietnam",
+  "Yémen",
+  "Zambie", "Zimbabwe"
+];
 
 export default function Settings() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [location] = useLocation();
   const [activeTab, setActiveTab] = useState("profile");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [currentUploadType, setCurrentUploadType] = useState<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -138,12 +167,19 @@ export default function Settings() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="country">Pays</Label>
-              <Input 
-                id="country" 
+              <Select 
                 value={kycData.country} 
-                onChange={(e) => setKycData({...kycData, country: e.target.value})} 
-                placeholder="France" 
-              />
+                onValueChange={(value) => setKycData({...kycData, country: value})}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionnez votre pays" />
+                </SelectTrigger>
+                <SelectContent>
+                  {countries.map((c) => (
+                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="birthDate">Date de naissance</Label>
@@ -194,29 +230,60 @@ export default function Settings() {
           <div className="space-y-4">
             <h4 className="font-semibold text-lg">Photos du Document</h4>
             <div className="space-y-4">
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                className="hidden" 
+                accept="image/*" 
+                onChange={handleFileChange} 
+              />
               <div className="space-y-2">
-                <Label>Recto du document (Lien image)</Label>
-                <Input 
-                  value={kycData.photoRecto} 
-                  onChange={(e) => setKycData({...kycData, photoRecto: e.target.value})} 
-                  placeholder="https://..." 
-                />
+                <Label>Recto du document</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button variant="outline" className="w-full gap-2" onClick={() => triggerUpload("photoRecto", "environment")}>
+                    <Camera className="w-4 h-4" /> Caméra
+                  </Button>
+                  <Button variant="outline" className="w-full gap-2" onClick={() => triggerUpload("photoRecto")}>
+                    <ImageIcon className="w-4 h-4" /> Galerie
+                  </Button>
+                </div>
+                {kycData.photoRecto && (
+                  <div className="mt-2 relative aspect-video rounded-lg overflow-hidden border">
+                    <img src={kycData.photoRecto} alt="Recto" className="object-cover w-full h-full" />
+                  </div>
+                )}
               </div>
               <div className="space-y-2">
-                <Label>Verso du document (Lien image)</Label>
-                <Input 
-                  value={kycData.photoVerso} 
-                  onChange={(e) => setKycData({...kycData, photoVerso: e.target.value})} 
-                  placeholder="https://..." 
-                />
+                <Label>Verso du document</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button variant="outline" className="w-full gap-2" onClick={() => triggerUpload("photoVerso", "environment")}>
+                    <Camera className="w-4 h-4" /> Caméra
+                  </Button>
+                  <Button variant="outline" className="w-full gap-2" onClick={() => triggerUpload("photoVerso")}>
+                    <ImageIcon className="w-4 h-4" /> Galerie
+                  </Button>
+                </div>
+                {kycData.photoVerso && (
+                  <div className="mt-2 relative aspect-video rounded-lg overflow-hidden border">
+                    <img src={kycData.photoVerso} alt="Verso" className="object-cover w-full h-full" />
+                  </div>
+                )}
               </div>
               <div className="space-y-2">
-                <Label>Selfie avec le document (Lien image)</Label>
-                <Input 
-                  value={kycData.photoSelfie} 
-                  onChange={(e) => setKycData({...kycData, photoSelfie: e.target.value})} 
-                  placeholder="https://..." 
-                />
+                <Label>Selfie avec le document</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button variant="outline" className="w-full gap-2" onClick={() => triggerUpload("photoSelfie", "user")}>
+                    <Camera className="w-4 h-4" /> Caméra
+                  </Button>
+                  <Button variant="outline" className="w-full gap-2" onClick={() => triggerUpload("photoSelfie")}>
+                    <ImageIcon className="w-4 h-4" /> Galerie
+                  </Button>
+                </div>
+                {kycData.photoSelfie && (
+                  <div className="mt-2 relative aspect-video rounded-lg overflow-hidden border">
+                    <img src={kycData.photoSelfie} alt="Selfie" className="object-cover w-full h-full" />
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex gap-2">
