@@ -117,6 +117,43 @@ export default function Settings() {
             </div>
             <h3 className="text-xl font-bold">Vérification en cours</h3>
             <p className="text-muted-foreground">Nous examinons vos documents.</p>
+            <Button 
+              variant="outline" 
+              className="mt-4"
+              onClick={() => queryClient.invalidateQueries({ queryKey: ["/api/user"] })}
+            >
+              Actualiser le statut
+            </Button>
+          </div>
+        );
+      case "rejected":
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col items-center justify-center p-8 text-center space-y-4 bg-destructive/5 rounded-xl border border-destructive/10">
+              <div className="p-4 bg-destructive/10 rounded-full">
+                <XCircle className="w-12 h-12 text-destructive" />
+              </div>
+              <h3 className="text-xl font-bold">Vérification Rejetée</h3>
+              <p className="text-muted-foreground">Vos documents n'ont pas pu être validés. Veuillez soumettre à nouveau des documents lisibles et valides.</p>
+            </div>
+            
+            <div className="pt-6 border-t border-white/5">
+              <h4 className="font-semibold mb-4">Nouvelle Soumission</h4>
+              <form onSubmit={handleKYCSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Nom Complet</Label>
+                  <Input id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Jean Dupont" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="docUrl">Lien Document (URL)</Label>
+                  <Input id="docUrl" value={documentUrl} onChange={(e) => setDocumentUrl(e.target.value)} placeholder="https://..." />
+                </div>
+                <Button type="submit" className="w-full" disabled={kycMutation.isPending}>
+                  {kycMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Soumettre à nouveau
+                </Button>
+              </form>
+            </div>
           </div>
         );
       default:

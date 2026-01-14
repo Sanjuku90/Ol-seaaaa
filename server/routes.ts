@@ -294,6 +294,31 @@ export async function registerRoutes(
     res.json(updatedTx);
   });
 
+  app.patch("/api/admin/users/:id/kyc", async (req, res) => {
+    const { status } = req.body;
+    const userId = Number(req.params.id);
+    const user = await storage.updateUserProfile(userId, { kycStatus: status });
+
+    if (user && user.email) {
+      const isApproved = status === 'approved';
+      const statusLabel = isApproved ? 'approuvée' : 'rejetée';
+      sendEmail(
+        user.email,
+        "Mise à jour de votre vérification KYC - BlockMint",
+        `Votre vérification d'identité a été ${statusLabel}.`,
+        "Statut KYC",
+        `<p>Bonjour,</p>
+         <p>Nous vous informons que l'examen de vos documents d'identité est terminé.</p>
+         <div style="padding: 15px; border-radius: 8px; text-align: center; background: ${isApproved ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; margin: 20px 0;">
+           <p style="font-size: 18px; margin: 0;">Nouveau statut KYC : <span style="font-weight: bold; color: ${isApproved ? '#10b981' : '#ef4444'};">${statusLabel.toUpperCase()}</span></p>
+         </div>
+         ${!isApproved ? '<p>Veuillez soumettre à nouveau des documents valides depuis vos paramètres.</p>' : '<p>Votre compte est désormais pleinement vérifié pour les retraits.</p>'}
+         <p>Si vous avez des questions, n'hésitez pas à contacter notre support.</p>`
+      );
+    }
+    res.json(user);
+  });
+
   app.patch("/api/admin/users/:id/status", async (req, res) => {
     const { status } = req.body;
     const user = await storage.updateUserStatus(Number(req.params.id), status);
@@ -343,7 +368,11 @@ export async function registerRoutes(
 
   app.patch("/api/user/profile", async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
-    const user = await storage.updateUserProfile((req.user as any).id, req.body);
+    
+    // Protection: don't allow changing sensitive fields via this route
+    const { email, password, role, balance, isAdmin, kycStatus, ...updatableData } = req.body;
+    
+    const user = await storage.updateUserProfile((req.user as any).id, updatableData);
     res.json(user);
   });
 
