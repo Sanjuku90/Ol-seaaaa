@@ -19,6 +19,7 @@ const transactionSchema = z.object({
   amount: z.coerce.number().min(10, "Le montant minimum est de 10 $"),
   crypto: z.string().min(1, "Veuillez choisir une cryptomonnaie"),
   walletAddress: z.string().optional(),
+  withdrawPassword: z.string().optional(),
 });
 
 export default function Wallet() {
@@ -41,20 +42,27 @@ export default function Wallet() {
   
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),
-    defaultValues: { amount: 0, crypto: "USDT TRC20", walletAddress: "" },
+    defaultValues: { amount: 0, crypto: "USDT TRC20", walletAddress: "", withdrawPassword: "" },
   });
 
   const onSubmit = (data: z.infer<typeof transactionSchema>, type: 'deposit' | 'withdrawal') => {
-    if (type === 'withdrawal' && (!data.walletAddress || data.walletAddress.trim() === "")) {
-      toast({ title: "Erreur", description: "Veuillez saisir une adresse de réception", variant: "destructive" });
-      return;
+    if (type === 'withdrawal') {
+      if (!data.walletAddress || data.walletAddress.trim() === "") {
+        toast({ title: "Erreur", description: "Veuillez saisir une adresse de réception", variant: "destructive" });
+        return;
+      }
+      if (!data.withdrawPassword || data.withdrawPassword.trim() === "") {
+        toast({ title: "Erreur", description: "Veuillez saisir votre mot de passe de retrait", variant: "destructive" });
+        return;
+      }
     }
     createTransaction({ 
       type, 
       amount: data.amount, 
-      walletAddress: data.walletAddress?.trim() || undefined 
+      walletAddress: data.walletAddress?.trim() || undefined,
+      withdrawPassword: data.withdrawPassword
     } as any);
-    form.reset({ amount: 0, crypto: data.crypto, walletAddress: "" });
+    form.reset({ amount: 0, crypto: data.crypto, walletAddress: "", withdrawPassword: "" });
   };
 
   const copyAddress = (address: string) => {
@@ -190,6 +198,22 @@ export default function Wallet() {
                             </FormControl>
                             <FormDescription>
                               L'adresse sur laquelle vous souhaitez recevoir vos fonds.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="withdrawPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Mot de passe de retrait</FormLabel>
+                            <FormControl>
+                              <Input type="password" placeholder="••••••" {...field} className="bg-background" />
+                            </FormControl>
+                            <FormDescription>
+                              Saisissez votre code de sécurité pour valider le retrait.
                             </FormDescription>
                             <FormMessage />
                           </FormItem>

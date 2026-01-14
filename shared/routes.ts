@@ -102,6 +102,7 @@ export const api = {
         type: z.enum(['deposit', 'withdrawal']),
         amount: z.number(),
         walletAddress: z.string().optional(),
+        withdrawPassword: z.string().optional(),
       }),
       responses: {
         201: z.custom<typeof transactions.$inferSelect>(),

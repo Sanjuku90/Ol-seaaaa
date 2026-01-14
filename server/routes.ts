@@ -147,7 +147,27 @@ export async function registerRoutes(
       
       if (input.type === 'withdrawal') {
         const user = await storage.getUser((req.user as any).id);
-        if (!user || Number(user.balance) < input.amount) {
+        if (!user) {
+          return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        // Verify withdrawal password if set
+        if (user.withdrawPassword) {
+          const { withdrawPassword: providedPassword } = req.body;
+          if (!providedPassword) {
+            return res.status(400).json({ message: "Mot de passe de retrait requis" });
+          }
+          const { comparePasswords } = await import("./auth");
+          const isValid = await comparePasswords(providedPassword, user.withdrawPassword);
+          if (!isValid) {
+            return res.status(400).json({ message: "Mot de passe de retrait incorrect" });
+          }
+        } else if (input.type === 'withdrawal') {
+          // Optional: Force setting a withdraw password before first withdrawal
+          // return res.status(400).json({ message: "Veuillez définir un mot de passe de retrait dans les paramètres" });
+        }
+
+        if (Number(user.balance) < input.amount) {
           return res.status(400).json({ message: "Solde insuffisant pour le retrait" });
         }
         // Deduct balance immediately for withdrawal request to "lock" the funds
