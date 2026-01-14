@@ -1,6 +1,6 @@
 import { db } from "./db";
 import {
-  users, machines, contracts, transactions, supportMessages,
+  users, machines, contracts, transactions, supportMessages, settings,
   type User, type InsertUser, type Machine, type Contract, type Transaction,
   type SupportMessage, type InsertSupportMessage
 } from "@shared/schema";
