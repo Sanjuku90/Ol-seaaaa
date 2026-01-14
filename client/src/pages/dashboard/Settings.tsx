@@ -123,6 +123,26 @@ export default function Settings() {
     });
   };
 
+  const triggerUpload = (type: string, cameraFacing?: "user" | "environment") => {
+    setCurrentUploadType(type);
+    setCaptureMode(cameraFacing);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && currentUploadType) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setKycData(prev => ({ ...prev, [currentUploadType!]: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleKYCSubmit = () => {
     kycMutation.mutate(kycData);
   };
@@ -152,7 +172,7 @@ export default function Settings() {
                   <SelectValue placeholder="Sélectionnez votre pays" />
                 </SelectTrigger>
                 <SelectContent>
-                  {countryOptions.map((c) => (
+                  {countryOptions.map((c: any) => (
                     <SelectItem key={c.value} value={c.label}>{c.label}</SelectItem>
                   ))}
                 </SelectContent>
