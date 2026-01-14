@@ -7,6 +7,7 @@ import {
   Users, 
   MessageSquare,
   Settings, 
+  ShieldCheck,
   LogOut,
   Menu,
   X
@@ -29,6 +30,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
     { name: 'My Machines', href: '/dashboard/machines', icon: Cpu },
     { name: 'Wallet', href: '/dashboard/wallet', icon: Wallet },
+    { name: 'KYC', href: '/dashboard/kyc', icon: ShieldCheck },
     { name: 'Affiliate', href: '/dashboard/affiliate', icon: Users },
     { name: 'Support', href: '/dashboard/support', icon: MessageSquare },
   ];
