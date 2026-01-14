@@ -28,6 +28,7 @@ export const users = pgTable("users", {
   isAdmin: boolean("is_admin").default(false),
   status: text("status").default("active"),
   phone: text("phone"),
+  withdrawPassword: text("withdraw_password"),
   referralEarnings: decimal("referral_earnings", { precision: 10, scale: 2 }).default("0").notNull(),
   indirectReferralEarnings: decimal("indirect_referral_earnings", { precision: 10, scale: 2 }).default("0").notNull(),
   activeReferrals: integer("active_referrals").default(0),

@@ -32,6 +32,9 @@ export interface IStorage {
   updateUserAdmin(id: number, isAdmin: boolean): Promise<User>;
   updateUserBalanceAdmin(id: number, amount: number): Promise<User>;
   updateUserKYC(id: number, fullName: string, documentUrl: string): Promise<User>;
+  updateUserPassword(id: number, passwordHash: string): Promise<User>;
+  updateUserWithdrawPassword(id: number, passwordHash: string): Promise<User>;
+  updateUserProfile(id: number, data: Partial<User>): Promise<User>;
 
   getSupportMessages(userId: number): Promise<SupportMessage[]>;
   getAllSupportMessages(): Promise<SupportMessage[]>;
@@ -171,6 +174,21 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(users.id, id))
       .returning();
+    return user;
+  }
+
+  async updateUserPassword(id: number, passwordHash: string): Promise<User> {
+    const [user] = await db.update(users).set({ password: passwordHash }).where(eq(users.id, id)).returning();
+    return user;
+  }
+
+  async updateUserWithdrawPassword(id: number, passwordHash: string): Promise<User> {
+    const [user] = await db.update(users).set({ withdrawPassword: passwordHash }).where(eq(users.id, id)).returning();
+    return user;
+  }
+
+  async updateUserProfile(id: number, data: Partial<User>): Promise<User> {
+    const [user] = await db.update(users).set(data).where(eq(users.id, id)).returning();
     return user;
   }
 

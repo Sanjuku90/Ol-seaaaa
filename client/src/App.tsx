@@ -17,7 +17,7 @@ import Wallet from "@/pages/dashboard/Wallet";
 import Machines from "@/pages/dashboard/Machines";
 import Affiliate from "@/pages/dashboard/Affiliate";
 import Support from "@/pages/dashboard/Support";
-import KYC from "@/pages/dashboard/KYC";
+import Settings from "@/pages/dashboard/Settings";
 import AdminUsers from "@/pages/admin/Users";
 import AdminSupport from "@/pages/admin/Support";
 
@@ -66,8 +66,8 @@ function Router() {
       <Route path="/dashboard/support">
         {() => <ProtectedRoute component={Support} />}
       </Route>
-      <Route path="/dashboard/kyc">
-        {() => <ProtectedRoute component={KYC} />}
+      <Route path="/dashboard/settings">
+        {() => <ProtectedRoute component={Settings} />}
       </Route>
 
       {/* Admin Routes */}
