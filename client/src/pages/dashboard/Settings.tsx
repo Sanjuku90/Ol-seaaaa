@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -11,10 +11,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, Settings as SettingsIcon, User, Lock, ShieldCheck, Clock, XCircle, ChevronRight, ChevronLeft, Upload, CheckCircle2 } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLocation } from "wouter";
 
 export default function Settings() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const [location] = useLocation();
+  const [activeTab, setActiveTab] = useState("profile");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get("tab");
+    if (tab === "kyc") {
+      setActiveTab("kyc");
+    }
+  }, [location]);
   
   // Profile state
   const [phone, setPhone] = useState(user?.phone || "");
@@ -302,7 +313,7 @@ export default function Settings() {
           <h1 className="text-3xl font-bold">Paramètres</h1>
         </div>
 
-        <Tabs defaultValue="profile" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="bg-card border p-1 rounded-xl">
             <TabsTrigger value="profile" className="rounded-lg gap-2"><User className="w-4 h-4" /> Profil</TabsTrigger>
             <TabsTrigger value="security" className="rounded-lg gap-2"><Lock className="w-4 h-4" /> Sécurité</TabsTrigger>
