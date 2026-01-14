@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Settings as SettingsIcon, User, Lock, ShieldCheck, Clock, XCircle } from "lucide-react";
+import { Loader2, Settings as SettingsIcon, User, Lock, ShieldCheck, Clock, XCircle, ChevronRight, ChevronLeft, Upload, CheckCircle2 } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Settings() {
   const { user } = useAuth();
@@ -24,8 +25,16 @@ export default function Settings() {
   const [withdrawPassword, setWithdrawPassword] = useState("");
   
   // KYC states
-  const [fullName, setFullName] = useState(user?.kycFullName || "");
-  const [documentUrl, setDocumentUrl] = useState(user?.kycDocumentUrl || "");
+  const [step, setStep] = useState(1);
+  const [kycData, setKycData] = useState({
+    fullName: user?.kycFullName || "",
+    country: user?.kycCountry || "",
+    birthDate: user?.kycBirthDate || "",
+    documentType: user?.kycDocumentType || "",
+    photoRecto: user?.kycPhotoRecto || "",
+    photoVerso: user?.kycPhotoVerso || "",
+    photoSelfie: user?.kycPhotoSelfie || "",
+  });
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data: any) => {
@@ -66,7 +75,7 @@ export default function Settings() {
   });
 
   const kycMutation = useMutation({
-    mutationFn: async (data: { fullName: string; documentUrl: string }) => {
+    mutationFn: async (data: typeof kycData) => {
       const res = await apiRequest("POST", "/api/kyc/submit", data);
       return res.json();
     },
@@ -92,9 +101,126 @@ export default function Settings() {
     updateWithdrawPasswordMutation.mutate(withdrawPassword);
   };
 
-  const handleKYCSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    kycMutation.mutate({ fullName, documentUrl });
+  const handleKYCSubmit = () => {
+    kycMutation.mutate(kycData);
+  };
+
+  const renderKYCStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <div className="space-y-4">
+            <h4 className="font-semibold text-lg">Informations Personnelles</h4>
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Nom Complet</Label>
+              <Input 
+                id="fullName" 
+                value={kycData.fullName} 
+                onChange={(e) => setKycData({...kycData, fullName: e.target.value})} 
+                placeholder="Jean Dupont" 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="country">Pays</Label>
+              <Input 
+                id="country" 
+                value={kycData.country} 
+                onChange={(e) => setKycData({...kycData, country: e.target.value})} 
+                placeholder="France" 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="birthDate">Date de naissance</Label>
+              <Input 
+                id="birthDate" 
+                type="date"
+                value={kycData.birthDate} 
+                onChange={(e) => setKycData({...kycData, birthDate: e.target.value})} 
+              />
+            </div>
+            <Button className="w-full" onClick={() => setStep(2)}>
+              Suivant <ChevronRight className="ml-2 w-4 h-4" />
+            </Button>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-4">
+            <h4 className="font-semibold text-lg">Type de Document</h4>
+            <div className="space-y-2">
+              <Label>Type de pièce d'identité</Label>
+              <Select 
+                value={kycData.documentType} 
+                onValueChange={(value) => setKycData({...kycData, documentType: value})}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionnez un document" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="id_card">Carte d'Identité</SelectItem>
+                  <SelectItem value="passport">Passeport</SelectItem>
+                  <SelectItem value="driver_license">Permis de Conduire</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" className="flex-1" onClick={() => setStep(1)}>
+                <ChevronLeft className="mr-2 w-4 h-4" /> Retour
+              </Button>
+              <Button className="flex-1" onClick={() => setStep(3)} disabled={!kycData.documentType}>
+                Suivant <ChevronRight className="ml-2 w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="space-y-4">
+            <h4 className="font-semibold text-lg">Photos du Document</h4>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Recto du document (Lien image)</Label>
+                <Input 
+                  value={kycData.photoRecto} 
+                  onChange={(e) => setKycData({...kycData, photoRecto: e.target.value})} 
+                  placeholder="https://..." 
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Verso du document (Lien image)</Label>
+                <Input 
+                  value={kycData.photoVerso} 
+                  onChange={(e) => setKycData({...kycData, photoVerso: e.target.value})} 
+                  placeholder="https://..." 
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Selfie avec le document (Lien image)</Label>
+                <Input 
+                  value={kycData.photoSelfie} 
+                  onChange={(e) => setKycData({...kycData, photoSelfie: e.target.value})} 
+                  placeholder="https://..." 
+                />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" className="flex-1" onClick={() => setStep(2)}>
+                <ChevronLeft className="mr-2 w-4 h-4" /> Retour
+              </Button>
+              <Button 
+                className="flex-1" 
+                onClick={handleKYCSubmit}
+                disabled={kycMutation.isPending || !kycData.photoRecto || !kycData.photoSelfie}
+              >
+                {kycMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Soumettre
+              </Button>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
   };
 
   const renderKYCStatus = () => {
@@ -116,7 +242,7 @@ export default function Settings() {
               <Clock className="w-12 h-12 text-yellow-500" />
             </div>
             <h3 className="text-xl font-bold">Vérification en cours</h3>
-            <p className="text-muted-foreground">Nous examinons vos documents.</p>
+            <p className="text-muted-foreground">Nous examinons vos documents. Cela peut prendre jusqu'à 24h.</p>
             <Button 
               variant="outline" 
               className="mt-4"
@@ -134,44 +260,34 @@ export default function Settings() {
                 <XCircle className="w-12 h-12 text-destructive" />
               </div>
               <h3 className="text-xl font-bold">Vérification Rejetée</h3>
-              <p className="text-muted-foreground">Vos documents n'ont pas pu être validés. Veuillez soumettre à nouveau des documents lisibles et valides.</p>
+              <p className="text-muted-foreground">Vos documents n'ont pas pu être validés. {user.kycNote && <span className="block mt-2 font-semibold">Motif : {user.kycNote}</span>}</p>
             </div>
-            
             <div className="pt-6 border-t border-white/5">
-              <h4 className="font-semibold mb-4">Nouvelle Soumission</h4>
-              <form onSubmit={handleKYCSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">Nom Complet</Label>
-                  <Input id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Jean Dupont" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="docUrl">Lien Document (URL)</Label>
-                  <Input id="docUrl" value={documentUrl} onChange={(e) => setDocumentUrl(e.target.value)} placeholder="https://..." />
-                </div>
-                <Button type="submit" className="w-full" disabled={kycMutation.isPending}>
-                  {kycMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Soumettre à nouveau
-                </Button>
-              </form>
+              <h4 className="font-semibold mb-4 text-center">Recommencer la vérification</h4>
+              <div className="max-w-md mx-auto">
+                {renderKYCStep()}
+              </div>
             </div>
           </div>
         );
       default:
         return (
-          <form onSubmit={handleKYCSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Nom Complet</Label>
-              <Input id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Jean Dupont" />
+          <div className="max-w-md mx-auto py-4">
+            <div className="mb-8 flex justify-between relative">
+              {[1, 2, 3].map((s) => (
+                <div key={s} className="flex flex-col items-center z-10">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step >= s ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+                    {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
+                  </div>
+                  <span className="text-[10px] mt-1 text-muted-foreground">Étape {s}</span>
+                </div>
+              ))}
+              <div className="absolute top-4 left-0 w-full h-[2px] bg-muted -z-0">
+                <div className="h-full bg-primary transition-all duration-300" style={{ width: `${(step - 1) * 50}%` }} />
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="docUrl">Lien Document (URL)</Label>
-              <Input id="docUrl" value={documentUrl} onChange={(e) => setDocumentUrl(e.target.value)} placeholder="https://..." />
-            </div>
-            <Button type="submit" className="w-full" disabled={kycMutation.isPending}>
-              {kycMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Soumettre KYC
-            </Button>
-          </form>
+            {renderKYCStep()}
+          </div>
         );
     }
   };
@@ -250,7 +366,9 @@ export default function Settings() {
                       <Label>Nouveau mot de passe de retrait</Label>
                       <Input type="password" value={withdrawPassword} onChange={(e) => setWithdrawPassword(e.target.value)} />
                     </div>
-                    <Button type="submit" disabled={updateWithdrawPasswordMutation.isPending}>Définir</Button>
+                    <Button type="submit" disabled={updateWithdrawPasswordMutation.isPending}>
+                      {user?.withdrawPassword ? "Changer le mot de passe" : "Définir le mot de passe"}
+                    </Button>
                   </form>
                 </CardContent>
               </Card>
@@ -261,7 +379,7 @@ export default function Settings() {
             <Card className="hover-elevate">
               <CardHeader>
                 <CardTitle>Vérification d'Identité (KYC)</CardTitle>
-                <CardDescription>Obligatoire pour les retraits importants.</CardDescription>
+                <CardDescription>Obligatoire pour les retraits importants (≥ 200$).</CardDescription>
               </CardHeader>
               <CardContent>
                 {renderKYCStatus()}

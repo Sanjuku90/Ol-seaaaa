@@ -29,7 +29,6 @@ export const users = pgTable("users", {
   balance: decimal("balance", { precision: 10, scale: 2 }).default("0").notNull(),
   referralCode: text("referral_code").unique(),
   referredBy: integer("referred_by"), 
-  kycStatus: text("kyc_status").default("pending"), 
   affiliationGrade: text("affiliation_grade").default("Bronze"),
   isAdmin: boolean("is_admin").default(false),
   status: text("status").default("active"),
@@ -39,7 +38,14 @@ export const users = pgTable("users", {
   indirectReferralEarnings: decimal("indirect_referral_earnings", { precision: 10, scale: 2 }).default("0").notNull(),
   activeReferrals: integer("active_referrals").default(0),
   kycFullName: text("kyc_full_name"),
-  kycDocumentUrl: text("kyc_document_url"),
+  kycCountry: text("kyc_country"),
+  kycBirthDate: text("kyc_birth_date"),
+  kycDocumentType: text("kyc_document_type"), // id_card, passport, driver_license
+  kycPhotoRecto: text("kyc_photo_recto"),
+  kycPhotoVerso: text("kyc_photo_verso"),
+  kycPhotoSelfie: text("kyc_photo_selfie"),
+  kycNote: text("kyc_note"),
+  kycStatus: text("kyc_status").default("pending"), 
   createdAt: timestamp("created_at").defaultNow(),
 });
 

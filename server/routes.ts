@@ -151,6 +151,14 @@ export async function registerRoutes(
           return res.status(404).json({ message: "Utilisateur non trouvé" });
         }
 
+        // KYC check for large withdrawals
+        const WITHDRAWAL_KYC_THRESHOLD = 200;
+        if (input.amount >= WITHDRAWAL_KYC_THRESHOLD && user.kycStatus !== 'approved') {
+          return res.status(403).json({ 
+            message: `Une vérification d'identité (KYC) est requise pour les retraits de ${WITHDRAWAL_KYC_THRESHOLD}$ ou plus.` 
+          });
+        }
+
         // Verify withdrawal password if set
         if (user.withdrawPassword) {
           const { withdrawPassword: providedPassword } = req.body;
@@ -315,9 +323,12 @@ export async function registerRoutes(
   });
 
   app.patch("/api/admin/users/:id/kyc", async (req, res) => {
-    const { status } = req.body;
+    const { status, note } = req.body;
     const userId = Number(req.params.id);
-    const user = await storage.updateUserProfile(userId, { kycStatus: status });
+    const user = await storage.updateUserProfile(userId, { 
+      kycStatus: status,
+      kycNote: note
+    });
 
     if (user && user.email) {
       const isApproved = status === 'approved';
@@ -325,13 +336,14 @@ export async function registerRoutes(
       sendEmail(
         user.email,
         "Mise à jour de votre vérification KYC - BlockMint",
-        `Votre vérification d'identité a été ${statusLabel}.`,
+        `Votre vérification d'identité a été ${statusLabel}.${note ? ` Motif : ${note}` : ''}`,
         "Statut KYC",
         `<p>Bonjour,</p>
          <p>Nous vous informons que l'examen de vos documents d'identité est terminé.</p>
          <div style="padding: 15px; border-radius: 8px; text-align: center; background: ${isApproved ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; margin: 20px 0;">
            <p style="font-size: 18px; margin: 0;">Nouveau statut KYC : <span style="font-weight: bold; color: ${isApproved ? '#10b981' : '#ef4444'};">${statusLabel.toUpperCase()}</span></p>
          </div>
+         ${note ? `<p><strong>Note de l'administrateur :</strong> ${note}</p>` : ''}
          ${!isApproved ? '<p>Veuillez soumettre à nouveau des documents valides depuis vos paramètres.</p>' : '<p>Votre compte est désormais pleinement vérifié pour les retraits.</p>'}
          <p>Si vous avez des questions, n'hésitez pas à contacter notre support.</p>`
       );
@@ -378,11 +390,19 @@ export async function registerRoutes(
 
   app.post("/api/kyc/submit", async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
-    const { fullName, documentUrl } = req.body;
-    if (!fullName || !documentUrl) {
-      return res.status(400).json({ message: "Nom complet et URL du document requis" });
+    const { fullName, country, birthDate, documentType, photoRecto, photoVerso, photoSelfie } = req.body;
+    if (!fullName || !country || !birthDate || !documentType || !photoRecto || !photoSelfie) {
+      return res.status(400).json({ message: "Tous les champs sont requis" });
     }
-    const user = await storage.updateUserKYC((req.user as any).id, fullName, documentUrl);
+    const user = await storage.updateUserKYC((req.user as any).id, {
+      fullName,
+      country,
+      birthDate,
+      documentType,
+      photoRecto,
+      photoVerso,
+      photoSelfie
+    });
     res.json(user);
   });
 

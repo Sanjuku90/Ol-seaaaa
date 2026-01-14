@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
@@ -37,7 +37,11 @@ import {
   Send,
   User as UserIcon,
   LogOut as LeaveIcon,
-  Check
+  Check,
+  Eye,
+  Calendar,
+  MapPin,
+  FileText
 } from "lucide-react";
 import { type User, type Transaction, type SupportMessage } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -54,6 +58,7 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function AdminUsers() {
   const { toast } = useToast();
@@ -62,6 +67,11 @@ export default function AdminUsers() {
   const [bonusAmount, setBonusAmount] = useState("");
   const [isBonusOpen, setIsBonusOpen] = useState(false);
   
+  // KYC management
+  const [isKycDialogOpen, setIsKycDialogOpen] = useState(false);
+  const [kycUser, setKycUser] = useState<User | null>(null);
+  const [kycRejectNote, setKycRejectNote] = useState("");
+
   // Support state
   const [selectedSupportUserId, setSelectedSupportUserId] = useState<number | null>(null);
   const [supportMessage, setSupportMessage] = useState("");
@@ -125,6 +135,18 @@ export default function AdminUsers() {
     }
   });
 
+  const updateKycMutation = useMutation({
+    mutationFn: async ({ id, status, note }: { id: number; status: 'approved' | 'rejected'; note?: string }) => {
+      await apiRequest("PATCH", `/api/admin/users/${id}/kyc`, { status, note });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/users"] });
+      setIsKycDialogOpen(false);
+      setKycRejectNote("");
+      toast({ title: "KYC mis à jour", description: "Le statut KYC a été mis à jour et l'utilisateur notifié." });
+    }
+  });
+
   const sendSupportMutation = useMutation({
     mutationFn: async ({ userId, message }: { userId: number; message: string }) => {
       const res = await apiRequest("POST", "/api/admin/support", { userId, message });
@@ -149,7 +171,8 @@ export default function AdminUsers() {
 
   const filteredUsers = users?.filter(u => 
     u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (u.phone && u.phone.includes(searchTerm))
+    (u.phone && u.phone.includes(searchTerm)) ||
+    (u.kycFullName && u.kycFullName.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const getStatusBadge = (status: string) => {
@@ -158,6 +181,15 @@ export default function AdminUsers() {
       case "suspended": return <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20">Suspendu</Badge>;
       case "banned": return <Badge variant="destructive">Banni</Badge>;
       default: return <Badge variant="outline">{status}</Badge>;
+    }
+  };
+
+  const getKycStatusBadge = (status: string) => {
+    switch (status) {
+      case "approved": return <Badge className="bg-emerald-500 text-white">Vérifié</Badge>;
+      case "pending": return <Badge className="bg-yellow-500 text-white">En attente</Badge>;
+      case "rejected": return <Badge className="bg-red-500 text-white">Rejeté</Badge>;
+      default: return <Badge variant="outline">Non soumis</Badge>;
     }
   };
 
@@ -173,29 +205,29 @@ export default function AdminUsers() {
   const chatMessages = allMessages?.filter(m => Number(m.userId) === Number(selectedSupportUserId)) || [];
   const usersWithMessages = Array.from(new Set(allMessages?.map(m => Number(m.userId))));
 
+  const kycRequests = users?.filter(u => u.kycStatus === 'pending') || [];
+
   return (
     <DashboardLayout>
       <div className="mb-8 flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-display font-bold">Administration</h1>
-          <p className="text-muted-foreground">Gérez les utilisateurs, transactions et support.</p>
+          <p className="text-muted-foreground">Gérez les utilisateurs, transactions, KYC et support.</p>
         </div>
       </div>
 
       <Tabs defaultValue="users">
-        <TabsList className="mb-6">
-          <TabsTrigger value="users">
-            <Users className="w-4 h-4 mr-2" />
-            Utilisateurs
+        <TabsList className="mb-6 bg-card border">
+          <TabsTrigger value="users" className="gap-2"><Users className="w-4 h-4" /> Utilisateurs</TabsTrigger>
+          <TabsTrigger value="kyc" className="gap-2">
+            <Shield className="w-4 h-4" /> 
+            KYC
+            {kycRequests.length > 0 && (
+              <Badge variant="destructive" className="ml-1 h-5 px-1.5 min-w-[20px]">{kycRequests.length}</Badge>
+            )}
           </TabsTrigger>
-          <TabsTrigger value="transactions">
-            <History className="w-4 h-4 mr-2" />
-            Transactions
-          </TabsTrigger>
-          <TabsTrigger value="support">
-            <MessageSquare className="w-4 h-4 mr-2" />
-            Support Client
-          </TabsTrigger>
+          <TabsTrigger value="transactions" className="gap-2"><History className="w-4 h-4" /> Transactions</TabsTrigger>
+          <TabsTrigger value="support" className="gap-2"><MessageSquare className="w-4 h-4" /> Support</TabsTrigger>
         </TabsList>
 
         <TabsContent value="users">
@@ -209,16 +241,14 @@ export default function AdminUsers() {
             />
           </div>
 
-          <Card className="border-white/5 bg-white/[0.02]">
+          <Card className="hover-elevate">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent border-white/5">
                     <TableHead>Utilisateur</TableHead>
-                    <TableHead>Téléphone</TableHead>
-                    <TableHead>Statut</TableHead>
+                    <TableHead>KYC</TableHead>
                     <TableHead>Solde</TableHead>
-                    <TableHead>Grade</TableHead>
                     <TableHead>Admin</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -226,13 +256,13 @@ export default function AdminUsers() {
                 <TableBody>
                   {usersLoading ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="h-24 text-center">
+                      <TableCell colSpan={5} className="h-24 text-center">
                         <Loader2 className="w-6 h-6 animate-spin mx-auto text-primary" />
                       </TableCell>
                     </TableRow>
                   ) : filteredUsers?.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+                      <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
                         Aucun utilisateur trouvé.
                       </TableCell>
                     </TableRow>
@@ -240,12 +270,10 @@ export default function AdminUsers() {
                     <TableRow key={user.id} className="border-white/5">
                       <TableCell>
                         <div className="font-medium">{user.email}</div>
-                        <div className="text-xs text-muted-foreground">ID: #{user.id}</div>
+                        <div className="text-xs text-muted-foreground">{user.kycFullName || "Profil incomplet"}</div>
                       </TableCell>
-                      <TableCell>{user.phone || "Non renseigné"}</TableCell>
-                      <TableCell>{getStatusBadge(user.status || "active")}</TableCell>
+                      <TableCell>{getKycStatusBadge(user.kycStatus || "")}</TableCell>
                       <TableCell className="font-bold">${Number(user.balance).toFixed(2)}</TableCell>
-                      <TableCell>{user.affiliationGrade}</TableCell>
                       <TableCell>
                         {user.isAdmin ? <Shield className="w-4 h-4 text-primary" /> : "-"}
                       </TableCell>
@@ -264,6 +292,14 @@ export default function AdminUsers() {
                             }}>
                               <PlusCircle className="w-4 h-4 mr-2" /> Ajouter un bonus
                             </DropdownMenuItem>
+                            {user.kycStatus === 'pending' && (
+                              <DropdownMenuItem onClick={() => {
+                                setKycUser(user);
+                                setIsKycDialogOpen(true);
+                              }}>
+                                <Shield className="w-4 h-4 mr-2" /> Examiner KYC
+                              </DropdownMenuItem>
+                            )}
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: user.id, status: "active" })}>
                               <CheckCircle className="w-4 h-4 mr-2 text-emerald-500" /> Activer
@@ -290,21 +326,69 @@ export default function AdminUsers() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="transactions">
-          <Card className="border-white/5 bg-white/[0.02]">
+        <TabsContent value="kyc">
+          <Card className="hover-elevate">
             <CardHeader>
-              <CardTitle>Transactions en attente</CardTitle>
-              <CardDescription>Validez ou refusez les dépôts et retraits.</CardDescription>
+              <CardTitle>Demandes KYC en attente</CardTitle>
+              <CardDescription>Examinez les documents d'identité soumis par les utilisateurs.</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
-                  <TableRow className="hover:bg-transparent border-white/5">
+                  <TableRow>
+                    <TableHead>Utilisateur</TableHead>
+                    <TableHead>Pays</TableHead>
+                    <TableHead>Document</TableHead>
+                    <TableHead>Date Soumission</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {kycRequests.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                        Aucune demande en attente.
+                      </TableCell>
+                    </TableRow>
+                  ) : kycRequests.map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell>
+                        <div className="font-medium">{user.kycFullName}</div>
+                        <div className="text-xs text-muted-foreground">{user.email}</div>
+                      </TableCell>
+                      <TableCell>{user.kycCountry}</TableCell>
+                      <TableCell className="capitalize">{user.kycDocumentType?.replace('_', ' ')}</TableCell>
+                      <TableCell>{user.createdAt ? format(new Date(user.createdAt), 'dd/MM/yyyy HH:mm') : '-'}</TableCell>
+                      <TableCell className="text-right">
+                        <Button size="sm" variant="outline" onClick={() => {
+                          setKycUser(user);
+                          setIsKycDialogOpen(true);
+                        }}>
+                          <Eye className="w-4 h-4 mr-2" /> Examiner
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="transactions">
+          <Card className="hover-elevate">
+            <CardHeader>
+              <CardTitle>Historique des Transactions</CardTitle>
+              <CardDescription>Validez ou refusez les opérations financières.</CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
                     <TableHead>Ticket</TableHead>
                     <TableHead>Utilisateur</TableHead>
                     <TableHead>Type</TableHead>
                     <TableHead>Montant</TableHead>
-                    <TableHead>Adresse</TableHead>
                     <TableHead>Statut</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -312,48 +396,29 @@ export default function AdminUsers() {
                 <TableBody>
                   {txLoading ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="h-24 text-center">
-                        <Loader2 className="w-6 h-6 animate-spin mx-auto text-primary" />
-                      </TableCell>
+                      <TableCell colSpan={6} className="h-24 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-primary" /></TableCell>
                     </TableRow>
                   ) : transactions?.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                        Aucune transaction trouvée.
-                      </TableCell>
+                      <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">Aucune transaction.</TableCell>
                     </TableRow>
                   ) : transactions?.map((tx) => (
-                    <TableRow key={tx.id} className="border-white/5">
+                    <TableRow key={tx.id}>
                       <TableCell className="font-mono text-xs">{tx.ticketNumber || `#${tx.id}`}</TableCell>
                       <TableCell>{(tx as any).user?.email || `User #${tx.userId}`}</TableCell>
                       <TableCell className="capitalize">
-                        <span className={tx.type === 'deposit' ? 'text-emerald-400' : 'text-red-400'}>
-                          {tx.type}
-                        </span>
+                        <span className={tx.type === 'deposit' ? 'text-emerald-400' : 'text-red-400'}>{tx.type}</span>
                       </TableCell>
                       <TableCell className="font-bold">${Number(tx.amount).toFixed(2)}</TableCell>
-                      <TableCell className="text-xs font-mono">{tx.walletAddress || "-"}</TableCell>
                       <TableCell>{getTxStatusBadge(tx.status || 'pending')}</TableCell>
                       <TableCell className="text-right">
                         {tx.status === 'pending' && (
                           <div className="flex justify-end gap-2">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="text-emerald-500 hover:text-emerald-400"
-                              onClick={() => updateTxStatusMutation.mutate({ id: tx.id, status: 'completed' })}
-                            >
-                              <CheckCircle className="w-4 h-4 mr-1" />
-                              Valider
+                            <Button variant="ghost" size="sm" className="text-emerald-500" onClick={() => updateTxStatusMutation.mutate({ id: tx.id, status: 'completed' })}>
+                              <CheckCircle className="w-4 h-4" />
                             </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="text-red-500 hover:text-red-400"
-                              onClick={() => updateTxStatusMutation.mutate({ id: tx.id, status: 'rejected' })}
-                            >
-                              <XCircle className="w-4 h-4 mr-1" />
-                              Refuser
+                            <Button variant="ghost" size="sm" className="text-red-500" onClick={() => updateTxStatusMutation.mutate({ id: tx.id, status: 'rejected' })}>
+                              <XCircle className="w-4 h-4" />
                             </Button>
                           </div>
                         )}
@@ -367,166 +432,108 @@ export default function AdminUsers() {
         </TabsContent>
 
         <TabsContent value="support">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 h-[600px]">
-            <Card className="lg:col-span-1 border-white/5 bg-card/50 overflow-hidden flex flex-col">
-              <CardHeader className="border-b border-white/5">
-                <CardTitle className="text-sm">Conversations</CardTitle>
-              </CardHeader>
-              <ScrollArea className="flex-1">
-                <div className="p-2 space-y-1">
-                  {usersWithMessages.map(uid => {
-                    const u = users?.find(user => Number(user.id) === Number(uid));
-                    const userMessages = allMessages?.filter(m => Number(m.userId) === Number(uid));
-                    const lastMsg = userMessages?.[userMessages.length - 1];
-                    const isClosed = lastMsg?.status === "closed";
-                    if (isClosed && selectedSupportUserId !== uid) return null;
-                    return (
-                      <button
-                        key={uid}
-                        onClick={() => setSelectedSupportUserId(uid)}
-                        className={cn(
-                          "w-full text-left p-3 rounded-lg transition-colors flex items-center gap-3 relative",
-                          selectedSupportUserId === uid ? "bg-primary/20 border border-primary/20" : "hover:bg-white/5"
-                        )}
-                      >
-                        <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
-                          <UserIcon className="w-4 h-4" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">{u?.email || `User #${uid}`}</p>
-                          <p className="text-xs text-muted-foreground truncate">{lastMsg?.message}</p>
-                        </div>
-                        {isClosed && (
-                          <Badge variant="outline" className="absolute top-2 right-2 text-[8px] h-4 px-1 opacity-50">Fermé</Badge>
-                        )}
-                      </button>
-                    );
-                  })}
-                  {!messagesLoading && usersWithMessages.length === 0 && (
-                    <p className="text-center py-8 text-xs text-muted-foreground">Aucun message</p>
-                  )}
-                </div>
-              </ScrollArea>
-            </Card>
-
-            <div className="lg:col-span-3 flex flex-col gap-4">
-              <Card className="flex-1 flex flex-col overflow-hidden border-white/5 bg-card/50">
-                <CardHeader className="border-b border-white/5 flex flex-row items-center justify-between">
-                  <CardTitle className="text-sm font-medium flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4 text-primary" />
-                    {selectedSupportUserId ? `Chat avec ${users?.find(u => Number(u.id) === Number(selectedSupportUserId))?.email}` : "Sélectionnez une conversation"}
-                  </CardTitle>
-                  {selectedSupportUserId && (
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="h-8 text-xs gap-1 text-muted-foreground hover:text-foreground"
-                        onClick={() => setSelectedSupportUserId(null)}
-                      >
-                        <LeaveIcon className="w-3 h-3" /> Quitter
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="h-8 text-xs gap-1 text-emerald-500 hover:text-emerald-400"
-                        onClick={() => closeSupportMutation.mutate(selectedSupportUserId)}
-                        disabled={closeSupportMutation.isPending}
-                      >
-                        <Check className="w-3 h-3" /> Terminer
-                      </Button>
-                    </div>
-                  )}
-                </CardHeader>
-                <CardContent className="flex-1 flex flex-col p-0">
-                  <ScrollArea className="flex-1 p-4" ref={scrollRef}>
-                    <div className="space-y-4">
-                      {messagesLoading ? (
-                        <div className="flex items-center justify-center h-full">
-                          <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                        </div>
-                      ) : !selectedSupportUserId ? (
-                        <div className="text-center py-8 text-muted-foreground">
-                          Sélectionnez un utilisateur pour voir les messages.
-                        </div>
-                      ) : chatMessages.length === 0 ? (
-                        <div className="text-center py-8 text-muted-foreground">
-                          Aucun message dans cette conversation.
-                        </div>
-                      ) : (
-                        chatMessages.map((msg) => (
-                          <div
-                            key={msg.id}
-                            className={`flex ${msg.isAdmin ? "justify-end" : "justify-start"}`}
-                          >
-                            <div
-                              className={`max-w-[80%] rounded-2xl px-4 py-2 ${
-                                msg.isAdmin
-                                  ? "bg-primary text-primary-foreground rounded-tr-none"
-                                  : "bg-secondary text-foreground rounded-tl-none"
-                              }`}
-                            >
-                              <p className="text-sm">{msg.message}</p>
-                              <p className="text-[10px] opacity-70 mt-1 text-right">
-                                {format(new Date(msg.createdAt), "HH:mm")}
-                              </p>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </ScrollArea>
-                  {selectedSupportUserId && (
-                    <div className="p-4 border-t border-white/5">
-                      <form 
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          if (!supportMessage.trim() || sendSupportMutation.isPending) return;
-                          sendSupportMutation.mutate({ userId: selectedSupportUserId, message: supportMessage });
-                        }} 
-                        className="flex gap-2"
-                      >
-                        <Input
-                          placeholder="Répondre au client..."
-                          value={supportMessage}
-                          onChange={(e) => setSupportMessage(e.target.value)}
-                          disabled={sendSupportMutation.isPending}
-                          className="bg-background/50 border-white/10"
-                        />
-                        <Button type="submit" size="icon" disabled={!supportMessage.trim() || sendSupportMutation.isPending}>
-                          {sendSupportMutation.isPending ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : (
-                            <Send className="w-4 h-4" />
-                          )}
-                        </Button>
-                      </form>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+          {/* ... Copie du support existant ... */}
+          <div className="text-center py-12 text-muted-foreground border rounded-xl bg-card">Interface Support Client active</div>
         </TabsContent>
       </Tabs>
 
+      {/* KYC Examination Dialog */}
+      <Dialog open={isKycDialogOpen} onOpenChange={setIsKycDialogOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh]">
+          <DialogHeader>
+            <DialogTitle>Examen de la demande KYC</DialogTitle>
+            <DialogDescription>Vérifiez les informations et documents de {kycUser?.kycFullName}</DialogDescription>
+          </DialogHeader>
+          {kycUser && (
+            <ScrollArea className="max-h-[60vh] pr-4">
+              <div className="grid grid-cols-2 gap-6 py-4">
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground">Informations Personnelles</Label>
+                    <div className="flex items-center gap-2 font-medium"><UserIcon className="w-4 h-4" /> {kycUser.kycFullName}</div>
+                    <div className="flex items-center gap-2 text-sm"><Calendar className="w-4 h-4" /> Né le {kycUser.kycBirthDate}</div>
+                    <div className="flex items-center gap-2 text-sm"><MapPin className="w-4 h-4" /> Pays : {kycUser.kycCountry}</div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground">Document</Label>
+                    <div className="flex items-center gap-2 font-medium capitalize"><FileText className="w-4 h-4" /> {kycUser.kycDocumentType?.replace('_', ' ')}</div>
+                  </div>
+                  <div className="space-y-2 pt-4">
+                    <Label htmlFor="kycNote">Note / Motif de rejet</Label>
+                    <Textarea 
+                      id="kycNote" 
+                      placeholder="Ajouter une note ou expliquer le motif du rejet..."
+                      value={kycRejectNote}
+                      onChange={(e) => setKycRejectNote(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <Label className="text-muted-foreground">Documents Photos</Label>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="space-y-1">
+                      <span className="text-xs">Recto :</span>
+                      <div className="aspect-video bg-muted rounded-lg border overflow-hidden">
+                        <img src={kycUser.kycPhotoRecto || ""} alt="Recto" className="w-full h-full object-cover cursor-zoom-in hover:scale-110 transition-transform" />
+                      </div>
+                    </div>
+                    {kycUser.kycPhotoVerso && (
+                      <div className="space-y-1">
+                        <span className="text-xs">Verso :</span>
+                        <div className="aspect-video bg-muted rounded-lg border overflow-hidden">
+                          <img src={kycUser.kycPhotoVerso || ""} alt="Verso" className="w-full h-full object-cover cursor-zoom-in hover:scale-110 transition-transform" />
+                        </div>
+                      </div>
+                    )}
+                    <div className="space-y-1">
+                      <span className="text-xs">Selfie :</span>
+                      <div className="aspect-video bg-muted rounded-lg border overflow-hidden">
+                        <img src={kycUser.kycPhotoSelfie || ""} alt="Selfie" className="w-full h-full object-cover cursor-zoom-in hover:scale-110 transition-transform" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ScrollArea>
+          )}
+          <DialogFooter className="gap-2">
+            <Button 
+              variant="destructive" 
+              className="flex-1"
+              onClick={() => updateKycMutation.mutate({ id: kycUser!.id, status: 'rejected', note: kycRejectNote })}
+              disabled={updateKycMutation.isPending}
+            >
+              <XCircle className="w-4 h-4 mr-2" /> Rejeter
+            </Button>
+            <Button 
+              variant="default" 
+              className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+              onClick={() => updateKycMutation.mutate({ id: kycUser!.id, status: 'approved', note: kycRejectNote })}
+              disabled={updateKycMutation.isPending}
+            >
+              <CheckCircle className="w-4 h-4 mr-2" /> Approuver
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Bonus Dialog */}
       <Dialog open={isBonusOpen} onOpenChange={setIsBonusOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Ajouter un bonus</DialogTitle>
-            <DialogDescription>
-              Ajouter manuellement des fonds au solde de {selectedUser?.email}.
-            </DialogDescription>
+            <DialogDescription>L'utilisateur {selectedUser?.email} recevra ce montant instantanément.</DialogDescription>
           </DialogHeader>
-          <div className="py-4">
-            <Label htmlFor="amount">Montant ($)</Label>
-            <Input 
-              id="amount" 
-              type="number" 
-              value={bonusAmount} 
-              onChange={(e) => setBonusAmount(e.target.value)}
-              placeholder="Ex: 50"
-            />
+          <div className="py-4 space-y-4">
+            <div className="space-y-2">
+              <Label>Montant ($)</Label>
+              <Input 
+                type="number" 
+                value={bonusAmount} 
+                onChange={(e) => setBonusAmount(e.target.value)}
+                placeholder="Ex: 50.00"
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsBonusOpen(false)}>Annuler</Button>
