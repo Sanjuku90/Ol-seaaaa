@@ -41,7 +41,8 @@ import {
   Eye,
   Calendar,
   MapPin,
-  FileText
+  FileText,
+  Lock
 } from "lucide-react";
 import { type User, type Transaction, type SupportMessage } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -166,6 +167,21 @@ export default function AdminUsers() {
       setSelectedSupportUserId(null);
       queryClient.invalidateQueries({ queryKey: ["/api/admin/support"] });
       toast({ title: "Conversation terminée", description: "La discussion a été marquée comme fermée." });
+    }
+  });
+
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordUser, setPasswordUser] = useState<User | null>(null);
+
+  const updatePasswordMutation = useMutation({
+    mutationFn: async ({ id, password }: { id: number; password: string }) => {
+      await apiRequest("POST", `/api/admin/users/${id}/password`, { password });
+    },
+    onSuccess: () => {
+      setIsPasswordDialogOpen(false);
+      setNewPassword("");
+      toast({ title: "Succès", description: "Mot de passe mis à jour." });
     }
   });
 
@@ -300,6 +316,12 @@ export default function AdminUsers() {
                                 <Shield className="w-4 h-4 mr-2" /> Examiner KYC
                               </DropdownMenuItem>
                             )}
+                            <DropdownMenuItem onClick={() => {
+                              setPasswordUser(user);
+                              setIsPasswordDialogOpen(true);
+                            }}>
+                              <Lock className="w-4 h-4 mr-2" /> Changer le mot de passe
+                            </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: user.id, status: "active" })}>
                               <CheckCircle className="w-4 h-4 mr-2 text-emerald-500" /> Activer
@@ -512,6 +534,37 @@ export default function AdminUsers() {
               disabled={updateKycMutation.isPending}
             >
               <CheckCircle className="w-4 h-4 mr-2" /> Approuver
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Password Dialog */}
+      <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Changer le mot de passe</DialogTitle>
+            <DialogDescription>Définir un nouveau mot de passe pour {passwordUser?.email}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>Nouveau mot de passe</Label>
+              <Input 
+                type="password" 
+                value={newPassword} 
+                onChange={(e) => setNewPassword(e.target.value)} 
+                placeholder="Entrez le nouveau mot de passe"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsPasswordDialogOpen(false)}>Annuler</Button>
+            <Button 
+              onClick={() => updatePasswordMutation.mutate({ id: passwordUser!.id, password: newPassword })}
+              disabled={!newPassword || updatePasswordMutation.isPending}
+            >
+              {updatePasswordMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Mettre à jour
             </Button>
           </DialogFooter>
         </DialogContent>

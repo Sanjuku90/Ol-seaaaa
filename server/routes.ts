@@ -396,6 +396,15 @@ export async function registerRoutes(
     res.json(user);
   });
 
+  app.post("/api/admin/users/:id/password", async (req, res) => {
+    const { password } = req.body;
+    const userId = Number(req.params.id);
+    const { hashPassword } = await import("./auth");
+    const hashedPassword = await hashPassword(password);
+    const user = await storage.updateUserPassword(userId, hashedPassword);
+    res.json(user);
+  });
+
   app.post("/api/kyc/submit", async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     const { fullName, country, birthDate, documentType, photoRecto, photoVerso, photoSelfie } = req.body;
