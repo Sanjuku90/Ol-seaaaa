@@ -92,6 +92,7 @@ export async function registerRoutes(
 
       // Send Purchase Confirmation Email
       if (user.email) {
+        console.log(`[Purchase] Triggering email for ${user.email}`);
         sendEmail(
           user.email,
           "Confirmation d'achat - BlockMint",
@@ -153,6 +154,7 @@ export async function registerRoutes(
       const user = await storage.getUser((req.user as any).id);
       if (user && user.email) {
         const typeLabel = input.type === 'deposit' ? 'Dépôt' : 'Retrait';
+        console.log(`[Transaction] Triggering email for ${user.email} - Type: ${typeLabel}`);
         sendEmail(
           user.email,
           `Confirmation de votre demande de ${typeLabel} - BlockMint`,
