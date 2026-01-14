@@ -31,6 +31,7 @@ export interface IStorage {
   updateUserStatus(id: number, status: string): Promise<User>;
   updateUserAdmin(id: number, isAdmin: boolean): Promise<User>;
   updateUserBalanceAdmin(id: number, amount: number): Promise<User>;
+  updateUserKYC(id: number, fullName: string, documentUrl: string): Promise<User>;
 
   getSupportMessages(userId: number): Promise<SupportMessage[]>;
   getAllSupportMessages(): Promise<SupportMessage[]>;
@@ -156,6 +157,18 @@ export class DatabaseStorage implements IStorage {
   async updateUserBalanceAdmin(id: number, amount: number): Promise<User> {
     const [user] = await db.update(users)
       .set({ balance: sql`${users.balance} + ${amount.toString()}` })
+      .where(eq(users.id, id))
+      .returning();
+    return user;
+  }
+
+  async updateUserKYC(id: number, fullName: string, documentUrl: string): Promise<User> {
+    const [user] = await db.update(users)
+      .set({ 
+        kycFullName: fullName, 
+        kycDocumentUrl: documentUrl, 
+        kycStatus: "pending" 
+      })
       .where(eq(users.id, id))
       .returning();
     return user;

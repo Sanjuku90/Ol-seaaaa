@@ -31,6 +31,8 @@ export const users = pgTable("users", {
   referralEarnings: decimal("referral_earnings", { precision: 10, scale: 2 }).default("0").notNull(),
   indirectReferralEarnings: decimal("indirect_referral_earnings", { precision: 10, scale: 2 }).default("0").notNull(),
   activeReferrals: integer("active_referrals").default(0),
+  kycFullName: text("kyc_full_name"),
+  kycDocumentUrl: text("kyc_document_url"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

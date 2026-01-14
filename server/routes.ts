@@ -319,6 +319,16 @@ export async function registerRoutes(
     res.json(user);
   });
 
+  app.post("/api/kyc/submit", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const { fullName, documentUrl } = req.body;
+    if (!fullName || !documentUrl) {
+      return res.status(400).json({ message: "Nom complet et URL du document requis" });
+    }
+    const user = await storage.updateUserKYC((req.user as any).id, fullName, documentUrl);
+    res.json(user);
+  });
+
   // --- REFERRAL ROUTES ---
   app.get("/api/referrals", async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
