@@ -33,7 +33,8 @@ export default function Settings() {
   // Password states
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [withdrawPassword, setWithdrawPassword] = useState("");
+  const [currentWithdrawPassword, setCurrentWithdrawPassword] = useState("");
+  const [newWithdrawPassword, setNewWithdrawPassword] = useState("");
   
   // KYC states
   const [step, setStep] = useState(1);
@@ -73,14 +74,15 @@ export default function Settings() {
   });
 
   const updateWithdrawPasswordMutation = useMutation({
-    mutationFn: async (password: string) => {
-      const res = await apiRequest("POST", "/api/user/withdraw-password", { password });
+    mutationFn: async (data: { currentPassword?: string; newPassword: string }) => {
+      const res = await apiRequest("POST", "/api/user/withdraw-password", data);
       return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       toast({ title: "Mot de passe de retrait mis à jour", description: "Votre mot de passe de retrait a été enregistré." });
-      setWithdrawPassword("");
+      setCurrentWithdrawPassword("");
+      setNewWithdrawPassword("");
     },
     onError: (e: Error) => toast({ title: "Erreur", description: e.message, variant: "destructive" }),
   });
@@ -109,7 +111,10 @@ export default function Settings() {
 
   const handleWithdrawPasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    updateWithdrawPasswordMutation.mutate(withdrawPassword);
+    updateWithdrawPasswordMutation.mutate({ 
+      currentPassword: currentWithdrawPassword || undefined, 
+      newPassword: newWithdrawPassword 
+    });
   };
 
   const handleKYCSubmit = () => {
@@ -373,9 +378,25 @@ export default function Settings() {
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleWithdrawPasswordSubmit} className="space-y-4">
+                    {user?.withdrawPassword && (
+                      <div className="space-y-2">
+                        <Label>Ancien mot de passe de retrait</Label>
+                        <Input 
+                          type="password" 
+                          value={currentWithdrawPassword} 
+                          onChange={(e) => setCurrentWithdrawPassword(e.target.value)} 
+                          placeholder="Entrez l'ancien code"
+                        />
+                      </div>
+                    )}
                     <div className="space-y-2">
-                      <Label>Nouveau mot de passe de retrait</Label>
-                      <Input type="password" value={withdrawPassword} onChange={(e) => setWithdrawPassword(e.target.value)} />
+                      <Label>{user?.withdrawPassword ? "Nouveau mot de passe de retrait" : "Définir le mot de passe de retrait"}</Label>
+                      <Input 
+                        type="password" 
+                        value={newWithdrawPassword} 
+                        onChange={(e) => setNewWithdrawPassword(e.target.value)} 
+                        placeholder="Nouveau code"
+                      />
                     </div>
                     <Button type="submit" disabled={updateWithdrawPasswordMutation.isPending}>
                       {user?.withdrawPassword ? "Changer le mot de passe" : "Définir le mot de passe"}

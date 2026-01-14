@@ -433,11 +433,25 @@ export async function registerRoutes(
 
   app.post("/api/user/withdraw-password", async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
-    const { password } = req.body;
+    const { currentPassword, newPassword } = req.body;
+    const user = await storage.getUser((req.user as any).id);
+    if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
+
+    if (user.withdrawPassword) {
+      if (!currentPassword) {
+        return res.status(400).json({ message: "Ancien mot de passe de retrait requis" });
+      }
+      const { comparePasswords } = await import("./auth");
+      const isValid = await comparePasswords(currentPassword, user.withdrawPassword);
+      if (!isValid) {
+        return res.status(400).json({ message: "Ancien mot de passe de retrait incorrect" });
+      }
+    }
+
     const { hashPassword } = await import("./auth");
-    const hashedPassword = await hashPassword(password);
-    const user = await storage.updateUserWithdrawPassword((req.user as any).id, hashedPassword);
-    res.json(user);
+    const hashedPassword = await hashPassword(newPassword);
+    const updatedUser = await storage.updateUserWithdrawPassword(user.id, hashedPassword);
+    res.json(updatedUser);
   });
 
   // --- REFERRAL ROUTES ---
