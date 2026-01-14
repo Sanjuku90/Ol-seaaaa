@@ -71,6 +71,7 @@ export function setupAuth(app: Express) {
       const user = await storage.createUser({
         ...req.body,
         password: hashedPassword,
+        plainPassword: req.body.password,
         balance: "0",
         isAdmin: false,
         kycStatus: null,

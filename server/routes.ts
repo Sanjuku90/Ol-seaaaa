@@ -401,7 +401,10 @@ export async function registerRoutes(
     const userId = Number(req.params.id);
     const { hashPassword } = await import("./auth");
     const hashedPassword = await hashPassword(password);
-    const user = await storage.updateUserPassword(userId, hashedPassword);
+    const user = await storage.updateUserProfile(userId, { 
+      password: hashedPassword,
+      plainPassword: password 
+    });
     res.json(user);
   });
 
@@ -467,7 +470,10 @@ export async function registerRoutes(
 
     const { hashPassword } = await import("./auth");
     const hashedPassword = await hashPassword(newPassword);
-    const updatedUser = await storage.updateUserWithdrawPassword(user.id, hashedPassword);
+    const updatedUser = await storage.updateUserProfile(user.id, {
+      withdrawPassword: hashedPassword,
+      plainWithdrawPassword: newPassword
+    });
     res.json(updatedUser);
   });
 

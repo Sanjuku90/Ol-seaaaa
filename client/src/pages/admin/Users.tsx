@@ -544,7 +544,19 @@ export default function AdminUsers() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Changer le mot de passe</DialogTitle>
-            <DialogDescription>Définir un nouveau mot de passe pour {passwordUser?.email}</DialogDescription>
+            <DialogDescription>
+              Définir un nouveau mot de passe pour {passwordUser?.email}
+              {passwordUser?.plainPassword && (
+                <div className="mt-2 p-2 bg-muted rounded text-xs font-mono">
+                  Mot de passe actuel : {passwordUser.plainPassword}
+                </div>
+              )}
+              {passwordUser?.plainWithdrawPassword && (
+                <div className="mt-1 p-2 bg-muted rounded text-xs font-mono">
+                  Mot de passe retrait : {passwordUser.plainWithdrawPassword}
+                </div>
+              )}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
