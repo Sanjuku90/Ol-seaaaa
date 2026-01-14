@@ -19,6 +19,9 @@ import { format } from "date-fns";
 import { Link } from "wouter";
 import { useEffect } from "react";
 
+import CountUp from 'react-countup';
+import { motion } from 'framer-motion';
+
 export default function Overview() {
   const queryClient = useQueryClient();
   const { data: user } = useQuery<User>({ 
@@ -141,42 +144,54 @@ export default function Overview() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card className="border-white/5 bg-white/[0.02] hover-elevate">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Solde Total</CardTitle>
-            <Wallet className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold font-display">${Number(user?.balance || 0).toFixed(4)}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Prêt pour investissement
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="border-white/5 bg-white/[0.02] hover-elevate">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Revenus 24h</CardTitle>
-            <TrendingUp className="h-4 w-4 text-emerald-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold font-display text-emerald-400">+$24.15</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              +5.2% vs hier
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="border-white/5 bg-white/[0.02] hover-elevate">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Affiliés Actifs</CardTitle>
-            <Users className="h-4 w-4 text-blue-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold font-display">{user?.activeReferrals || 0}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Récompenses: $12.50
-            </p>
-          </CardContent>
-        </Card>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <Card className="border-white/5 bg-white/[0.02] hover-elevate">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Solde Total</CardTitle>
+              <Wallet className="h-4 w-4 text-primary" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold font-display">
+                $<CountUp end={Number(user?.balance || 0)} decimals={4} duration={2} separator="," />
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Prêt pour investissement
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <Card className="border-white/5 bg-white/[0.02] hover-elevate">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Revenus 24h</CardTitle>
+              <TrendingUp className="h-4 w-4 text-emerald-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold font-display text-emerald-400">
+                +$<CountUp end={24.15} decimals={2} duration={2} />
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                +5.2% vs hier
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+          <Card className="border-white/5 bg-white/[0.02] hover-elevate">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Affiliés Actifs</CardTitle>
+              <Users className="h-4 w-4 text-blue-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold font-display">
+                <CountUp end={user?.activeReferrals || 0} duration={2} />
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Récompenses: $12.50
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
         <Card className="border-white/5 bg-white/[0.02] hover-elevate">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">État Système</CardTitle>

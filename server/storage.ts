@@ -40,6 +40,9 @@ export interface IStorage {
   getAllSupportMessages(): Promise<SupportMessage[]>;
   createSupportMessage(message: InsertSupportMessage): Promise<SupportMessage>;
   closeSupportConversation(userId: number): Promise<void>;
+  
+  getMaintenanceMode(): Promise<boolean>;
+  setMaintenanceMode(enabled: boolean): Promise<void>;
 
   sessionStore: session.Store;
 }
@@ -214,6 +217,17 @@ export class DatabaseStorage implements IStorage {
     await db.update(supportMessages)
       .set({ status: "closed" })
       .where(eq(supportMessages.userId, userId));
+  }
+
+  async getMaintenanceMode(): Promise<boolean> {
+    const [setting] = await db.select().from(sql`settings`).where(sql`key = 'maintenance_mode'`);
+    return setting?.value === 'true';
+  }
+
+  async setMaintenanceMode(enabled: boolean): Promise<void> {
+    await db.insert(sql`settings`)
+      .values({ key: 'maintenance_mode', value: enabled.toString() })
+      .onConflictDoUpdate({ target: sql`key`, set: { value: enabled.toString() } });
   }
 }
 

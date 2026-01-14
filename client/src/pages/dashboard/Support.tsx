@@ -11,6 +11,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { type SupportMessage } from "@shared/schema";
 import { format } from "date-fns";
 
+import { Badge } from "@/components/ui/badge";
+
 export default function Support() {
   const { user } = useAuth();
   const [message, setMessage] = useState("");
@@ -58,6 +60,7 @@ export default function Support() {
               <CardTitle className="text-sm font-medium flex items-center gap-2">
                 <MessageSquare className="w-4 h-4 text-primary" />
                 Discussion avec le support
+                <Badge variant="outline" className="ml-auto bg-emerald-500/10 text-emerald-500 border-emerald-500/20">Ticket Ouvert</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent className="flex-1 flex flex-col p-0">

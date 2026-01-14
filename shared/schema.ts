@@ -5,6 +5,12 @@ import { z } from "zod";
 
 // === TABLE DEFINITIONS ===
 
+export const settings = pgTable("settings", {
+  id: serial("id").primaryKey(),
+  key: text("key").notNull().unique(),
+  value: text("value").notNull(),
+});
+
 export const supportMessages = pgTable("support_messages", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull(),

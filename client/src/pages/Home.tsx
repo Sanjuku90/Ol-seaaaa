@@ -8,6 +8,8 @@ import { ArrowRight, Calculator, CheckCircle2, ShieldCheck, Zap } from "lucide-r
 import { useState } from "react";
 import { Slider } from "@/components/ui/slider";
 
+import CountUp from 'react-countup';
+
 export default function Home() {
   const { data: machines } = useMachines();
   const [calcAmount, setCalcAmount] = useState([1000]);
@@ -78,13 +80,22 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { label: "Utilisateurs Actifs", value: "12,450+" },
-              { label: "Gains Distribués", value: "$4.2M+" },
-              { label: "Puissance Totale", value: "85.2 PH/s" },
-              { label: "Uptime Système", value: "99.99%" },
+              { label: "Utilisateurs Actifs", value: 12450, suffix: "+" },
+              { label: "Gains Distribués", value: 4.2, prefix: "$", suffix: "M+" },
+              { label: "Puissance Totale", value: 85.2, suffix: " PH/s" },
+              { label: "Uptime Système", value: 99.99, suffix: "%" },
             ].map((stat, i) => (
               <div key={i} className="text-center">
-                <div className="text-3xl font-display font-bold text-foreground mb-1">{stat.value}</div>
+                <div className="text-3xl font-display font-bold text-foreground mb-1">
+                  <CountUp 
+                    end={stat.value} 
+                    decimals={stat.value % 1 === 0 ? 0 : 2} 
+                    duration={2.5} 
+                    prefix={stat.prefix} 
+                    suffix={stat.suffix} 
+                    enableScrollSpy 
+                  />
+                </div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
               </div>
             ))}

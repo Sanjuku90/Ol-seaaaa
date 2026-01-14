@@ -34,6 +34,18 @@ export async function registerRoutes(
   // Auth setup
   setupAuth(app);
 
+  // Maintenance Middleware
+  app.use(async (req, res, next) => {
+    if (req.path.startsWith("/api/admin") || req.path === "/api/user" || req.path === "/api/login" || req.path === "/api/logout") {
+      return next();
+    }
+    const isMaintenance = await storage.getMaintenanceMode();
+    if (isMaintenance && !(req.user as any)?.isAdmin) {
+      return res.status(503).json({ message: "Site en maintenance technique. Revenez plus tard." });
+    }
+    next();
+  });
+
   // Machines
   app.get(api.machines.list.path, async (req, res) => {
     const machinesList = await storage.getMachines();
@@ -419,6 +431,17 @@ export async function registerRoutes(
     } catch (e) {
       res.status(400).json({ message: "Erreur lors de la fermeture" });
     }
+  });
+
+  app.get("/api/admin/maintenance", async (req, res) => {
+    const enabled = await storage.getMaintenanceMode();
+    res.json({ enabled });
+  });
+
+  app.post("/api/admin/maintenance", async (req, res) => {
+    const { enabled } = req.body;
+    await storage.setMaintenanceMode(enabled);
+    res.json({ enabled });
   });
 
   // Seed data function
