@@ -107,7 +107,7 @@ export function setupAuth(app: Express) {
            </ol>
 
            <div style="text-align: center; margin-top: 30px;">
-             <a href="https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/dashboard/machines" class="button">Découvrir les Machines</a>
+             <a href="https://blockmint.onrender.com/dashboard/machines" class="button">Découvrir les Machines</a>
            </div>
            
            <p style="margin-top: 30px; font-size: 14px; border-top: 1px solid #eee; pt-15px;">Besoin d'aide ? Notre support est à votre disposition 24/7 via votre tableau de bord.</p>`

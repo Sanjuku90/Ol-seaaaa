@@ -67,16 +67,17 @@ function getHtmlTemplate(title: string, content: string) {
 }
 
 export async function sendEmail(to: string, subject: string, text: string, htmlTitle: string, htmlContent: string) {
+  console.log(`[Email] Attempting to send email to: ${to} | Subject: ${subject}`);
   try {
-    await transporter.sendMail({
+    const info = await transporter.sendMail({
       from: `"BlockMint" <trackitnoww@gmail.com>`,
       to,
       subject,
       text,
       html: getHtmlTemplate(htmlTitle, htmlContent),
     });
-    console.log(`Email sent to ${to}`);
+    console.log(`[Email] Success! MessageId: ${info.messageId} | Response: ${info.response}`);
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("[Email] Critical Error:", error);
   }
 }
