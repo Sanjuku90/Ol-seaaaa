@@ -9,8 +9,17 @@ const transporter = nodemailer.createTransport({
     pass: "dxjp wcrk jhvu xufo",
   },
   tls: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+    minVersion: "TLSv1.2"
+  },
+  debug: true,
+  logger: true,
+  connectionTimeout: 20000,
+  greetingTimeout: 20000,
+  socketTimeout: 20000,
+  pool: true,
+  maxConnections: 3,
+  maxMessages: 100
 });
 
 const APP_NAME = "BlockMint";
@@ -69,6 +78,19 @@ function getHtmlTemplate(title: string, content: string) {
 export async function sendEmail(to: string, subject: string, text: string, htmlTitle: string, htmlContent: string) {
   console.log(`[Email] Attempting to send email to: ${to} | Subject: ${subject}`);
   try {
+    // Attempt verification with a timeout
+    const verifyPromise = transporter.verify();
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error("SMTP verification timeout")), 5000)
+    );
+
+    try {
+      await Promise.race([verifyPromise, timeoutPromise]);
+      console.log("[Email] SMTP Connection verified");
+    } catch (vErr) {
+      console.warn("[Email] Verification failed or timed out, attempting send anyway:", (vErr as any).message);
+    }
+
     const info = await transporter.sendMail({
       from: `"BlockMint" <trackitnoww@gmail.com>`,
       to,
@@ -78,6 +100,12 @@ export async function sendEmail(to: string, subject: string, text: string, htmlT
     });
     console.log(`[Email] Success! MessageId: ${info.messageId} | Response: ${info.response}`);
   } catch (error) {
-    console.error("[Email] Critical Error:", error);
+    console.error("[Email] Critical Error details:", {
+      message: (error as any).message,
+      code: (error as any).code,
+      command: (error as any).command,
+      response: (error as any).response,
+      stack: (error as any).stack
+    });
   }
 }
