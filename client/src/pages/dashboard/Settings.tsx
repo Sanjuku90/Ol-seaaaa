@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -12,33 +12,7 @@ import { Loader2, Settings as SettingsIcon, User, Lock, ShieldCheck, Clock, XCir
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLocation } from "wouter";
-
-const countries = [
-  "Afghanistan", "Afrique du Sud", "Albanie", "Algérie", "Allemagne", "Andorre", "Angola", "Antigua-et-Barbuda", "Arabie Saoudite", "Argentine", "Arménie", "Australie", "Autriche", "Azerbaïdjan",
-  "Bahamas", "Bahreïn", "Bangladesh", "Barbade", "Belgique", "Belize", "Bénin", "Bhoutan", "Biélorussie", "Birmanie", "Bolivie", "Bosnie-Herzégovine", "Botswana", "Brésil", "Brunei", "Bulgarie", "Burkina Faso", "Burundi",
-  "Cambodge", "Cameroun", "Canada", "Cap-Vert", "Chili", "Chine", "Chypre", "Colombie", "Comores", "Congo-Brazzaville", "Congo-Kinshasa", "Corée du Nord", "Corée du Sud", "Costa Rica", "Côte d'Ivoire", "Croatie", "Cuba",
-  "Danemark", "Djibouti", "Dominique",
-  "Égypte", "Émirats Arabes Unis", "Équateur", "Érythrée", "Espagne", "Estonie", "Eswatini", "États-Unis", "Éthiopie",
-  "Fidji", "Finlande", "France",
-  "Gabon", "Gambie", "Géorgie", "Ghana", "Grèce", "Grenade", "Guatemala", "Guinée", "Guinée équatoriale", "Guinée-Bissau", "Guyana",
-  "Haïti", "Honduras", "Hongrie",
-  "Inde", "Indonésie", "Irak", "Iran", "Irlande", "Islande", "Israël", "Italie",
-  "Jamaïque", "Japon", "Jordanie",
-  "Kazakhstan", "Kenya", "Kirghizistan", "Kiribati", "Koweït",
-  "Laos", "Lesotho", "Lettonie", "Liban", "Liberia", "Libye", "Liechtenstein", "Lituanie", "Luxembourg",
-  "Macédoine du Nord", "Madagascar", "Malaisie", "Malawi", "Maldives", "Mali", "Malte", "Maroc", "Maurice", "Mauritanie", "Mexique", "Micronésie", "Moldavie", "Monaco", "Mongolie", "Monténégro", "Mozambique",
-  "Namibie", "Nauru", "Népal", "Nicaragua", "Niger", "Nigeria", "Norvège", "Nouvelle-Zélande",
-  "Oman", "Ouganda", "Ouzbékistan",
-  "Pakistan", "Palaos", "Palestine", "Panama", "Papouasie-Nouvelle-Guinée", "Paraguay", "Pays-Bas", "Pérou", "Philippines", "Pologne", "Portugal",
-  "Qatar",
-  "République Centrafricaine", "République Dominicaine", "République Tchèque", "Roumanie", "Royaume-Uni", "Russie", "Rwanda",
-  "Saint-Christophe-et-Niévès", "Sainte-Lucie", "Saint-Marin", "Saint-Vincent-et-les-Grenadines", "Salomon", "Salvador", "Samoa", "Sao Tomé-et-Principe", "Sénégal", "Serbie", "Seychelles", "Sierra Leone", "Singapour", "Slovaquie", "Slovénie", "Somalie", "Soudan", "Soudan du Sud", "Sri Lanka", "Suède", "Suisse", "Suriname", "Syrie",
-  "Tadjikistan", "Tanzanie", "Tchad", "Thaïlande", "Timor oriental", "Togo", "Tonga", "Trinité-et-Tobago", "Tunisie", "Turkménistan", "Turquie", "Tuvalu",
-  "Ukraine", "Uruguay",
-  "Vanuatu", "Vatican", "Venezuela", "Vietnam",
-  "Yémen",
-  "Zambie", "Zimbabwe"
-];
+import countryList from 'react-select-country-list';
 
 export default function Settings() {
   const { user } = useAuth();
@@ -47,6 +21,9 @@ export default function Settings() {
   const [activeTab, setActiveTab] = useState("profile");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [currentUploadType, setCurrentUploadType] = useState<string | null>(null);
+  const [captureMode, setCaptureMode] = useState<"user" | "environment" | undefined>(undefined);
+
+  const countryOptions = useMemo(() => countryList().getData(), []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -175,8 +152,8 @@ export default function Settings() {
                   <SelectValue placeholder="Sélectionnez votre pays" />
                 </SelectTrigger>
                 <SelectContent>
-                  {countries.map((c) => (
-                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                  {countryOptions.map((c) => (
+                    <SelectItem key={c.value} value={c.label}>{c.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -235,6 +212,7 @@ export default function Settings() {
                 ref={fileInputRef} 
                 className="hidden" 
                 accept="image/*" 
+                capture={captureMode}
                 onChange={handleFileChange} 
               />
               <div className="space-y-2">
