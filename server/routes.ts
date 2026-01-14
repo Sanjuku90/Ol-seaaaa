@@ -299,6 +299,14 @@ export async function registerRoutes(
         }
       });
 
+      // Notify support of new message via WebSocket
+      broadcast({
+        type: "SUPPORT_UPDATE",
+        payload: {
+          userId: tx.userId
+        }
+      });
+
       // Send Email Notification
       const user = await storage.getUser(tx.userId);
       if (user && user.email) {
@@ -478,6 +486,12 @@ export async function registerRoutes(
         isAdmin: false
       });
       console.log(`[support] new msg from user ${(req.user as any).id}`);
+      
+      broadcast({
+        type: "SUPPORT_MESSAGE",
+        payload: msg
+      });
+      
       res.status(201).json(msg);
     } catch (e) {
       res.status(400).json({ message: "Erreur" });
@@ -499,6 +513,12 @@ export async function registerRoutes(
         isAdmin: true
       });
       console.log(`[support-admin] reply to user ${req.body.userId}`);
+      
+      broadcast({
+        type: "SUPPORT_MESSAGE",
+        payload: msg
+      });
+      
       res.status(201).json(msg);
     } catch (e) {
       console.error("[support-admin] error replying:", e);

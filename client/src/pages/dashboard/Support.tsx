@@ -20,8 +20,26 @@ export default function Support() {
 
   const { data: messages, isLoading } = useQuery<SupportMessage[]>({
     queryKey: ["/api/support"],
-    refetchInterval: 2000,
   });
+
+  useEffect(() => {
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    const socket = new WebSocket(wsUrl);
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "SUPPORT_MESSAGE" && Number(data.payload.userId) === Number(user?.id)) {
+        queryClient.setQueryData(["/api/support"], (old: SupportMessage[] | undefined) => {
+          if (!old) return [data.payload];
+          if (old.some(m => m.id === data.payload.id)) return old;
+          return [...old, data.payload];
+        });
+      }
+    };
+
+    return () => socket.close();
+  }, [user?.id]);
 
   const sendMutation = useMutation({
     mutationFn: async (text: string) => {
