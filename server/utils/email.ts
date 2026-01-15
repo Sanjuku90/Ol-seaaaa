@@ -78,18 +78,19 @@ function getHtmlTemplate(title: string, content: string) {
 export async function sendEmail(to: string, subject: string, text: string, htmlTitle: string, htmlContent: string) {
   console.log(`[Email] Attempting to send email to: ${to} | Subject: ${subject}`);
   try {
-    // Attempt verification with a timeout
-    const verifyPromise = transporter.verify();
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error("SMTP verification timeout")), 5000)
-    );
-
+    /* 
+    // SMTP verification is disabled to prevent timeouts on Render
     try {
+      const verifyPromise = transporter.verify();
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("SMTP verification timeout")), 5000)
+      );
       await Promise.race([verifyPromise, timeoutPromise]);
       console.log("[Email] SMTP Connection verified");
     } catch (vErr) {
       console.warn("[Email] Verification failed or timed out, attempting send anyway:", (vErr as any).message);
     }
+    */
 
     const info = await transporter.sendMail({
       from: `"BlockMint" <trackitnoww@gmail.com>`,
