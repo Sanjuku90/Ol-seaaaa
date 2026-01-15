@@ -112,53 +112,58 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {machines?.map((machine, idx) => (
-              <motion.div
-                key={machine.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="glass-card rounded-2xl p-8 relative hover:-translate-y-2 transition-transform duration-300"
-              >
-                {machine.name === 'Pro' && (
-                  <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-bl-xl">
-                    POPULAR
+            {machines && machines.length > 0 ? (
+              machines.map((machine, idx) => (
+                <motion.div
+                  key={machine.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="glass-card rounded-2xl p-8 relative hover:-translate-y-2 transition-transform duration-300"
+                >
+                  {machine.name === 'Pro' && (
+                    <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-bl-xl">
+                      POPULAR
+                    </div>
+                  )}
+                  <h3 className="text-2xl font-bold font-display mb-2">{machine.name}</h3>
+                  <div className="flex items-baseline space-x-1 mb-6">
+                    <span className="text-4xl font-bold text-primary">${machine.minDeposit}</span>
+                    <span className="text-muted-foreground">min deposit</span>
                   </div>
-                )}
-                <h3 className="text-2xl font-bold font-display mb-2">{machine.name}</h3>
-                <div className="flex items-baseline space-x-1 mb-6">
-                  <span className="text-4xl font-bold text-primary">${machine.minDeposit}</span>
-                  <span className="text-muted-foreground">min deposit</span>
-                </div>
 
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Daily Rate</span>
-                    <span className="font-semibold text-emerald-400">{machine.dailyRate}%</span>
+                  <div className="space-y-4 mb-8">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Daily Rate</span>
+                      <span className="font-semibold text-emerald-400">{machine.dailyRate}%</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Duration</span>
+                      <span className="font-semibold">{machine.durationDays} Days</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Hardware</span>
+                      <span className="font-semibold">ASIC S{19 + idx} Pro</span>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Duration</span>
-                    <span className="font-semibold">{machine.durationDays} Days</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Hardware</span>
-                    <span className="font-semibold">ASIC S{19 + idx} Pro</span>
-                  </div>
-                </div>
 
-                <Link href="/register">
-                  <Button className="w-full" variant={idx === 1 ? 'default' : 'secondary'}>
-                    Invest Now
-                  </Button>
-                </Link>
-              </motion.div>
-            ))}
-            
-            {/* Fallback if no machines loaded yet */}
-            {!machines && [1, 2, 3].map((i) => (
-              <div key={i} className="h-96 rounded-2xl bg-secondary/50 animate-pulse" />
-            ))}
+                  <Link href="/register">
+                    <Button className="w-full" variant={idx === 1 ? 'default' : 'secondary'}>
+                      Invest Now
+                    </Button>
+                  </Link>
+                </motion.div>
+              ))
+            ) : !machines ? (
+              [1, 2, 3].map((i) => (
+                <div key={i} className="h-96 rounded-2xl bg-secondary/50 animate-pulse" />
+              ))
+            ) : (
+              <div className="col-span-full py-10 text-center text-muted-foreground">
+                Aucune machine disponible pour le moment.
+              </div>
+            )}
           </div>
         </div>
       </section>

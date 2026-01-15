@@ -5,7 +5,8 @@ import { createServer } from "http";
 
 const app = express();
 const httpServer = createServer(app);
-app.set("trust proxy", 1);
+app.set("trust proxy", true);
+app.enable("trust proxy");
 
 declare module "http" {
   interface IncomingMessage {
