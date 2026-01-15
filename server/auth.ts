@@ -31,14 +31,14 @@ export function setupAuth(app: Express) {
     saveUninitialized: true,
     proxy: true,
     cookie: {
-      secure: app.get("env") === "production",
+      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
     },
     store: storage.sessionStore,
   };
 
-  if (app.get("env") === "production") {
+  if (process.env.NODE_ENV === "production") {
     app.set("trust proxy", 1);
   }
 
