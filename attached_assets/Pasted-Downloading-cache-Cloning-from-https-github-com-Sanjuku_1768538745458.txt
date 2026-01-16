@@ -1,0 +1,55 @@
+Downloading cache...
+==> Cloning from https://github.com/Sanjuku90/Ol-seaaaa
+==> Checking out commit e9b7db80e07c54e66df45636aeace9ef99e876d6 in branch main
+==> Downloaded 246MB in 2s. Extraction took 5s.
+==> Requesting Node.js version >=22
+==> Using Node.js version 25.3.0 via /opt/render/project/src/package.json
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+==> Running build command 'npm install; npm run build'...
+up to date, audited 583 packages in 4s
+69 packages are looking for funding
+  run `npm fund` for details
+6 vulnerabilities (3 low, 3 high)
+To address issues that do not require attention, run:
+  npm audit fix
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+Run `npm audit` for details.
+> rest-express@1.0.0 build
+> tsx script/build.ts && tsc
+building client...
+vite v7.3.1 building client environment for production...
+transforming...
+✓ 2517 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                   2.17 kB │ gzip:   0.82 kB
+../dist/public/assets/index-CZXGSF8h.css   76.07 kB │ gzip:  12.41 kB
+../dist/public/assets/index-BYhT_Y5G.js   767.60 kB │ gzip: 233.79 kB
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 4.24s
+building server...
+  dist/index.js  1.3mb ⚠️
+⚡ Done in 227ms
+==> Uploading build...
+==> Uploaded in 5.6s. Compression took 3.1s
+==> Build successful 🎉
+==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+==> Deploying...
+==> Running 'npm run start'
+> rest-express@1.0.0 start
+> node dist/index.js
+[2026-01-16 04:43:21] DEBUG Creating transport: nodemailer (7.0.12; +https://nodemailer.com/; SMTP (pool)/7.0.12[client:7.0.12])
+[db] Running auto-migrations for production...
+[db] Auto-migrations completed successfully.
+4:43:21 AM [express] serving on port 10000
+==> Your service is live 🎉
+==> 
+==> ///////////////////////////////////////////////////////////
+==> 
+==> Available at your primary URL https://block-092f.onrender.com
+==> 
+==> ///////////////////////////////////////////////////////////

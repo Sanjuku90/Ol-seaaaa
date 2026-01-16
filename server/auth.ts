@@ -50,9 +50,7 @@ export function setupAuth(app: Express) {
     new LocalStrategy({ passReqToCallback: true }, async (req, username, password, done) => {
       // Note: 'username' here is actually the email from the form
       const user = await storage.getUserByEmail(username);
-      console.log(`[auth] Login attempt for ${username}, user found: ${!!user}`);
       const isValid = user ? await comparePasswords(password, user.password) : false;
-      console.log(`[auth] Password valid: ${isValid}`);
       
       // Log attempt
       await db.insert(loginAttempts).values({

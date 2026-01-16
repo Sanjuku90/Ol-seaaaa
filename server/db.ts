@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === "production" || process.env.RENDER) {
     let client;
     try {
       client = await pool.connect();
-      console.log("[db] Running auto-migrations for production...");
+      // Auto-migrations silenced for production
       await client.query(`
         DO $$ 
         BEGIN 
@@ -113,7 +113,6 @@ if (process.env.NODE_ENV === "production" || process.env.RENDER) {
           END;
         END $$;
       `);
-      console.log("[db] Auto-migrations completed successfully.");
     } catch (err) {
       console.error("[db] Auto-migration failed:", err);
     } finally {
