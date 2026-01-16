@@ -6,13 +6,9 @@ import { createServer } from "http";
 const app = express();
 const httpServer = createServer(app);
 app.set("trust proxy", 1);
-// Plus simple pour Render
-app.use((req, res, next) => {
-  if (req.headers["x-forwarded-proto"] === "http") {
-    // Force HTTPS si nécessaire mais ne bloque pas les cookies
-  }
-  next();
-});
+app.enable("trust proxy");
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 declare module "http" {
   interface IncomingMessage {
