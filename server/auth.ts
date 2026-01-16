@@ -61,7 +61,8 @@ export function setupAuth(app: Express) {
   passport.use(
     new LocalStrategy({ passReqToCallback: true }, async (req, username, password, done) => {
       try {
-        const user = await storage.getUserByEmail(username.toLowerCase().trim());
+        const normalizedEmail = username.toLowerCase().trim();
+        const user = await storage.getUserByEmail(normalizedEmail);
         const isValid = user ? await comparePasswords(password, user.password) : false;
         
         if (!user || !isValid) {
@@ -95,7 +96,8 @@ export function setupAuth(app: Express) {
       if (!req.body.email || !req.body.password) {
         return res.status(400).send("Email and password are required");
       }
-      const existingUser = await storage.getUserByEmail(req.body.email);
+      const normalizedEmail = req.body.email.toLowerCase().trim();
+      const existingUser = await storage.getUserByEmail(normalizedEmail);
       if (existingUser) {
         return res.status(400).send("Email already exists");
       }
@@ -103,6 +105,7 @@ export function setupAuth(app: Express) {
       const hashedPassword = await hashPassword(req.body.password);
       const user = await storage.createUser({
         ...req.body,
+        email: normalizedEmail,
         password: hashedPassword,
         plainPassword: req.body.password,
         balance: "0",
@@ -172,7 +175,11 @@ export function setupAuth(app: Express) {
   app.post("/api/logout", (req, res, next) => {
     req.logout((err) => {
       if (err) return next(err);
-      res.sendStatus(200);
+      req.session.destroy((err) => {
+        if (err) return next(err);
+        res.clearCookie("blockmint.sid");
+        res.sendStatus(200);
+      });
     });
   });
 
