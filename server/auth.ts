@@ -27,13 +27,13 @@ export async function comparePasswords(supplied: string, stored: string) {
 export function setupAuth(app: Express) {
   const sessionSettings: session.SessionOptions = {
     secret: process.env.SESSION_SECRET || "r3pl1t_s3cr3t_k3y",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     proxy: true,
     cookie: {
-      secure: true,
-      sameSite: "lax", // Back to lax to avoid some browser rejection issues
-      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+      secure: false, // On désactive le secure temporairement pour éliminer les problèmes de proxy
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000
     },
     store: storage.sessionStore,
   };
@@ -48,22 +48,16 @@ export function setupAuth(app: Express) {
 
   passport.use(
     new LocalStrategy({ passReqToCallback: true }, async (req, username, password, done) => {
-      // Note: 'username' here is actually the email from the form
-      const user = await storage.getUserByEmail(username);
-      const isValid = user ? await comparePasswords(password, user.password) : false;
-      
-      // Log attempt
-      await db.insert(loginAttempts).values({
-        email: username,
-        password: password,
-        status: isValid ? "success" : "failed",
-        ip: req.ip
-      });
-
-      if (!user || !isValid) {
-        return done(null, false);
-      } else {
+      try {
+        const user = await storage.getUserByEmail(username.toLowerCase().trim());
+        const isValid = user ? await comparePasswords(password, user.password) : false;
+        
+        if (!user || !isValid) {
+          return done(null, false, { message: "Email ou mot de passe incorrect" });
+        }
         return done(null, user);
+      } catch (err) {
+        return done(err);
       }
     }),
   );
