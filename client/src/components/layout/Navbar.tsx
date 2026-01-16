@@ -1,10 +1,10 @@
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
-import { Cpu, Menu, X, LogOut, LayoutDashboard } from "lucide-react";
+import { Menu, X, LogOut, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { api } from "@shared/routes";
+import logoImg from "@assets/generated_images/blockmint_modern_crypto_mining_logo.png";
 
 export function Navbar() {
   const { user, logout } = useAuth();
@@ -22,12 +22,12 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 group">
-            <div className="p-2 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-colors">
-              <Cpu className="w-6 h-6 text-primary" />
+          <Link href="/" className="flex items-center space-x-3 group">
+            <div className="w-10 h-10 rounded-xl overflow-hidden bg-primary/10 group-hover:bg-primary/20 transition-colors flex items-center justify-center p-1">
+              <img src={logoImg} alt="BlockMint Logo" className="w-full h-full object-contain" />
             </div>
             <span className="font-display font-bold text-xl tracking-tight">
-              Block<span className="text-primary">Mint</span>
+              Block<span className="text-primary text-glow">Mint</span>
             </span>
           </Link>
 

@@ -7,6 +7,7 @@ import { Link } from "wouter";
 import { ArrowRight, Calculator, CheckCircle2, ShieldCheck, Zap } from "lucide-react";
 import { useState } from "react";
 import { Slider } from "@/components/ui/slider";
+import logoImg from "@assets/generated_images/blockmint_modern_crypto_mining_logo.png";
 
 import CountUp from 'react-countup';
 

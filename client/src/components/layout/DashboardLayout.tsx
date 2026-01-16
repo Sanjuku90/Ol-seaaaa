@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import logoImg from "@assets/generated_images/blockmint_modern_crypto_mining_logo.png";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -43,12 +44,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const SidebarContent = () => (
     <div className="flex flex-col h-full bg-card border-r border-border">
       <div className="p-6">
-        <Link href="/" className="flex items-center space-x-2">
-          <div className="p-2 bg-primary/10 rounded-xl">
-            <Cpu className="w-6 h-6 text-primary" />
+        <Link href="/" className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-xl overflow-hidden bg-primary/10 flex items-center justify-center p-1">
+            <img src={logoImg} alt="BlockMint Logo" className="w-full h-full object-contain" />
           </div>
           <span className="font-display font-bold text-xl tracking-tight">
-            Block<span className="text-primary">Mint</span>
+            Block<span className="text-primary text-glow">Mint</span>
           </span>
         </Link>
       </div>
