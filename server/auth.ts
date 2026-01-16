@@ -31,8 +31,8 @@ export function setupAuth(app: Express) {
     saveUninitialized: true,
     proxy: true,
     cookie: {
-      secure: true, // Render always uses HTTPS
-      sameSite: "none", // Critical for some browser environments on Render
+      secure: true,
+      sameSite: "lax", // Back to lax to avoid some browser rejection issues
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
     },
     store: storage.sessionStore,
