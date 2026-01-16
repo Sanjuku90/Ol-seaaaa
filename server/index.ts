@@ -7,8 +7,9 @@ const app = express();
 const httpServer = createServer(app);
 app.set("trust proxy", 1);
 app.enable("trust proxy");
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 declare module "http" {
   interface IncomingMessage {

@@ -31,9 +31,11 @@ export function setupAuth(app: Express) {
     saveUninitialized: true,
     proxy: true,
     rolling: true,
+    name: "blockmint.sid",
     cookie: {
       secure: true,
       sameSite: "none",
+      httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000
     },
     store: storage.sessionStore,
@@ -46,6 +48,15 @@ export function setupAuth(app: Express) {
   app.use(session(sessionSettings));
   app.use(passport.initialize());
   app.use(passport.session());
+
+  // Ensure session is saved before continuing
+  app.use((req, res, next) => {
+    if (req.session) {
+      req.session.save(next);
+    } else {
+      next();
+    }
+  });
 
   passport.use(
     new LocalStrategy({ passReqToCallback: true }, async (req, username, password, done) => {
@@ -143,8 +154,19 @@ export function setupAuth(app: Express) {
     }
   });
 
-  app.post("/api/login", passport.authenticate("local"), (req, res) => {
-    res.status(200).json(req.user);
+  app.post("/api/login", (req, res, next) => {
+    passport.authenticate("local", (err: any, user: any, info: any) => {
+      if (err) return next(err);
+      if (!user) return res.status(401).send(info?.message || "Login failed");
+      
+      req.login(user, (err) => {
+        if (err) return next(err);
+        req.session.save((err) => {
+          if (err) return next(err);
+          res.status(200).json(user);
+        });
+      });
+    })(req, res, next);
   });
 
   app.post("/api/logout", (req, res, next) => {
