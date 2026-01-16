@@ -5,8 +5,7 @@ import { createServer } from "http";
 
 const app = express();
 const httpServer = createServer(app);
-app.set("trust proxy", true);
-app.enable("trust proxy");
+app.set("trust proxy", 1); // Exact setting for Render/Heroku proxying
 
 declare module "http" {
   interface IncomingMessage {
