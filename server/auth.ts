@@ -111,7 +111,8 @@ export function setupAuth(app: Express) {
         balance: "0",
         isAdmin: false,
         kycStatus: null,
-        referralCode: Math.random().toString(36).substring(2, 8).toUpperCase()
+        referralCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
+        referredBy: req.body.referralCode ? (await storage.getUsers()).find(u => u.referralCode === req.body.referralCode)?.id : null
       });
 
       req.login(user, (err) => {

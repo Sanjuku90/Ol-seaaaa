@@ -584,7 +584,6 @@ export async function registerRoutes(
         const machine = await storage.getMachine(contract.machineId);
         if (machine) {
           // Calculate profit based on machine type
-          // For 'buy', profit is based on buyPrice. For 'rent', it's based on the deposit amount.
           const baseAmount = machine.type === "buy" ? Number(machine.buyPrice || 0) : Number(contract.amount || 0);
           const dailyProfit = (baseAmount * Number(machine.dailyRate)) / 100;
           const profit = dailyProfit / (24 * 60); 
@@ -593,7 +592,32 @@ export async function registerRoutes(
             // Update user global balance
             await storage.updateUserBalance(contract.userId, profit);
             
-            // Update accumulated rewards in contract for progress bar tracking
+            // Referral commissions
+            const user = await storage.getUser(contract.userId);
+            if (user && user.referredBy) {
+              // Level 1: 10%
+              const lvl1Profit = profit * 0.10;
+              await db.update(users)
+                .set({ 
+                  balance: sql`ROUND((${users.balance} + ${lvl1Profit.toString()})::numeric, 4)`,
+                  referralEarnings: sql`ROUND((${users.referralEarnings} + ${lvl1Profit.toString()})::numeric, 4)`
+                })
+                .where(eq(users.id, user.referredBy));
+
+              // Level 2: 5%
+              const referrer = await storage.getUser(user.referredBy);
+              if (referrer && referrer.referredBy) {
+                const lvl2Profit = profit * 0.05;
+                await db.update(users)
+                  .set({ 
+                    balance: sql`ROUND((${users.balance} + ${lvl2Profit.toString()})::numeric, 4)`,
+                    indirectReferralEarnings: sql`ROUND((${users.indirectReferralEarnings} + ${lvl2Profit.toString()})::numeric, 4)`
+                  })
+                  .where(eq(users.id, referrer.referredBy));
+              }
+            }
+            
+            // Update accumulated rewards in contract
             await db.update(contracts)
               .set({ accumulatedRewards: sql`ROUND((${contracts.accumulatedRewards} + ${profit.toString()})::numeric, 4)` })
               .where(eq(contracts.id, contract.id));
@@ -608,7 +632,7 @@ export async function registerRoutes(
           }
         }
       }
-    }, 10000); // Check every 10 seconds for more visible progress
+    }, 10000);
 
   return httpServer;
 }
