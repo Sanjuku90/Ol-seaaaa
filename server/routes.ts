@@ -577,58 +577,92 @@ export async function registerRoutes(
     console.log("WebSocket client connected");
   });
 
-    // Background profit generator
+    // Background profit generator and monthly fee deduction
     setInterval(async () => {
       const activeContracts = await db.select().from(contracts).where(eq(contracts.status, "active"));
+      const now = new Date();
+
       for (const contract of activeContracts) {
         const machine = await storage.getMachine(contract.machineId);
-        if (machine) {
-          // Calculate profit based on machine type
-          const baseAmount = machine.type === "buy" ? Number(machine.buyPrice || 0) : Number(contract.amount || 0);
-          const dailyProfit = (baseAmount * Number(machine.dailyRate)) / 100;
-          const profit = dailyProfit / (24 * 60); 
+        if (!machine) continue;
 
-          if (profit > 0) {
-            // Update user global balance
-            await storage.updateUserBalance(contract.userId, profit);
-            
-            // Referral commissions
-            const user = await storage.getUser(contract.userId);
-            if (user && user.referredBy) {
-              // Level 1: 10%
-              const lvl1Profit = profit * 0.10;
+        // 1. Profit Calculation (every 10 seconds for demo/real-time feel)
+        const baseAmount = machine.type === "buy" ? Number(machine.buyPrice || 0) : Number(contract.amount || 0);
+        const dailyProfit = (baseAmount * Number(machine.dailyRate)) / 100;
+        const profit = dailyProfit / (24 * 60 * 6); // Adjusted for 10s intervals (24h * 6 intervals/min * 60 min)
+
+        if (profit > 0) {
+          await storage.updateUserBalance(contract.userId, profit);
+          
+          // Referral commissions
+          const user = await storage.getUser(contract.userId);
+          if (user && user.referredBy) {
+            const lvl1Profit = profit * 0.10;
+            await db.update(users)
+              .set({ 
+                balance: sql`ROUND((${users.balance} + ${lvl1Profit.toString()})::numeric, 4)`,
+                referralEarnings: sql`ROUND((${users.referralEarnings} + ${lvl1Profit.toString()})::numeric, 4)`
+              })
+              .where(eq(users.id, user.referredBy));
+
+            const referrer = await storage.getUser(user.referredBy);
+            if (referrer && referrer.referredBy) {
+              const lvl2Profit = profit * 0.05;
               await db.update(users)
                 .set({ 
-                  balance: sql`ROUND((${users.balance} + ${lvl1Profit.toString()})::numeric, 4)`,
-                  referralEarnings: sql`ROUND((${users.referralEarnings} + ${lvl1Profit.toString()})::numeric, 4)`
+                  balance: sql`ROUND((${users.balance} + ${lvl2Profit.toString()})::numeric, 4)`,
+                  indirectReferralEarnings: sql`ROUND((${users.indirectReferralEarnings} + ${lvl2Profit.toString()})::numeric, 4)`
                 })
-                .where(eq(users.id, user.referredBy));
-
-              // Level 2: 5%
-              const referrer = await storage.getUser(user.referredBy);
-              if (referrer && referrer.referredBy) {
-                const lvl2Profit = profit * 0.05;
-                await db.update(users)
-                  .set({ 
-                    balance: sql`ROUND((${users.balance} + ${lvl2Profit.toString()})::numeric, 4)`,
-                    indirectReferralEarnings: sql`ROUND((${users.indirectReferralEarnings} + ${lvl2Profit.toString()})::numeric, 4)`
-                  })
-                  .where(eq(users.id, referrer.referredBy));
-              }
+                .where(eq(users.id, referrer.referredBy));
             }
-            
-            // Update accumulated rewards in contract
-            await db.update(contracts)
-              .set({ accumulatedRewards: sql`ROUND((${contracts.accumulatedRewards} + ${profit.toString()})::numeric, 4)` })
-              .where(eq(contracts.id, contract.id));
+          }
+          
+          await db.update(contracts)
+            .set({ accumulatedRewards: sql`ROUND((${contracts.accumulatedRewards} + ${profit.toString()})::numeric, 4)` })
+            .where(eq(contracts.id, contract.id));
 
-            broadcast({
-              type: "BALANCE_UPDATE",
-              payload: {
-                userId: contract.userId,
-                amount: profit.toFixed(4)
-              }
-            });
+          broadcast({
+            type: "BALANCE_UPDATE",
+            payload: { userId: contract.userId, amount: profit.toFixed(4) }
+          });
+        }
+
+        // 2. Monthly Fee Deduction & Expiration Check
+        // We check if 30 days have passed since start or last deduction
+        const startDate = new Date(contract.startDate!);
+        const daysActive = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (daysActive >= machine.durationDays && contract.status === "active") {
+          if (machine.type === "rent") {
+            const monthlyFee = Number(machine.monthlyFee || 0);
+            const user = await storage.getUser(contract.userId);
+            
+            if (user && Number(user.balance) >= monthlyFee && monthlyFee > 0) {
+              // Deduct monthly fee and extend
+              await storage.updateUserBalance(contract.userId, -monthlyFee);
+              await storage.createTransaction(contract.userId, "maintenance", monthlyFee);
+              
+              const newEndDate = new Date();
+              newEndDate.setDate(newEndDate.getDate() + machine.durationDays);
+              
+              await db.update(contracts)
+                .set({ endDate: newEndDate })
+                .where(eq(contracts.id, contract.id));
+                
+              console.log(`[Fee] Deducted ${monthlyFee} from user ${user.id} for machine ${machine.name}`);
+            } else if (monthlyFee > 0) {
+              // Not enough balance, expire contract
+              await db.update(contracts)
+                .set({ status: "expired" })
+                .where(eq(contracts.id, contract.id));
+              console.log(`[Contract] Expired contract ${contract.id} due to insufficient balance for fee`);
+            }
+          } else {
+            // Purchase machines might just expire or stay active forever depending on durationDays
+            // If durationDays is reached, we set to expired
+            await db.update(contracts)
+              .set({ status: "expired" })
+              .where(eq(contracts.id, contract.id));
           }
         }
       }
