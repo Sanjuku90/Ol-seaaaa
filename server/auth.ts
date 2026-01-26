@@ -33,8 +33,8 @@ export function setupAuth(app: Express) {
     rolling: true,
     name: "blockmint.sid",
     cookie: {
-      secure: true,
-      sameSite: "none",
+      secure: app.get("env") === "production",
+      sameSite: "lax",
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000
     },

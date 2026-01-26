@@ -111,6 +111,14 @@ function AppContent() {
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const socket = new WebSocket(`${protocol}//${window.location.host}/ws`);
 
+    socket.onopen = () => {
+      console.log("WebSocket connected successfully");
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket connection error:", error);
+    };
+
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
