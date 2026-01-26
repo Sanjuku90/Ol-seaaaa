@@ -90,6 +90,9 @@ export default function Overview() {
 
   const activeContracts = contracts?.filter(c => c.status === "active" || c.status === "suspended") || [];
   
+  const totalBalance = Number(user?.balance || 0);
+  const totalAccumulated = contracts?.reduce((acc, c) => acc + Number(c.accumulatedRewards || 0), 0) || 0;
+  
   const getMachine = (id: number) => machines?.find(m => m.id === id);
 
   const renderContract = (contract: Contract) => {
@@ -193,7 +196,7 @@ export default function Overview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold font-display">
-                $<CountUp end={Number(user?.balance || 0)} decimals={4} duration={2} separator="," />
+                $<CountUp end={totalBalance} decimals={4} duration={0.5} preserveValue={true} />
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 Prêt pour investissement
@@ -204,15 +207,15 @@ export default function Overview() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <Card className="border-white/5 bg-white/[0.02] hover-elevate">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Revenus 24h</CardTitle>
+              <CardTitle className="text-sm font-medium">Total Gains</CardTitle>
               <TrendingUp className="h-4 w-4 text-emerald-400" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold font-display text-emerald-400">
-                +$<CountUp end={24.15} decimals={2} duration={2} />
+                $<CountUp end={totalAccumulated} decimals={4} duration={0.5} preserveValue={true} />
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                +5.2% vs hier
+                Gains totaux générés
               </p>
             </CardContent>
           </Card>
