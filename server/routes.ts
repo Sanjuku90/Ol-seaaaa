@@ -567,6 +567,49 @@ export async function registerRoutes(
     res.json({ enabled });
   });
 
+  app.post("/api/contracts/:id/resume", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    try {
+      const contractId = Number(req.params.id);
+      const [contract] = await db.select().from(contracts).where(eq(contracts.id, contractId));
+      
+      if (!contract) return res.status(404).json({ message: "Contrat non trouvé" });
+      if (contract.userId !== (req.user as any).id) return res.sendStatus(403);
+      if (contract.status !== "suspended") return res.status(400).json({ message: "Le contrat n'est pas suspendu" });
+
+      const machine = await storage.getMachine(contract.machineId);
+      if (!machine) return res.status(404).json({ message: "Machine non trouvée" });
+
+      const monthlyFee = Number(machine.monthlyFee || 0);
+      const user = await storage.getUser(contract.userId);
+
+      if (!user || Number(user.balance) < monthlyFee) {
+        return res.status(400).json({ message: "Solde insuffisant pour reprendre la location" });
+      }
+
+      // Deduct fee and resume
+      await storage.updateUserBalance(contract.userId, -monthlyFee);
+      await storage.createTransaction(contract.userId, "maintenance", monthlyFee);
+
+      const newEndDate = new Date();
+      newEndDate.setDate(newEndDate.getDate() + machine.durationDays);
+
+      const [updatedContract] = await db.update(contracts)
+        .set({ 
+          status: "active",
+          endDate: newEndDate,
+          startDate: new Date() // Reset start date for the new period
+        })
+        .where(eq(contracts.id, contractId))
+        .returning();
+
+      res.json(updatedContract);
+    } catch (e) {
+      res.status(500).json({ message: "Erreur serveur" });
+    }
+  });
+
   // Seed data function
   await seedDatabase();
 
@@ -651,11 +694,20 @@ export async function registerRoutes(
                 
               console.log(`[Fee] Deducted ${monthlyFee} from user ${user.id} for machine ${machine.name}`);
             } else if (monthlyFee > 0) {
-              // Not enough balance, expire contract
+              // Not enough balance, suspend contract
               await db.update(contracts)
-                .set({ status: "expired" })
+                .set({ status: "suspended" })
                 .where(eq(contracts.id, contract.id));
-              console.log(`[Contract] Expired contract ${contract.id} due to insufficient balance for fee`);
+              console.log(`[Contract] Suspended contract ${contract.id} due to insufficient balance for fee`);
+
+              broadcast({
+                type: "CONTRACT_SUSPENDED",
+                payload: {
+                  userId: contract.userId,
+                  contractId: contract.id,
+                  message: `Votre machine ${machine.name} a été suspendue faute de solde suffisant pour les frais.`
+                }
+              });
             }
           } else {
             // Purchase machines might just expire or stay active forever depending on durationDays

@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -12,17 +12,21 @@ import {
   Activity, 
   Clock, 
   Zap,
-  ShieldCheck
+  ShieldCheck,
+  Loader2
 } from "lucide-react";
 import { type Contract, type Machine, type User } from "@shared/schema";
 import { format } from "date-fns";
 import { Link } from "wouter";
 import { useEffect } from "react";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 import CountUp from 'react-countup';
 import { motion } from 'framer-motion';
 
 export default function Overview() {
+  const { toast } = useToast();
   const queryClient = useQueryClient();
   const { data: user } = useQuery<User>({ 
     queryKey: ["/api/user"],
@@ -32,6 +36,29 @@ export default function Overview() {
     queryKey: ["/api/contracts"],
     refetchInterval: 5000
   });
+
+  const resumeMutation = useMutation({
+    mutationFn: async (contractId: number) => {
+      const res = await apiRequest("POST", `/api/contracts/${contractId}/resume`, {});
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      toast({
+        title: "Succès",
+        description: "Votre contrat a été réactivé."
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Erreur",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  });
+
   const { data: machines } = useQuery<Machine[]>({ queryKey: ["/api/machines"] });
 
   useEffect(() => {
@@ -61,7 +88,7 @@ export default function Overview() {
     return () => socket.close();
   }, [queryClient]);
 
-  const activeContracts = contracts?.filter(c => c.status === "active") || [];
+  const activeContracts = contracts?.filter(c => c.status === "active" || c.status === "suspended") || [];
   
   const getMachine = (id: number) => machines?.find(m => m.id === id);
 
@@ -76,11 +103,11 @@ export default function Overview() {
       : null; // Buy machines don't have a "maturity" progress usually, or we can show ROI progress
 
     return (
-      <Card key={contract.id} className="border-white/5 bg-white/[0.02]">
+      <Card key={contract.id} className={`border-white/5 bg-white/[0.02] ${contract.status === "suspended" ? "opacity-75" : ""}`}>
         <CardContent className="pt-6">
           <div className="flex justify-between items-start mb-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/10 text-primary">
+              <div className={`p-2 rounded-lg ${contract.status === "suspended" ? "bg-amber-500/10 text-amber-500" : "bg-primary/10 text-primary"}`}>
                 {machine.type === "rent" ? <Zap className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />}
               </div>
               <div>
@@ -88,8 +115,8 @@ export default function Overview() {
                 <p className="text-xs text-muted-foreground">ID: #{contract.id}</p>
               </div>
             </div>
-            <Badge variant={contract.status === "active" ? "default" : "secondary"}>
-              {contract.status === "active" ? "Actif" : "Suspendu"}
+            <Badge variant={contract.status === "active" ? "default" : "secondary"} className={contract.status === "suspended" ? "bg-amber-500 text-white" : ""}>
+              {contract.status === "active" ? "Actif" : contract.status === "suspended" ? "Suspendu" : "Expiré"}
             </Badge>
           </div>
 
@@ -104,17 +131,31 @@ export default function Overview() {
             </div>
           </div>
 
-          {machine.type === "rent" && progress !== null && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs">
-                <span>Maturité du retrait (Min ${minDep})</span>
-                <span>{progress.toFixed(0)}%</span>
-              </div>
-              <Progress value={progress} className="h-2" />
-              <p className="text-[10px] text-muted-foreground text-center">
-                {progress >= 100 ? "Frais de retrait : 4%" : "Frais de retrait : 19%"}
-              </p>
+          {contract.status === "suspended" ? (
+            <div className="space-y-3 pt-2">
+              <p className="text-xs text-amber-500 font-medium">Action requise : Solde insuffisant pour les frais.</p>
+              <Button 
+                className="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs" 
+                size="sm"
+                onClick={() => resumeMutation.mutate(contract.id)}
+                disabled={resumeMutation.isPending}
+              >
+                {resumeMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin mr-2" /> : "Recharger & Relancer"}
+              </Button>
             </div>
+          ) : (
+            machine.type === "rent" && progress !== null && (
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs">
+                  <span>Maturité du retrait (Min ${minDep})</span>
+                  <span>{progress.toFixed(0)}%</span>
+                </div>
+                <Progress value={progress} className="h-2" />
+                <p className="text-[10px] text-muted-foreground text-center">
+                  {progress >= 100 ? "Frais de retrait : 4%" : "Frais de retrait : 19%"}
+                </p>
+              </div>
+            )
           )}
 
           <div className="mt-4 pt-4 border-t border-white/5 flex justify-between text-xs text-muted-foreground">

@@ -26,6 +26,36 @@ export default function Machines() {
   const [isOpen, setIsOpen] = useState(false);
   const [calcAmount, setCalcAmount] = useState("100");
 
+  const { data: userContracts } = useQuery<Contract[]>({
+    queryKey: ["/api/contracts"]
+  });
+
+  const getContractForMachine = (machineId: number) => {
+    return userContracts?.find(c => c.machineId === machineId && (c.status === "active" || c.status === "suspended"));
+  };
+
+  const resumeMutation = useMutation({
+    mutationFn: async (contractId: number) => {
+      const res = await apiRequest("POST", `/api/contracts/${contractId}/resume`, {});
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      toast({
+        title: "Succès",
+        description: "Votre contrat a été réactivé."
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Erreur",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  });
+
   const calculateProfit = (machine: Machine, amount: number) => {
     const daily = (amount * Number(machine.dailyRate)) / 100;
     const weekly = daily * 7;
@@ -83,8 +113,10 @@ export default function Machines() {
 
   const renderMachineCard = (machine: Machine) => {
     const profits = calculateProfit(machine, Number(calcAmount) || 0);
+    const existingContract = getContractForMachine(machine.id);
+
     return (
-      <Card key={machine.id} className="overflow-hidden border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+      <Card key={machine.id} className={`overflow-hidden border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors ${existingContract?.status === "suspended" ? "border-amber-500/50" : ""}`}>
         <CardHeader>
           <div className="flex justify-between items-start gap-2">
             <div>
@@ -97,6 +129,12 @@ export default function Machines() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
+          {existingContract?.status === "suspended" && (
+            <div className="bg-amber-500/10 border border-amber-500/20 rounded-md p-2 mb-2">
+              <p className="text-[10px] text-amber-500 font-bold uppercase tracking-wider">Machine Suspendue</p>
+              <p className="text-[10px] text-muted-foreground">Solde insuffisant pour les frais de maintenance.</p>
+            </div>
+          )}
           <div className="text-3xl font-bold font-display text-primary">
             {machine.type === "rent" ? (
               <>${machine.rentalPrice}<span className="text-sm text-muted-foreground font-sans font-normal ml-1">/ mois</span></>
@@ -135,9 +173,19 @@ export default function Machines() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full" onClick={() => openPurchaseDialog(machine)} disabled={purchaseMutation.isPending}>
-            {machine.type === "rent" ? "Louer Maintenant" : "Acheter Maintenant"}
-          </Button>
+          {existingContract?.status === "suspended" ? (
+            <Button 
+              className="w-full bg-amber-500 hover:bg-amber-600 text-white" 
+              onClick={() => resumeMutation.mutate(existingContract.id)}
+              disabled={resumeMutation.isPending}
+            >
+              {resumeMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : "Réactiver la Machine"}
+            </Button>
+          ) : (
+            <Button className="w-full" onClick={() => openPurchaseDialog(machine)} disabled={purchaseMutation.isPending || !!existingContract}>
+              {existingContract ? "Déjà Actif" : (machine.type === "rent" ? "Louer Maintenant" : "Acheter Maintenant")}
+            </Button>
+          )}
         </CardFooter>
       </Card>
     );
