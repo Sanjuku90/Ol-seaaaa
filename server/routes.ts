@@ -671,13 +671,13 @@ export async function registerRoutes(
             continue;
           }
 
-          // 1. Profit Calculation (every 10 seconds)
+          // 1. Profit Calculation (every 5 seconds)
           const baseAmount = machine.type === "buy" ? Number(machine.buyPrice || 0) : Number(contract.amount || 0);
           const dailyRate = Number(machine.dailyRate || 0);
           
           if (baseAmount > 0 && dailyRate > 0) {
             const dailyProfit = (baseAmount * dailyRate) / 100;
-            const profitPerInterval = dailyProfit / 8640;
+            const profitPerInterval = dailyProfit / 17280; // 86400 / 5 = 17280 intervals per day
 
             if (profitPerInterval > 0) {
               const currentAccumulated = Number(contract.accumulatedRewards || 0);
@@ -741,7 +741,7 @@ export async function registerRoutes(
       } catch (err) {
         console.error("[ProfitJob] Error:", err);
       }
-    }, 10000);
+    }, 5000);
 
   return httpServer;
 }
