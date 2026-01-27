@@ -101,6 +101,13 @@ export default function Overview() {
   const { data: machines } = useQuery<Machine[]>({ queryKey: ["/api/machines"] });
 
   const [realtimeAccumulated, setRealtimeAccumulated] = useState<Record<number, number>>({});
+  const [realtimeBalance, setRealtimeBalance] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (user && realtimeBalance === null) {
+      setRealtimeBalance(Number(user.balance || 0));
+    }
+  }, [user]);
 
   useEffect(() => {
     if (contracts) {
@@ -131,6 +138,11 @@ export default function Overview() {
               ...prev,
               [data.payload.contractId]: Number(data.payload.accumulated)
             }));
+            
+            // Update balance in real-time as well
+            if (data.payload.amount) {
+              setRealtimeBalance(prev => (prev !== null ? prev + Number(data.payload.amount) : null));
+            }
           }
         } else if (data.type === "BALANCE_UPDATE" || data.type === "TRANSACTION_UPDATE") {
           queryClient.invalidateQueries({ queryKey: ["/api/user"] });
@@ -159,7 +171,7 @@ export default function Overview() {
 
   const activeContracts = contracts?.filter(c => c.status === "active" || c.status === "suspended") || [];
   
-  const totalBalance = Number(user?.balance || 0);
+  const totalBalance = realtimeBalance ?? Number(user?.balance || 0);
   const totalAccumulated = Object.values(realtimeAccumulated).reduce((acc, val) => acc + val, 0) || contracts?.reduce((acc, c) => acc + Number(c.accumulatedRewards || 0), 0) || 0;
   
   const getMachine = (id: number) => machines?.find(m => m.id === id);
