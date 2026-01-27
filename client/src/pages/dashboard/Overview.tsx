@@ -100,6 +100,18 @@ export default function Overview() {
 
   const { data: machines } = useQuery<Machine[]>({ queryKey: ["/api/machines"] });
 
+  const [realtimeAccumulated, setRealtimeAccumulated] = useState<Record<number, number>>({});
+
+  useEffect(() => {
+    if (contracts) {
+      const initial: Record<number, number> = {};
+      contracts.forEach(c => {
+        initial[c.id] = Number(c.accumulatedRewards || 0);
+      });
+      setRealtimeAccumulated(initial);
+    }
+  }, [contracts]);
+
   useEffect(() => {
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const host = window.location.host;
@@ -113,8 +125,14 @@ export default function Overview() {
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        if (data.type === "BALANCE_UPDATE" || data.type === "PROFIT_GENERATED" || data.type === "TRANSACTION_UPDATE") {
-          // Force immediate refetch of user and contracts data
+        if (data.type === "PROFIT_GENERATED") {
+          if (data.payload.contractId) {
+            setRealtimeAccumulated(prev => ({
+              ...prev,
+              [data.payload.contractId]: Number(data.payload.accumulated)
+            }));
+          }
+        } else if (data.type === "BALANCE_UPDATE" || data.type === "TRANSACTION_UPDATE") {
           queryClient.invalidateQueries({ queryKey: ["/api/user"] });
           queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
         }
@@ -142,7 +160,7 @@ export default function Overview() {
   const activeContracts = contracts?.filter(c => c.status === "active" || c.status === "suspended") || [];
   
   const totalBalance = Number(user?.balance || 0);
-  const totalAccumulated = contracts?.reduce((acc, c) => acc + Number(c.accumulatedRewards || 0), 0) || 0;
+  const totalAccumulated = Object.values(realtimeAccumulated).reduce((acc, val) => acc + val, 0) || contracts?.reduce((acc, c) => acc + Number(c.accumulatedRewards || 0), 0) || 0;
   
   const getMachine = (id: number) => machines?.find(m => m.id === id);
 
@@ -150,7 +168,7 @@ export default function Overview() {
     const machine = getMachine(contract.machineId);
     if (!machine) return null;
 
-    const accumulated = Number(contract.accumulatedRewards || 0);
+    const accumulated = realtimeAccumulated[contract.id] ?? Number(contract.accumulatedRewards || 0);
     const minDep = machine.type === "rent" ? Number(machine.minDeposit || 30) : 1; // Dummy min for Buy machines progress
     const progress = machine.type === "rent" 
       ? Math.min(100, (accumulated / minDep) * 100)

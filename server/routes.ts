@@ -695,12 +695,12 @@ export async function registerRoutes(
 
               // Broadcast update
               broadcast({
-                type: "BALANCE_UPDATE",
+                type: "PROFIT_GENERATED",
                 payload: { 
                   userId: contract.userId,
-                  amount: profitPerInterval.toFixed(6),
+                  amount: profitPerInterval.toFixed(8),
                   contractId: contract.id,
-                  accumulated: newAccumulated.toFixed(6)
+                  accumulated: newAccumulated.toFixed(8)
                 }
               });
             }
