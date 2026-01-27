@@ -109,6 +109,7 @@ app.use((req, res, next) => {
                     kyc_note TEXT,
                     kyc_status TEXT,
                     affiliation_grade TEXT DEFAULT 'Bronze',
+                    phone TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                   );
                 `);

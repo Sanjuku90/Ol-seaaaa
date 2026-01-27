@@ -121,6 +121,12 @@ if (process.env.NODE_ENV === "production" || process.env.RENDER) {
               EXCEPTION WHEN duplicate_column THEN 
                 NULL;
               END;
+
+              BEGIN
+                ALTER TABLE users ADD COLUMN phone text;
+              EXCEPTION WHEN duplicate_column THEN 
+                NULL;
+              END;
             END IF;
           END $$;
         `);
