@@ -108,6 +108,7 @@ app.use((req, res, next) => {
                     kyc_photo_selfie TEXT,
                     kyc_note TEXT,
                     kyc_status TEXT,
+                    affiliation_grade TEXT DEFAULT 'Bronze',
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                   );
                 `);

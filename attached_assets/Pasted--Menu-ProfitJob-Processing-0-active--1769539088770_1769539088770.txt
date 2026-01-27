@@ -1,0 +1,51 @@
+=> ///////////////////////////////////////////////////////////
+Menu
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:36:00.939Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:36:10.939Z
+6:36:11 PM [express] GET /api/user 401 in 7ms
+6:36:11 PM [express] GET /api/machines 200 in 8ms :: [{"id":1,"name":"Rent Mini","type":"rent","rentalPrice":"4.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"1.90","monthlyFee":"0.00","description":"Location abordable pour débuter."},{"id":2,"name":"Rent Starter","type":"rent","rentalPrice":"14.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"2.30","monthlyFee":"0.00","description":"Idéal pour booster vos premiers gains."},{"id":3,"name":"Rent Standard","type":"rent","rentalPrice":"24.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"2.80","monthlyFee":"0.00","description":"Bon équilibre entre coût et rendement."},{"id":4,"name":"Rent Pro","type":"rent","rentalPrice":"29.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"3.30","monthlyFee":"0.00","description":"Pour les mineurs avertis."},{"id":5,"name":"Rent Elite","type":"rent","rentalPrice":"49.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"3.80","monthlyFee":"0.00","description":"Performance maximale en location."},{"id":6,"name":"Starter Buy","type":"buy","rentalPrice":null,"buyPrice":"180.00","minDeposit":0,"durationDays":365,"dailyRate":"2.80","monthlyFee":"0.00","description":"Achat unique, minage permanent."},{"id":7,"name":"Standard Buy","type":"buy","rentalPrice":null,"buyPrice":"450.00","minDeposit":0,"durationDays":365,"dailyRate":"3.30","monthlyFee":"0.00","description":"Rendement supérieur pour investisseurs."},{"id":8,"name":"Pro Buy","type":"buy","rentalPrice":null,"buyPrice":"1100.00","minDeposit":0,"durationDays":365,"dailyRate":"3.80","monthlyFee":"0.00","description":"Gains optimisés sur le long terme."},{"id":9,"name":"Elite Buy","type":"buy","rentalPrice":null,"buyPrice":"2800.00","minDeposit":0,"durationDays":365,"dailyRate":"4.30","monthlyFee":"0.00","description":"Le top de la performance BlockMint."}]
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:36:21.021Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:36:30.942Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:36:40.940Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:36:50.942Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:37:00.945Z
+error: column "affiliation_grade" does not exist
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:77:37960
+    at async Cv.getUserByEmail (file:///opt/render/project/src/dist/index.js:167:4571)
+    at async of._verify (file:///opt/render/project/src/dist/index.js:262:1789)
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:37:10.945Z
+error: column "affiliation_grade" does not exist
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:77:37960
+    at async Cv.getUserByEmail (file:///opt/render/project/src/dist/index.js:167:4571)
+    at async file:///opt/render/project/src/dist/index.js:262:2297
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:37:21.021Z
+error: column "affiliation_grade" does not exist
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:77:37960
+    at async Cv.getUserByEmail (file:///opt/render/project/src/dist/index.js:167:4571)
+    at async file:///opt/render/project/src/dist/index.js:262:2297
+error: column "affiliation_grade" does not exist
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:77:37960
+    at async Cv.getUserByEmail (file:///opt/render/project/src/dist/index.js:167:4571)
+    at async of._verify (file:///opt/render/project/src/dist/index.js:262:1789)
+error: column "affiliation_grade" does not exist
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:77:37960
+    at async Cv.getUserByEmail (file:///opt/render/project/src/dist/index.js:167:4571)
+    at async of._verify (file:///opt/render/project/src/dist/index.js:262:1789)
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:37:30.949Z
+error: column "affiliation_grade" does not exist
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:77:37960
+    at async Cv.getUserByEmail (file:///opt/render/project/src/dist/index.js:167:4571)
+    at async of._verify (file:///opt/render/project/src/dist/index.js:262:1789)
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:37:40.950Z

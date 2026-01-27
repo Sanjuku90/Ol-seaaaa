@@ -115,6 +115,12 @@ if (process.env.NODE_ENV === "production" || process.env.RENDER) {
               EXCEPTION WHEN duplicate_column THEN 
                 NULL;
               END;
+
+              BEGIN
+                ALTER TABLE users ADD COLUMN affiliation_grade text DEFAULT 'Bronze';
+              EXCEPTION WHEN duplicate_column THEN 
+                NULL;
+              END;
             END IF;
           END $$;
         `);
