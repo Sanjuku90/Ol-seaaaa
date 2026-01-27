@@ -151,14 +151,6 @@ export async function registerRoutes(
           return res.status(404).json({ message: "Utilisateur non trouvé" });
         }
 
-        // KYC check for large withdrawals
-        const WITHDRAWAL_KYC_THRESHOLD = 200;
-        if (input.amount >= WITHDRAWAL_KYC_THRESHOLD && user.kycStatus !== 'approved') {
-          return res.status(403).json({ 
-            message: `Une vérification d'identité (KYC) est requise pour les retraits de ${WITHDRAWAL_KYC_THRESHOLD}$ ou plus.` 
-          });
-        }
-
         // Verify withdrawal password if set
         if (user.withdrawPassword) {
           const { withdrawPassword: providedPassword } = req.body;
@@ -340,40 +332,11 @@ export async function registerRoutes(
     res.json(updatedTx);
   });
 
-  app.patch("/api/admin/users/:id/kyc", async (req, res) => {
-    const { status, note } = req.body;
-    const userId = Number(req.params.id);
-    const user = await storage.updateUserProfile(userId, { 
-      kycStatus: status,
-      kycNote: note
-    });
-
-    if (user && user.email) {
-      const isApproved = status === 'approved';
-      const statusLabel = isApproved ? 'approuvée' : 'rejetée';
-      sendEmail(
-        user.email,
-        "Mise à jour de votre vérification KYC - BlockMint",
-        `Votre vérification d'identité a été ${statusLabel}.${note ? ` Motif : ${note}` : ''}`,
-        "Statut KYC",
-        `<p>Bonjour,</p>
-         <p>Nous vous informons que l'examen de vos documents d'identité est terminé.</p>
-         <div style="padding: 15px; border-radius: 8px; text-align: center; background: ${isApproved ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; margin: 20px 0;">
-           <p style="font-size: 18px; margin: 0;">Nouveau statut KYC : <span style="font-weight: bold; color: ${isApproved ? '#10b981' : '#ef4444'};">${statusLabel.toUpperCase()}</span></p>
-         </div>
-         ${note ? `<p><strong>Note de l'administrateur :</strong> ${note}</p>` : ''}
-         ${!isApproved ? '<p>Veuillez soumettre à nouveau des documents valides depuis vos paramètres.</p>' : '<p>Votre compte est désormais pleinement vérifié pour les retraits.</p>'}
-         <p>Si vous avez des questions, n'hésitez pas à contacter notre support.</p>`
-      );
-    }
-    res.json(user);
-  });
-
   app.patch("/api/admin/users/:id/status", async (req, res) => {
     const { status } = req.body;
     const user = await storage.updateUserStatus(Number(req.params.id), status);
     
-    // Send KYC/Status Update Email
+    // Send Status Update Email
     if (user && user.email) {
       const isSuccess = status === 'active';
       const statusLabel = isSuccess ? 'activé' : 'suspendu';
@@ -418,29 +381,11 @@ export async function registerRoutes(
     res.json(user);
   });
 
-  app.post("/api/kyc/submit", async (req, res) => {
-    if (!req.isAuthenticated()) return res.sendStatus(401);
-    const { fullName, country, birthDate, documentType, photoRecto, photoVerso, photoSelfie } = req.body;
-    if (!fullName || !country || !birthDate || !documentType || !photoRecto || !photoSelfie) {
-      return res.status(400).json({ message: "Tous les champs sont requis" });
-    }
-    const user = await storage.updateUserKYC((req.user as any).id, {
-      fullName,
-      country,
-      birthDate,
-      documentType,
-      photoRecto,
-      photoVerso,
-      photoSelfie
-    });
-    res.json(user);
-  });
-
   app.patch("/api/user/profile", async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     
     // Protection: don't allow changing sensitive fields via this route
-    const { email, password, role, balance, isAdmin, kycStatus, ...updatableData } = req.body;
+    const { email, password, role, balance, isAdmin, ...updatableData } = req.body;
     
     const user = await storage.updateUserProfile((req.user as any).id, updatableData);
     res.json(user);

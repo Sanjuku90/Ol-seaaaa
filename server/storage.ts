@@ -31,15 +31,6 @@ export interface IStorage {
   updateUserStatus(id: number, status: string): Promise<User>;
   updateUserAdmin(id: number, isAdmin: boolean): Promise<User>;
   updateUserBalanceAdmin(id: number, amount: number): Promise<User>;
-  updateUserKYC(id: number, data: {
-    fullName: string;
-    country: string;
-    birthDate: string;
-    documentType: string;
-    photoRecto: string;
-    photoVerso: string;
-    photoSelfie: string;
-  }): Promise<User>;
   updateUserPassword(id: number, passwordHash: string): Promise<User>;
   updateUserWithdrawPassword(id: number, passwordHash: string): Promise<User>;
   updateUserProfile(id: number, data: Partial<User>): Promise<User>;
@@ -174,31 +165,6 @@ export class DatabaseStorage implements IStorage {
     const amountStr = amount.toString();
     const [user] = await db.update(users)
       .set({ balance: sql`(${users.balance}::numeric + ${amountStr}::numeric)` })
-      .where(eq(users.id, id))
-      .returning();
-    return user;
-  }
-
-  async updateUserKYC(id: number, data: {
-    fullName: string;
-    country: string;
-    birthDate: string;
-    documentType: string;
-    photoRecto: string;
-    photoVerso: string;
-    photoSelfie: string;
-  }): Promise<User> {
-    const [user] = await db.update(users)
-      .set({ 
-        kycFullName: data.fullName,
-        kycCountry: data.country,
-        kycBirthDate: data.birthDate,
-        kycDocumentType: data.documentType,
-        kycPhotoRecto: data.photoRecto,
-        kycPhotoVerso: data.photoVerso,
-        kycPhotoSelfie: data.photoSelfie,
-        kycStatus: "pending" 
-      })
       .where(eq(users.id, id))
       .returning();
     return user;

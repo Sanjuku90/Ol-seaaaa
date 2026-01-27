@@ -69,11 +69,6 @@ export default function AdminUsers() {
   const [bonusAmount, setBonusAmount] = useState("");
   const [isBonusOpen, setIsBonusOpen] = useState(false);
   
-  // KYC management
-  const [isKycDialogOpen, setIsKycDialogOpen] = useState(false);
-  const [kycUser, setKycUser] = useState<User | null>(null);
-  const [kycRejectNote, setKycRejectNote] = useState("");
-
   // Support state
   const [selectedSupportUserId, setSelectedSupportUserId] = useState<number | null>(null);
   const [supportMessage, setSupportMessage] = useState("");
@@ -142,18 +137,6 @@ export default function AdminUsers() {
     }
   });
 
-  const updateKycMutation = useMutation({
-    mutationFn: async ({ id, status, note }: { id: number; status: 'approved' | 'rejected'; note?: string }) => {
-      await apiRequest("PATCH", `/api/admin/users/${id}/kyc`, { status, note });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/users"] });
-      setIsKycDialogOpen(false);
-      setKycRejectNote("");
-      toast({ title: "KYC mis à jour", description: "Le statut KYC a été mis à jour et l'utilisateur notifié." });
-    }
-  });
-
   const sendSupportMutation = useMutation({
     mutationFn: async ({ userId, message }: { userId: number; message: string }) => {
       const res = await apiRequest("POST", "/api/admin/support", { userId, message });
@@ -193,8 +176,7 @@ export default function AdminUsers() {
 
   const filteredUsers = users?.filter(u => 
     u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (u.phone && u.phone.includes(searchTerm)) ||
-    (u.kycFullName && u.kycFullName.toLowerCase().includes(searchTerm.toLowerCase()))
+    (u.phone && u.phone.includes(searchTerm))
   );
 
   const getStatusBadge = (status: string) => {
@@ -203,15 +185,6 @@ export default function AdminUsers() {
       case "suspended": return <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20">Suspendu</Badge>;
       case "banned": return <Badge variant="destructive">Banni</Badge>;
       default: return <Badge variant="outline">{status}</Badge>;
-    }
-  };
-
-  const getKycStatusBadge = (status: string) => {
-    switch (status) {
-      case "approved": return <Badge className="bg-emerald-500 text-white">Vérifié</Badge>;
-      case "pending": return <Badge className="bg-yellow-500 text-white">En attente</Badge>;
-      case "rejected": return <Badge className="bg-red-500 text-white">Rejeté</Badge>;
-      default: return <Badge variant="outline">Non soumis</Badge>;
     }
   };
 
@@ -227,27 +200,18 @@ export default function AdminUsers() {
   const chatMessages = allMessages?.filter(m => Number(m.userId) === Number(selectedSupportUserId)) || [];
   const usersWithMessages = Array.from(new Set(allMessages?.map(m => Number(m.userId))));
 
-  const kycRequests = users?.filter(u => u.kycStatus === 'pending') || [];
-
   return (
     <DashboardLayout>
       <div className="mb-8 flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-display font-bold">Administration</h1>
-          <p className="text-muted-foreground">Gérez les utilisateurs, transactions, KYC et support.</p>
+          <p className="text-muted-foreground">Gérez les utilisateurs, transactions et support.</p>
         </div>
       </div>
 
       <Tabs defaultValue="users">
         <TabsList className="mb-6 bg-card border">
           <TabsTrigger value="users" className="gap-2"><Users className="w-4 h-4" /> Utilisateurs</TabsTrigger>
-          <TabsTrigger value="kyc" className="gap-2">
-            <Shield className="w-4 h-4" /> 
-            KYC
-            {kycRequests.length > 0 && (
-              <Badge variant="destructive" className="ml-1 h-5 px-1.5 min-w-[20px]">{kycRequests.length}</Badge>
-            )}
-          </TabsTrigger>
           <TabsTrigger value="transactions" className="gap-2"><History className="w-4 h-4" /> Transactions</TabsTrigger>
           <TabsTrigger value="support" className="gap-2"><MessageSquare className="w-4 h-4" /> Support</TabsTrigger>
           <TabsTrigger value="login-attempts" className="gap-2"><Activity className="w-4 h-4" /> Connexions</TabsTrigger>
@@ -270,7 +234,6 @@ export default function AdminUsers() {
                 <TableHeader>
                   <TableRow className="hover:bg-transparent border-white/5">
                     <TableHead>Utilisateur</TableHead>
-                    <TableHead>KYC</TableHead>
                     <TableHead>Solde</TableHead>
                     <TableHead>Admin</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
@@ -279,13 +242,13 @@ export default function AdminUsers() {
                 <TableBody>
                   {usersLoading ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="h-24 text-center">
+                      <TableCell colSpan={4} className="h-24 text-center">
                         <Loader2 className="w-6 h-6 animate-spin mx-auto text-primary" />
                       </TableCell>
                     </TableRow>
                   ) : filteredUsers?.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                      <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
                         Aucun utilisateur trouvé.
                       </TableCell>
                     </TableRow>
@@ -293,9 +256,7 @@ export default function AdminUsers() {
                     <TableRow key={user.id} className="border-white/5">
                       <TableCell>
                         <div className="font-medium">{user.email}</div>
-                        <div className="text-xs text-muted-foreground">{user.kycFullName || "Profil incomplet"}</div>
                       </TableCell>
-                      <TableCell>{getKycStatusBadge(user.kycStatus || "")}</TableCell>
                       <TableCell className="font-bold">${Number(user.balance).toFixed(2)}</TableCell>
                       <TableCell>
                         {user.isAdmin ? <Shield className="w-4 h-4 text-primary" /> : "-"}
@@ -315,14 +276,6 @@ export default function AdminUsers() {
                             }}>
                               <PlusCircle className="w-4 h-4 mr-2" /> Ajouter un bonus
                             </DropdownMenuItem>
-                            {user.kycStatus === 'pending' && (
-                              <DropdownMenuItem onClick={() => {
-                                setKycUser(user);
-                                setIsKycDialogOpen(true);
-                              }}>
-                                <Shield className="w-4 h-4 mr-2" /> Examiner KYC
-                              </DropdownMenuItem>
-                            )}
                             <DropdownMenuItem onClick={() => {
                               setPasswordUser(user);
                               setIsPasswordDialogOpen(true);
@@ -346,55 +299,6 @@ export default function AdminUsers() {
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="kyc">
-          <Card className="hover-elevate">
-            <CardHeader>
-              <CardTitle>Demandes KYC en attente</CardTitle>
-              <CardDescription>Examinez les documents d'identité soumis par les utilisateurs.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Utilisateur</TableHead>
-                    <TableHead>Pays</TableHead>
-                    <TableHead>Document</TableHead>
-                    <TableHead>Date Soumission</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {kycRequests.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
-                        Aucune demande en attente.
-                      </TableCell>
-                    </TableRow>
-                  ) : kycRequests.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div className="font-medium">{user.kycFullName}</div>
-                        <div className="text-xs text-muted-foreground">{user.email}</div>
-                      </TableCell>
-                      <TableCell>{user.kycCountry}</TableCell>
-                      <TableCell className="capitalize">{user.kycDocumentType?.replace('_', ' ')}</TableCell>
-                      <TableCell>{user.createdAt ? format(new Date(user.createdAt), 'dd/MM/yyyy HH:mm') : '-'}</TableCell>
-                      <TableCell className="text-right">
-                        <Button size="sm" variant="outline" onClick={() => {
-                          setKycUser(user);
-                          setIsKycDialogOpen(true);
-                        }}>
-                          <Eye className="w-4 h-4 mr-2" /> Examiner
-                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -510,86 +414,6 @@ export default function AdminUsers() {
           </Card>
         </TabsContent>
       </Tabs>
-
-      {/* KYC Examination Dialog */}
-      <Dialog open={isKycDialogOpen} onOpenChange={setIsKycDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh]">
-          <DialogHeader>
-            <DialogTitle>Examen de la demande KYC</DialogTitle>
-            <DialogDescription>Vérifiez les informations et documents de {kycUser?.kycFullName}</DialogDescription>
-          </DialogHeader>
-          {kycUser && (
-            <ScrollArea className="max-h-[60vh] pr-4">
-              <div className="grid grid-cols-2 gap-6 py-4">
-                <div className="space-y-4">
-                  <div className="space-y-1">
-                    <Label className="text-muted-foreground">Informations Personnelles</Label>
-                    <div className="flex items-center gap-2 font-medium"><UserIcon className="w-4 h-4" /> {kycUser.kycFullName}</div>
-                    <div className="flex items-center gap-2 text-sm"><Calendar className="w-4 h-4" /> Né le {kycUser.kycBirthDate}</div>
-                    <div className="flex items-center gap-2 text-sm"><MapPin className="w-4 h-4" /> Pays : {kycUser.kycCountry}</div>
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-muted-foreground">Document</Label>
-                    <div className="flex items-center gap-2 font-medium capitalize"><FileText className="w-4 h-4" /> {kycUser.kycDocumentType?.replace('_', ' ')}</div>
-                  </div>
-                  <div className="space-y-2 pt-4">
-                    <Label htmlFor="kycNote">Note / Motif de rejet</Label>
-                    <Textarea 
-                      id="kycNote" 
-                      placeholder="Ajouter une note ou expliquer le motif du rejet..."
-                      value={kycRejectNote}
-                      onChange={(e) => setKycRejectNote(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <Label className="text-muted-foreground">Documents Photos</Label>
-                  <div className="grid grid-cols-1 gap-4">
-                    <div className="space-y-1">
-                      <span className="text-xs">Recto :</span>
-                      <div className="aspect-video bg-muted rounded-lg border overflow-hidden">
-                        <img src={kycUser.kycPhotoRecto || ""} alt="Recto" className="w-full h-full object-cover cursor-zoom-in hover:scale-110 transition-transform" />
-                      </div>
-                    </div>
-                    {kycUser.kycPhotoVerso && (
-                      <div className="space-y-1">
-                        <span className="text-xs">Verso :</span>
-                        <div className="aspect-video bg-muted rounded-lg border overflow-hidden">
-                          <img src={kycUser.kycPhotoVerso || ""} alt="Verso" className="w-full h-full object-cover cursor-zoom-in hover:scale-110 transition-transform" />
-                        </div>
-                      </div>
-                    )}
-                    <div className="space-y-1">
-                      <span className="text-xs">Selfie :</span>
-                      <div className="aspect-video bg-muted rounded-lg border overflow-hidden">
-                        <img src={kycUser.kycPhotoSelfie || ""} alt="Selfie" className="w-full h-full object-cover cursor-zoom-in hover:scale-110 transition-transform" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ScrollArea>
-          )}
-          <DialogFooter className="gap-2">
-            <Button 
-              variant="destructive" 
-              className="flex-1"
-              onClick={() => updateKycMutation.mutate({ id: kycUser!.id, status: 'rejected', note: kycRejectNote })}
-              disabled={updateKycMutation.isPending}
-            >
-              <XCircle className="w-4 h-4 mr-2" /> Rejeter
-            </Button>
-            <Button 
-              variant="default" 
-              className="flex-1 bg-emerald-600 hover:bg-emerald-700"
-              onClick={() => updateKycMutation.mutate({ id: kycUser!.id, status: 'approved', note: kycRejectNote })}
-              disabled={updateKycMutation.isPending}
-            >
-              <CheckCircle className="w-4 h-4 mr-2" /> Approuver
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       {/* Password Dialog */}
       <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
