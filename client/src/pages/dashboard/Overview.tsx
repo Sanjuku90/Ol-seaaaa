@@ -100,25 +100,6 @@ export default function Overview() {
 
   const { data: machines } = useQuery<Machine[]>({ queryKey: ["/api/machines"] });
 
-  const [realtimeAccumulated, setRealtimeAccumulated] = useState<Record<number, number>>({});
-  const [realtimeBalance, setRealtimeBalance] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (user && realtimeBalance === null) {
-      setRealtimeBalance(Number(user.balance || 0));
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (contracts) {
-      const initial: Record<number, number> = {};
-      contracts.forEach(c => {
-        initial[c.id] = Number(c.accumulatedRewards || 0);
-      });
-      setRealtimeAccumulated(initial);
-    }
-  }, [contracts]);
-
   useEffect(() => {
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const host = window.location.host;
@@ -132,19 +113,8 @@ export default function Overview() {
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        if (data.type === "PROFIT_GENERATED") {
-          if (data.payload.contractId) {
-            setRealtimeAccumulated(prev => ({
-              ...prev,
-              [data.payload.contractId]: Number(data.payload.accumulated)
-            }));
-            
-            // Update balance in real-time as well
-            if (data.payload.amount) {
-              setRealtimeBalance(prev => (prev !== null ? prev + Number(data.payload.amount) : null));
-            }
-          }
-        } else if (data.type === "BALANCE_UPDATE" || data.type === "TRANSACTION_UPDATE") {
+        if (data.type === "BALANCE_UPDATE" || data.type === "PROFIT_GENERATED" || data.type === "TRANSACTION_UPDATE") {
+          // Force immediate refetch of user and contracts data
           queryClient.invalidateQueries({ queryKey: ["/api/user"] });
           queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
         }
@@ -171,8 +141,8 @@ export default function Overview() {
 
   const activeContracts = contracts?.filter(c => c.status === "active" || c.status === "suspended") || [];
   
-  const totalBalance = realtimeBalance ?? Number(user?.balance || 0);
-  const totalAccumulated = Object.values(realtimeAccumulated).reduce((acc, val) => acc + val, 0) || contracts?.reduce((acc, c) => acc + Number(c.accumulatedRewards || 0), 0) || 0;
+  const totalBalance = Number(user?.balance || 0);
+  const totalAccumulated = contracts?.reduce((acc, c) => acc + Number(c.accumulatedRewards || 0), 0) || 0;
   
   const getMachine = (id: number) => machines?.find(m => m.id === id);
 
@@ -180,7 +150,7 @@ export default function Overview() {
     const machine = getMachine(contract.machineId);
     if (!machine) return null;
 
-    const accumulated = realtimeAccumulated[contract.id] ?? Number(contract.accumulatedRewards || 0);
+    const accumulated = Number(contract.accumulatedRewards || 0);
     const minDep = machine.type === "rent" ? Number(machine.minDeposit || 30) : 1; // Dummy min for Buy machines progress
     const progress = machine.type === "rent" 
       ? Math.min(100, (accumulated / minDep) * 100)
@@ -231,7 +201,7 @@ export default function Overview() {
             <div>
               <p className="text-muted-foreground">Gains cumulés</p>
               <p className="font-bold text-emerald-400">
-                $<CountUp end={accumulated} decimals={8} duration={1} preserveValue={true} />
+                $<CountUp end={accumulated} decimals={4} duration={0.5} preserveValue={true} />
               </p>
             </div>
           </div>
@@ -298,7 +268,7 @@ export default function Overview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold font-display">
-                $<CountUp end={totalBalance} decimals={8} duration={1} preserveValue={true} />
+                $<CountUp end={totalBalance} decimals={4} duration={0.5} preserveValue={true} />
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 Prêt pour investissement
@@ -314,7 +284,7 @@ export default function Overview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold font-display text-emerald-400">
-                $<CountUp end={totalAccumulated} decimals={8} duration={1} preserveValue={true} />
+                $<CountUp end={totalAccumulated} decimals={4} duration={0.5} preserveValue={true} />
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 Gains totaux générés

@@ -661,27 +661,23 @@ export async function registerRoutes(
         const activeContracts = await db.select().from(contracts).where(eq(contracts.status, "active"));
         const now = new Date();
 
-        if (activeContracts.length === 0) return;
-
+        // Plus de logs verbeux pour confirmer le fonctionnement
         console.log(`[ProfitJob] Processing ${activeContracts.length} active contracts at ${now.toISOString()}`);
 
         for (const contract of activeContracts) {
-          // Double check status explicitly in case of race conditions
-          if (contract.status !== "active") continue;
-
           const machine = await storage.getMachine(contract.machineId);
           if (!machine) {
             console.log(`[ProfitJob] Machine ${contract.machineId} not found for contract ${contract.id}`);
             continue;
           }
 
-          // 1. Profit Calculation (every 5 seconds)
+          // 1. Profit Calculation (every 10 seconds)
           const baseAmount = machine.type === "buy" ? Number(machine.buyPrice || 0) : Number(contract.amount || 0);
           const dailyRate = Number(machine.dailyRate || 0);
           
           if (baseAmount > 0 && dailyRate > 0) {
             const dailyProfit = (baseAmount * dailyRate) / 100;
-            const profitPerInterval = dailyProfit / 17280; // 86400 / 5 = 17280 intervals per day
+            const profitPerInterval = dailyProfit / 8640;
 
             if (profitPerInterval > 0) {
               const currentAccumulated = Number(contract.accumulatedRewards || 0);
@@ -699,12 +695,12 @@ export async function registerRoutes(
 
               // Broadcast update
               broadcast({
-                type: "PROFIT_GENERATED",
+                type: "BALANCE_UPDATE",
                 payload: { 
                   userId: contract.userId,
-                  amount: profitPerInterval.toFixed(8),
+                  amount: profitPerInterval.toFixed(6),
                   contractId: contract.id,
-                  accumulated: newAccumulated.toFixed(8)
+                  accumulated: newAccumulated.toFixed(6)
                 }
               });
             }
@@ -745,7 +741,7 @@ export async function registerRoutes(
       } catch (err) {
         console.error("[ProfitJob] Error:", err);
       }
-    }, 5000);
+    }, 10000);
 
   return httpServer;
 }

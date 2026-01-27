@@ -8,7 +8,6 @@ import { ArrowRight, Calculator, CheckCircle2, ShieldCheck, Zap } from "lucide-r
 import { useState } from "react";
 import { Slider } from "@/components/ui/slider";
 import logoImg from "@assets/generated_images/blockmint_modern_crypto_mining_logo.png";
-// const logoImg = ""; // Temporarily bypass potentially missing asset
 
 import CountUp from 'react-countup';
 
