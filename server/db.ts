@@ -118,7 +118,7 @@ if (process.env.NODE_ENV === "production" || process.env.RENDER) {
             END IF;
           END $$;
         `);
-      } catch (innerErr) {
+      } catch (innerErr: any) {
         console.warn("[db] Migration script error (possibly table doesn't exist yet):", innerErr.message);
       }
     } catch (err) {
