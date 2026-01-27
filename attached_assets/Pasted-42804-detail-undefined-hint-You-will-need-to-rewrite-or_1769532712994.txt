@@ -1,0 +1,448 @@
+42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:40:52.689Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:41:02.695Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:41:12.692Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:41:22.700Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:41:32.711Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:41:42.701Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:41:52.699Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:42:02.697Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:42:12.701Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:42:22.703Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:42:32.702Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:42:42.720Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:42:52.707Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:43:02.706Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:43:12.705Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:43:22.705Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:43:32.705Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
+[ProfitJob] Processing 4 active contracts at 2026-01-27T16:43:42.713Z
+[ProfitJob] Error: error: column "balance" is of type numeric but expression is of type text
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Tv.updateUserBalance (file:///opt/render/project/src/dist/index.js:164:4617)
+    at async Timeout._onTimeout (file:///opt/render/project/src/dist/index.js:325:6690) {
+  length: 192,
+  severity: 'ERROR',
+  code: '42804',
+  detail: undefined,
+  hint: 'You will need to rewrite or cast the expression.',
+  position: '32',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '588',
+  routine: 'transformAssignedExpr'
+}
