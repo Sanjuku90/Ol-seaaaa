@@ -13,14 +13,26 @@ import {
   Clock, 
   Zap,
   ShieldCheck,
-  Loader2
+  Loader2,
+  Plus
 } from "lucide-react";
 import { type Contract, type Machine, type User } from "@shared/schema";
 import { format } from "date-fns";
 import { Link } from "wouter";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 import CountUp from 'react-countup';
 import { motion } from 'framer-motion';
@@ -28,6 +40,9 @@ import { motion } from 'framer-motion';
 export default function Overview() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [increaseAmount, setIncreaseAmount] = useState("");
+  const [selectedContractForIncrease, setSelectedContractForIncrease] = useState<Contract | null>(null);
+
   const { data: user } = useQuery<User>({ 
     queryKey: ["/api/user"],
     refetchInterval: 5000 
@@ -35,6 +50,30 @@ export default function Overview() {
   const { data: contracts } = useQuery<Contract[]>({ 
     queryKey: ["/api/contracts"],
     refetchInterval: 5000
+  });
+
+  const increaseMutation = useMutation({
+    mutationFn: async ({ contractId, amount }: { contractId: number, amount: number }) => {
+      const res = await apiRequest("POST", `/api/contracts/${contractId}/increase`, { amount });
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      setSelectedContractForIncrease(null);
+      setIncreaseAmount("");
+      toast({
+        title: "Succès",
+        description: "Votre investissement a été augmenté."
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Erreur",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
   });
 
   const resumeMutation = useMutation({
@@ -125,12 +164,31 @@ export default function Overview() {
 
           <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
             <div>
+              <p className="text-muted-foreground">Investissement</p>
+              <div className="flex items-center gap-2">
+                <p className="font-bold">${Number(contract.amount).toFixed(2)}</p>
+                {contract.status === "active" && machine.type === "rent" && (
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6 rounded-full hover:bg-primary/20 text-primary"
+                    onClick={() => setSelectedContractForIncrease(contract)}
+                  >
+                    <Plus className="h-3 w-3" />
+                  </Button>
+                )}
+              </div>
+            </div>
+            <div>
               <p className="text-muted-foreground">Rendement/jour</p>
               <p className="font-bold text-emerald-400">{machine.dailyRate}%</p>
             </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 mb-4 text-sm">
             <div>
               <p className="text-muted-foreground">Gains cumulés</p>
-              <p className="font-bold">${accumulated.toFixed(4)}</p>
+              <p className="font-bold text-emerald-400">${accumulated.toFixed(4)}</p>
             </div>
           </div>
 
@@ -289,6 +347,59 @@ export default function Overview() {
           </div>
         </TabsContent>
       </Tabs>
+
+      <Dialog open={!!selectedContractForIncrease} onOpenChange={(open) => !open && setSelectedContractForIncrease(null)}>
+        <DialogContent className="border-white/10 bg-[#0a0a0b] text-white">
+          <DialogHeader>
+            <DialogTitle>Augmenter l'investissement</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Ajoutez des fonds à votre machine active pour augmenter vos gains journaliers.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="amount">Montant à ajouter ($)</Label>
+              <Input
+                id="amount"
+                type="number"
+                placeholder="Ex: 50"
+                value={increaseAmount}
+                onChange={(e) => setIncreaseAmount(e.target.value)}
+                className="bg-white/5 border-white/10"
+              />
+              <p className="text-[10px] text-muted-foreground">
+                Votre solde actuel: ${Number(user?.balance || 0).toFixed(2)}
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setSelectedContractForIncrease(null)}
+              className="border-white/10"
+            >
+              Annuler
+            </Button>
+            <Button
+              onClick={() => {
+                if (selectedContractForIncrease && increaseAmount) {
+                  increaseMutation.mutate({
+                    contractId: selectedContractForIncrease.id,
+                    amount: Number(increaseAmount)
+                  });
+                }
+              }}
+              disabled={increaseMutation.isPending || !increaseAmount}
+              className="bg-primary text-primary-foreground"
+            >
+              {increaseMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Confirmer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }

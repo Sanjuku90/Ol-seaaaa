@@ -567,6 +567,41 @@ export async function registerRoutes(
     res.json({ enabled });
   });
 
+  app.post("/api/contracts/:id/increase", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    try {
+      const contractId = Number(req.params.id);
+      const { amount } = z.object({ amount: z.number().positive() }).parse(req.body);
+      
+      const [contract] = await db.select().from(contracts).where(eq(contracts.id, contractId));
+      if (!contract) return res.status(404).json({ message: "Contrat non trouvé" });
+      if (contract.userId !== (req.user as any).id) return res.sendStatus(403);
+      if (contract.status !== "active") return res.status(400).json({ message: "Seuls les contrats actifs peuvent être augmentés" });
+
+      const user = await storage.getUser(contract.userId);
+      if (!user || Number(user.balance) < amount) {
+        return res.status(400).json({ message: "Solde insuffisant" });
+      }
+
+      // Deduct from user balance
+      await storage.updateUserBalance(user.id, -amount);
+      
+      // Update contract amount
+      const newAmount = Number(contract.amount) + amount;
+      await db.update(contracts)
+        .set({ amount: newAmount.toFixed(2) })
+        .where(eq(contracts.id, contractId));
+
+      // Create transaction record
+      await storage.createTransaction(user.id, "purchase", amount);
+
+      res.json({ message: "Investissement augmenté avec succès", newAmount });
+    } catch (e) {
+      res.status(400).json({ message: "Erreur lors de l'augmentation de l'investissement" });
+    }
+  });
+
   app.post("/api/contracts/:id/resume", async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     
