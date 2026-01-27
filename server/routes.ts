@@ -661,9 +661,8 @@ export async function registerRoutes(
         const activeContracts = await db.select().from(contracts).where(eq(contracts.status, "active"));
         const now = new Date();
 
-        if (activeContracts.length > 0) {
-          console.log(`[ProfitJob] Processing ${activeContracts.length} active contracts at ${now.toISOString()}`);
-        }
+        // Plus de logs verbeux pour confirmer le fonctionnement
+        console.log(`[ProfitJob] Processing ${activeContracts.length} active contracts at ${now.toISOString()}`);
 
         for (const contract of activeContracts) {
           const machine = await storage.getMachine(contract.machineId);
@@ -691,6 +690,8 @@ export async function registerRoutes(
               await db.update(contracts)
                 .set({ accumulatedRewards: newAccumulated.toFixed(6) })
                 .where(eq(contracts.id, contract.id));
+
+              console.log(`[ProfitJob] User ${contract.userId}: +${profitPerInterval.toFixed(6)} (Total: ${newAccumulated.toFixed(6)})`);
 
               // Broadcast update
               broadcast({
