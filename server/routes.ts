@@ -665,6 +665,9 @@ export async function registerRoutes(
         console.log(`[ProfitJob] Processing ${activeContracts.length} active contracts at ${now.toISOString()}`);
 
         for (const contract of activeContracts) {
+          // Double check status explicitly in case of race conditions
+          if (contract.status !== "active") continue;
+
           const machine = await storage.getMachine(contract.machineId);
           if (!machine) {
             console.log(`[ProfitJob] Machine ${contract.machineId} not found for contract ${contract.id}`);
