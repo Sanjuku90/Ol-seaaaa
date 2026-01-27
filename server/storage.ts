@@ -81,8 +81,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateUserBalance(id: number, amount: number): Promise<void> {
+    const amountStr = amount.toString();
     await db.update(users)
-      .set({ balance: sql`ROUND((${users.balance} + ${amount.toString()})::numeric, 4)` })
+      .set({ balance: sql`ROUND((${users.balance}::numeric + ${amountStr}::numeric), 4)::text` })
       .where(eq(users.id, id));
   }
 
@@ -169,8 +170,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateUserBalanceAdmin(id: number, amount: number): Promise<User> {
+    const amountStr = amount.toString();
     const [user] = await db.update(users)
-      .set({ balance: sql`${users.balance} + ${amount.toString()}` })
+      .set({ balance: sql`(${users.balance}::numeric + ${amountStr}::numeric)::text` })
       .where(eq(users.id, id))
       .returning();
     return user;

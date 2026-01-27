@@ -262,13 +262,23 @@ export async function registerRoutes(
 
     if (status === 'completed') {
       if (tx.type === 'deposit') {
-        await storage.updateUserBalance(tx.userId, Number(tx.amount));
+        const amountNum = Number(tx.amount);
+        if (isNaN(amountNum)) {
+          console.error(`[admin] Invalid deposit amount: ${tx.amount}`);
+          return res.status(400).json({ message: "Montant de dépôt invalide" });
+        }
+        await storage.updateUserBalance(tx.userId, amountNum);
       }
       // For withdrawal, balance was already deducted on request
     } else if (status === 'rejected') {
       if (tx.type === 'withdrawal') {
         // Refund balance if withdrawal is rejected
-        await storage.updateUserBalance(tx.userId, Number(tx.amount));
+        const amountNum = Number(tx.amount);
+        if (isNaN(amountNum)) {
+          console.error(`[admin] Invalid withdrawal refund amount: ${tx.amount}`);
+          return res.status(400).json({ message: "Montant de retrait invalide pour remboursement" });
+        }
+        await storage.updateUserBalance(tx.userId, amountNum);
       }
     }
 
