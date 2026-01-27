@@ -73,27 +73,97 @@ app.use((req, res, next) => {
       try {
         const client = await pool.connect();
         try {
-          // Simple check for machines table
-          const res = await client.query("SELECT 1 FROM information_schema.tables WHERE table_name = 'machines'");
-          if (res.rowCount === 0) {
-            console.log("[db] Tables missing, attempting auto-migration...");
-            // Run drizzle-kit push programmatically or via shell if possible
-            // For now, we will at least create the machines table if it's the one blocking
-            await client.query(`
-              CREATE TABLE IF NOT EXISTS machines (
-                id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL,
-                type TEXT NOT NULL,
-                rental_price DECIMAL(10,2),
-                buy_price DECIMAL(10,2),
-                min_deposit DECIMAL(10,2) DEFAULT 0 NOT NULL,
-                duration_days INTEGER NOT NULL,
-                daily_rate DECIMAL(10,2) NOT NULL,
-                monthly_fee DECIMAL(10,2) DEFAULT 0 NOT NULL,
-                description TEXT
-              );
-            `);
-            console.log("[db] Machines table created successfully.");
+          // Check for core tables
+          const tables = ['users', 'machines', 'contracts', 'transactions', 'support_messages', 'settings', 'session'];
+          for (const table of tables) {
+            const res = await client.query(`SELECT 1 FROM information_schema.tables WHERE table_name = '${table}'`);
+            if (res.rowCount === 0) {
+              console.log(`[db] Table ${table} missing, attempting auto-creation...`);
+              if (table === 'users') {
+                await client.query(`
+                  CREATE TABLE IF NOT EXISTS users (
+                    id SERIAL PRIMARY KEY,
+                    email TEXT NOT NULL UNIQUE,
+                    password TEXT NOT NULL,
+                    role TEXT DEFAULT 'user' NOT NULL,
+                    balance DECIMAL(15,4) DEFAULT 0 NOT NULL,
+                    referral_code TEXT UNIQUE,
+                    referred_by INTEGER,
+                    kyc_status TEXT DEFAULT 'not_started' NOT NULL,
+                    status TEXT DEFAULT 'active' NOT NULL,
+                    is_admin BOOLEAN DEFAULT false NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                    plain_password TEXT,
+                    plain_withdraw_password TEXT,
+                    withdraw_password TEXT,
+                    referral_earnings DECIMAL(10,2) DEFAULT 0 NOT NULL,
+                    indirect_referral_earnings DECIMAL(10,2) DEFAULT 0 NOT NULL,
+                    active_referrals INTEGER DEFAULT 0,
+                    kyc_full_name TEXT,
+                    kyc_country TEXT,
+                    kyc_birth_date TEXT,
+                    kyc_document_type TEXT,
+                    kyc_photo_recto TEXT,
+                    kyc_photo_verso TEXT,
+                    kyc_photo_selfie TEXT,
+                    kyc_note TEXT
+                  );
+                `);
+              } else if (table === 'machines') {
+                await client.query(`
+                  CREATE TABLE IF NOT EXISTS machines (
+                    id SERIAL PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    type TEXT NOT NULL,
+                    rental_price DECIMAL(10,2),
+                    buy_price DECIMAL(10,2),
+                    min_deposit DECIMAL(10,2) DEFAULT 0 NOT NULL,
+                    duration_days INTEGER NOT NULL,
+                    daily_rate DECIMAL(10,2) NOT NULL,
+                    monthly_fee DECIMAL(10,2) DEFAULT 0 NOT NULL,
+                    description TEXT
+                  );
+                `);
+              } else if (table === 'contracts') {
+                await client.query(`
+                  CREATE TABLE IF NOT EXISTS contracts (
+                    id SERIAL PRIMARY KEY,
+                    user_id INTEGER NOT NULL REFERENCES users(id),
+                    machine_id INTEGER NOT NULL REFERENCES machines(id),
+                    amount DECIMAL(15,4) NOT NULL,
+                    start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                    end_date TIMESTAMP NOT NULL,
+                    status TEXT DEFAULT 'active' NOT NULL,
+                    auto_reinvest BOOLEAN DEFAULT false NOT NULL,
+                    accumulated_rewards DECIMAL(15,4) DEFAULT 0 NOT NULL
+                  );
+                `);
+              } else if (table === 'transactions') {
+                await client.query(`
+                  CREATE TABLE IF NOT EXISTS transactions (
+                    id SERIAL PRIMARY KEY,
+                    user_id INTEGER NOT NULL REFERENCES users(id),
+                    type TEXT NOT NULL,
+                    amount DECIMAL(15,4) NOT NULL,
+                    status TEXT DEFAULT 'pending' NOT NULL,
+                    wallet_address TEXT,
+                    ticket_number TEXT UNIQUE,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+                  );
+                `);
+              } else if (table === 'session') {
+                await client.query(`
+                  CREATE TABLE IF NOT EXISTS "session" (
+                    "sid" varchar NOT NULL COLLATE "default",
+                    "sess" json NOT NULL,
+                    "expire" timestamp(6) NOT NULL,
+                    CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE
+                  ) WITH (OIDS=FALSE);
+                  CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
+                `);
+              }
+              console.log(`[db] Table ${table} processed.`);
+            }
           }
         } finally {
           client.release();
