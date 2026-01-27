@@ -661,7 +661,8 @@ export async function registerRoutes(
         const activeContracts = await db.select().from(contracts).where(eq(contracts.status, "active"));
         const now = new Date();
 
-        // Plus de logs verbeux pour confirmer le fonctionnement
+        if (activeContracts.length === 0) return;
+
         console.log(`[ProfitJob] Processing ${activeContracts.length} active contracts at ${now.toISOString()}`);
 
         for (const contract of activeContracts) {
