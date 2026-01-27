@@ -1,0 +1,396 @@
+Cloning from https://github.com/Sanjuku90/Ol-seaaaa
+
+
+==> Checking out commit 859459a785270ab33cad1255eb51530470930b7c in branch main
+
+
+==> Requesting Node.js version >=22
+
+
+==> Using Node.js version 25.5.0 via /opt/render/project/src/package.json
+
+
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+
+
+==> Running build command 'npm install; npm run build'...
+
+
+
+
+
+added 583 packages, and audited 584 packages in 20s
+
+
+
+
+
+69 packages are looking for funding
+
+
+  run `npm fund` for details
+
+
+
+
+
+5 vulnerabilities (1 low, 1 moderate, 3 high)
+
+
+
+
+
+To address all issues, run:
+
+
+  npm audit fix
+
+
+
+
+
+Run `npm audit` for details.
+
+
+
+
+
+> rest-express@1.0.0 build
+
+
+> tsx script/build.ts && tsc
+
+
+
+
+
+building client...
+
+
+vite v7.3.1 building client environment for production...
+
+
+transforming...
+
+
+✓ 2518 modules transformed.
+
+
+rendering chunks...
+
+
+computing gzip size...
+
+
+../dist/public/index.html                                                 2.22 kB │ gzip:   0.85 kB
+
+
+../dist/public/assets/blockmint_modern_crypto_mining_logo-DbSebbxY.png  335.42 kB
+
+
+../dist/public/assets/index-B4z3ZB1I.css                                 76.90 kB │ gzip:  12.52 kB
+
+
+../dist/public/assets/index-C0GL6GKr.js                                 773.22 kB │ gzip: 234.96 kB
+
+
+
+
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+
+
+- Using dynamic import() to code-split the application
+
+
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+
+
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+
+✓ built in 4.50s
+
+
+building server...
+
+
+
+
+
+  dist/index.js  1.4mb ⚠️
+
+
+
+
+
+⚡ Done in 203ms
+
+
+==> Uploading build...
+
+
+==> Uploaded in 7.3s. Compression took 4.1s
+
+
+==> Build successful 🎉
+
+
+==> Deploying...
+
+
+==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+
+
+
+==> Running 'npm run start'
+
+
+
+
+
+
+
+> rest-express@1.0.0 start
+
+
+
+> node dist/index.js
+
+
+
+
+
+
+
+FAILED TO START SERVER: error: relation "machines" does not exist
+
+
+
+    at file:///opt/render/project/src/dist/index.js:71:13302
+
+
+
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+
+
+    at async file:///opt/render/project/src/dist/index.js:77:37960
+
+
+
+    at async Tv.getMachines (file:///opt/render/project/src/dist/index.js:164:4748)
+
+
+
+    at async yV (file:///opt/render/project/src/dist/index.js:325:7571)
+
+
+
+    at async u6 (file:///opt/render/project/src/dist/index.js:325:6066)
+
+
+
+    at async file:///opt/render/project/src/dist/index.js:325:10022 {
+
+
+
+  length: 108,
+
+
+
+  severity: 'ERROR',
+
+
+
+  code: '42P01',
+
+
+
+  detail: undefined,
+
+
+
+  hint: undefined,
+
+
+
+  position: '139',
+
+
+
+  internalPosition: undefined,
+
+
+
+  internalQuery: undefined,
+
+
+
+  where: undefined,
+
+
+
+  schema: undefined,
+
+
+
+  table: undefined,
+
+
+
+  column: undefined,
+
+
+
+  dataType: undefined,
+
+
+
+  constraint: undefined,
+
+
+
+  file: 'parse_relation.c',
+
+
+
+  line: '1466',
+
+
+
+  routine: 'parserOpenTable'
+
+
+
+}
+
+
+==> Exited with status 1
+
+
+==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
+
+
+
+==> Running 'npm run start'
+
+
+
+
+
+
+
+> rest-express@1.0.0 start
+
+
+
+> node dist/index.js
+
+
+
+
+
+
+
+FAILED TO START SERVER: error: relation "machines" does not exist
+
+
+
+    at file:///opt/render/project/src/dist/index.js:71:13302
+
+
+
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+
+
+    at async file:///opt/render/project/src/dist/index.js:77:37960
+
+
+
+    at async Tv.getMachines (file:///opt/render/project/src/dist/index.js:164:4748)
+
+
+
+    at async yV (file:///opt/render/project/src/dist/index.js:325:7571)
+
+
+
+    at async u6 (file:///opt/render/project/src/dist/index.js:325:6066)
+
+
+
+    at async file:///opt/render/project/src/dist/index.js:325:10022 {
+
+
+
+  length: 108,
+
+
+
+  severity: 'ERROR',
+
+
+
+  code: '42P01',
+
+
+
+  detail: undefined,
+
+
+
+  hint: undefined,
+
+
+
+  position: '139',
+
+
+
+  internalPosition: undefined,
+
+
+
+  internalQuery: undefined,
+
+
+
+  where: undefined,
+
+
+
+  schema: undefined,
+
+
+
+  table: undefined,
+
+
+
+  column: undefined,
+
+
+
+  dataType: undefined,
+
+
+
+  constraint: undefined,
+
+
+
+  file: 'parse_relation.c',
+
+
+
+  line: '1466',
+
+
+
+  routine: 'parserOpenTable'
+
+
+
+}
