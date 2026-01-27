@@ -111,7 +111,7 @@ if (process.env.NODE_ENV === "production" || process.env.RENDER) {
               END;
 
               BEGIN
-                ALTER TABLE users ADD COLUMN kyc_status text;
+                ALTER TABLE users ADD COLUMN kyc_status text DEFAULT 'not_started' NOT NULL;
               EXCEPTION WHEN duplicate_column THEN 
                 NULL;
               END;

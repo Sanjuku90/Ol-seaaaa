@@ -107,7 +107,7 @@ app.use((req, res, next) => {
                     kyc_photo_verso TEXT,
                     kyc_photo_selfie TEXT,
                     kyc_note TEXT,
-                    kyc_status TEXT,
+                    kyc_status TEXT DEFAULT 'not_started' NOT NULL,
                     affiliation_grade TEXT DEFAULT 'Bronze',
                     phone TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

@@ -1,0 +1,21 @@
+Available at your primary URL https://blockblock.onrender.com
+==> 
+==> ///////////////////////////////////////////////////////////
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:44:57.622Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:45:07.598Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:45:17.599Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:45:27.620Z
+6:45:34 PM [express] GET /api/user 401 in 32ms
+6:45:34 PM [express] GET /api/machines 304 in 83ms :: [{"id":1,"name":"Rent Mini","type":"rent","rentalPrice":"4.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"1.90","monthlyFee":"0.00","description":"Location abordable pour débuter."},{"id":2,"name":"Rent Starter","type":"rent","rentalPrice":"14.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"2.30","monthlyFee":"0.00","description":"Idéal pour booster vos premiers gains."},{"id":3,"name":"Rent Standard","type":"rent","rentalPrice":"24.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"2.80","monthlyFee":"0.00","description":"Bon équilibre entre coût et rendement."},{"id":4,"name":"Rent Pro","type":"rent","rentalPrice":"29.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"3.30","monthlyFee":"0.00","description":"Pour les mineurs avertis."},{"id":5,"name":"Rent Elite","type":"rent","rentalPrice":"49.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"3.80","monthlyFee":"0.00","description":"Performance maximale en location."},{"id":6,"name":"Starter Buy","type":"buy","rentalPrice":null,"buyPrice":"180.00","minDeposit":0,"durationDays":365,"dailyRate":"2.80","monthlyFee":"0.00","description":"Achat unique, minage permanent."},{"id":7,"name":"Standard Buy","type":"buy","rentalPrice":null,"buyPrice":"450.00","minDeposit":0,"durationDays":365,"dailyRate":"3.30","monthlyFee":"0.00","description":"Rendement supérieur pour investisseurs."},{"id":8,"name":"Pro Buy","type":"buy","rentalPrice":null,"buyPrice":"1100.00","minDeposit":0,"durationDays":365,"dailyRate":"3.80","monthlyFee":"0.00","description":"Gains optimisés sur le long terme."},{"id":9,"name":"Elite Buy","type":"buy","rentalPrice":null,"buyPrice":"2800.00","minDeposit":0,"durationDays":365,"dailyRate":"4.30","monthlyFee":"0.00","description":"Le top de la performance BlockMint."}]
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:45:37.603Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:45:47.620Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:45:57.606Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:46:07.610Z
+error: null value in column "kyc_status" of relation "users" violates not-null constraint
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:77:37960
+    at async Cv.createUser (file:///opt/render/project/src/dist/index.js:179:4653)
+    at async file:///opt/render/project/src/dist/index.js:274:2407
+6:46:14 PM [express] POST /api/login 401 in 8ms
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:46:17.621Z
