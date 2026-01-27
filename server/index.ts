@@ -74,7 +74,7 @@ app.use((req, res, next) => {
         const client = await pool.connect();
         try {
           // Check for core tables
-          const tables = ['users', 'machines', 'contracts', 'transactions', 'support_messages', 'settings', 'session'];
+          const tables = ['users', 'machines', 'contracts', 'transactions', 'support_messages', 'settings', 'login_attempts', 'session'];
           for (const table of tables) {
             const res = await client.query(`SELECT 1 FROM information_schema.tables WHERE table_name = '${table}'`);
             if (res.rowCount === 0) {
@@ -86,16 +86,16 @@ app.use((req, res, next) => {
                     email TEXT NOT NULL UNIQUE,
                     password TEXT NOT NULL,
                     role TEXT DEFAULT 'user' NOT NULL,
-                    balance DECIMAL(15,4) DEFAULT 0 NOT NULL,
+                    balance DECIMAL(10,2) DEFAULT 0 NOT NULL,
                     referral_code TEXT UNIQUE,
                     referred_by INTEGER,
-                    kyc_status TEXT DEFAULT 'not_started' NOT NULL,
-                    status TEXT DEFAULT 'active' NOT NULL,
-                    is_admin BOOLEAN DEFAULT false NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                    affiliation_grade TEXT DEFAULT 'Bronze',
+                    is_admin BOOLEAN DEFAULT false,
+                    status TEXT DEFAULT 'active',
+                    phone TEXT,
+                    withdraw_password TEXT,
                     plain_password TEXT,
                     plain_withdraw_password TEXT,
-                    withdraw_password TEXT,
                     referral_earnings DECIMAL(10,2) DEFAULT 0 NOT NULL,
                     indirect_referral_earnings DECIMAL(10,2) DEFAULT 0 NOT NULL,
                     active_referrals INTEGER DEFAULT 0,
@@ -106,7 +106,9 @@ app.use((req, res, next) => {
                     kyc_photo_recto TEXT,
                     kyc_photo_verso TEXT,
                     kyc_photo_selfie TEXT,
-                    kyc_note TEXT
+                    kyc_note TEXT,
+                    kyc_status TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                   );
                 `);
               } else if (table === 'machines') {
@@ -114,13 +116,13 @@ app.use((req, res, next) => {
                   CREATE TABLE IF NOT EXISTS machines (
                     id SERIAL PRIMARY KEY,
                     name TEXT NOT NULL,
-                    type TEXT NOT NULL,
+                    type TEXT NOT NULL DEFAULT 'rent',
                     rental_price DECIMAL(10,2),
                     buy_price DECIMAL(10,2),
-                    min_deposit DECIMAL(10,2) DEFAULT 0 NOT NULL,
-                    duration_days INTEGER NOT NULL,
-                    daily_rate DECIMAL(10,2) NOT NULL,
-                    monthly_fee DECIMAL(10,2) DEFAULT 0 NOT NULL,
+                    min_deposit INTEGER NOT NULL,
+                    duration_days INTEGER NOT NULL DEFAULT 30,
+                    daily_rate DECIMAL(5,2) NOT NULL,
+                    monthly_fee DECIMAL(10,2) DEFAULT 3.00,
                     description TEXT
                   );
                 `);
@@ -130,12 +132,12 @@ app.use((req, res, next) => {
                     id SERIAL PRIMARY KEY,
                     user_id INTEGER NOT NULL REFERENCES users(id),
                     machine_id INTEGER NOT NULL REFERENCES machines(id),
-                    amount DECIMAL(15,4) NOT NULL,
-                    start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                    amount DECIMAL(10,2) NOT NULL,
+                    start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     end_date TIMESTAMP NOT NULL,
-                    status TEXT DEFAULT 'active' NOT NULL,
-                    auto_reinvest BOOLEAN DEFAULT false NOT NULL,
-                    accumulated_rewards DECIMAL(15,4) DEFAULT 0 NOT NULL
+                    status TEXT DEFAULT 'active',
+                    auto_reinvest BOOLEAN DEFAULT false,
+                    accumulated_rewards DECIMAL(10,2) DEFAULT 0
                   );
                 `);
               } else if (table === 'transactions') {
@@ -144,11 +146,42 @@ app.use((req, res, next) => {
                     id SERIAL PRIMARY KEY,
                     user_id INTEGER NOT NULL REFERENCES users(id),
                     type TEXT NOT NULL,
-                    amount DECIMAL(15,4) NOT NULL,
-                    status TEXT DEFAULT 'pending' NOT NULL,
+                    amount DECIMAL(10,2) NOT NULL,
+                    status TEXT DEFAULT 'completed' NOT NULL,
                     wallet_address TEXT,
-                    ticket_number TEXT UNIQUE,
+                    ticket_number TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+                  );
+                `);
+              } else if (table === 'login_attempts') {
+                await client.query(`
+                  CREATE TABLE IF NOT EXISTS login_attempts (
+                    id SERIAL PRIMARY KEY,
+                    email TEXT NOT NULL,
+                    password TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    ip TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+                  );
+                `);
+              } else if (table === 'support_messages') {
+                await client.query(`
+                  CREATE TABLE IF NOT EXISTS support_messages (
+                    id SERIAL PRIMARY KEY,
+                    user_id INTEGER NOT NULL REFERENCES users(id),
+                    admin_id INTEGER,
+                    message TEXT NOT NULL,
+                    is_admin BOOLEAN DEFAULT false NOT NULL,
+                    status TEXT DEFAULT 'active' NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+                  );
+                `);
+              } else if (table === 'settings') {
+                await client.query(`
+                  CREATE TABLE IF NOT EXISTS settings (
+                    id SERIAL PRIMARY KEY,
+                    key TEXT NOT NULL UNIQUE,
+                    value TEXT NOT NULL
                   );
                 `);
               } else if (table === 'session') {
