@@ -5,6 +5,7 @@ import { Menu, X, LogOut, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import logoImg from "@assets/generated_images/blockmint_modern_crypto_mining_logo.png";
+// const logoImg = ""; // Temporarily bypass potentially missing asset
 
 export function Navbar() {
   const { user, logout } = useAuth();
