@@ -201,7 +201,7 @@ export default function Overview() {
             <div>
               <p className="text-muted-foreground">Gains cumulés</p>
               <p className="font-bold text-emerald-400">
-                $<CountUp end={accumulated} decimals={4} duration={0.5} preserveValue={true} />
+                $<CountUp end={accumulated} decimals={8} duration={1} preserveValue={true} />
               </p>
             </div>
           </div>
@@ -268,7 +268,7 @@ export default function Overview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold font-display">
-                $<CountUp end={totalBalance} decimals={4} duration={0.5} preserveValue={true} />
+                $<CountUp end={totalBalance} decimals={8} duration={1} preserveValue={true} />
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 Prêt pour investissement
@@ -284,7 +284,7 @@ export default function Overview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold font-display text-emerald-400">
-                $<CountUp end={totalAccumulated} decimals={4} duration={0.5} preserveValue={true} />
+                $<CountUp end={totalAccumulated} decimals={8} duration={1} preserveValue={true} />
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 Gains totaux générés
