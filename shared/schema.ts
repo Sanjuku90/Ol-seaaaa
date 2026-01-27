@@ -47,7 +47,7 @@ export const users = pgTable("users", {
   kycPhotoVerso: text("kyc_photo_verso"),
   kycPhotoSelfie: text("kyc_photo_selfie"),
   kycNote: text("kyc_note"),
-  kycStatus: text("kyc_status"), 
+  kycStatus: text("kyc_status").default("pending").notNull(), 
   createdAt: timestamp("created_at").defaultNow(),
 });
 

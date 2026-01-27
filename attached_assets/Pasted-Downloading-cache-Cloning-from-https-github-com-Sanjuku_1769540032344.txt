@@ -1,0 +1,83 @@
+Downloading cache...
+==> Cloning from https://github.com/Sanjuku90/Ol-seaaaa
+==> Checking out commit 80e44c4d33bb1c56adb8d60ffc27837320f275a1 in branch main
+==> Downloaded 247MB in 5s. Extraction took 5s.
+==> Requesting Node.js version >=22
+==> Using Node.js version 25.5.0 via /opt/render/project/src/package.json
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+==> Running build command 'npm install; npm run build'...
+up to date, audited 584 packages in 5s
+69 packages are looking for funding
+  run `npm fund` for details
+5 vulnerabilities (1 low, 1 moderate, 3 high)
+To address all issues, run:
+  npm audit fix
+Run `npm audit` for details.
+> rest-express@1.0.0 build
+> tsx script/build.ts && tsc
+building client...
+vite v7.3.1 building client environment for production...
+transforming...
+✓ 2518 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                                                 2.22 kB │ gzip:   0.85 kB
+../dist/public/assets/blockmint_modern_crypto_mining_logo-DbSebbxY.png  335.42 kB
+../dist/public/assets/index-B4z3ZB1I.css                                 76.90 kB │ gzip:  12.52 kB
+../dist/public/assets/index-C0GL6GKr.js                                 773.22 kB │ gzip: 234.96 kB
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 4.31s
+building server...
+  dist/index.js  1.4mb ⚠️
+⚡ Done in 207ms
+==> Uploading build...
+==> Uploaded in 7.4s. Compression took 3.4s
+==> Build successful 🎉
+==> Deploying...
+==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+==> Running 'npm run start'
+> rest-express@1.0.0 start
+> node dist/index.js
+6:49:40 PM [express] serving on port 10000
+==> Your service is live 🎉
+==> 
+==> ///////////////////////////////////////////////////////////
+==> 
+==> Available at your primary URL https://blockblock.onrender.com
+==> 
+==> ///////////////////////////////////////////////////////////
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:49:50.635Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:50:00.636Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:50:10.637Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:50:20.638Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:50:30.639Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:50:40.640Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:50:50.643Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:51:00.642Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:51:10.642Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:51:20.645Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:51:30.647Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:51:40.648Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:51:50.648Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:52:00.649Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:52:10.650Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:52:20.653Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:52:30.652Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:52:40.652Z
+6:52:43 PM [express] GET /api/user 401 in 8ms
+6:52:43 PM [express] GET /api/machines 304 in 80ms :: [{"id":1,"name":"Rent Mini","type":"rent","rentalPrice":"4.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"1.90","monthlyFee":"0.00","description":"Location abordable pour débuter."},{"id":2,"name":"Rent Starter","type":"rent","rentalPrice":"14.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"2.30","monthlyFee":"0.00","description":"Idéal pour booster vos premiers gains."},{"id":3,"name":"Rent Standard","type":"rent","rentalPrice":"24.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"2.80","monthlyFee":"0.00","description":"Bon équilibre entre coût et rendement."},{"id":4,"name":"Rent Pro","type":"rent","rentalPrice":"29.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"3.30","monthlyFee":"0.00","description":"Pour les mineurs avertis."},{"id":5,"name":"Rent Elite","type":"rent","rentalPrice":"49.99","buyPrice":null,"minDeposit":30,"durationDays":30,"dailyRate":"3.80","monthlyFee":"0.00","description":"Performance maximale en location."},{"id":6,"name":"Starter Buy","type":"buy","rentalPrice":null,"buyPrice":"180.00","minDeposit":0,"durationDays":365,"dailyRate":"2.80","monthlyFee":"0.00","description":"Achat unique, minage permanent."},{"id":7,"name":"Standard Buy","type":"buy","rentalPrice":null,"buyPrice":"450.00","minDeposit":0,"durationDays":365,"dailyRate":"3.30","monthlyFee":"0.00","description":"Rendement supérieur pour investisseurs."},{"id":8,"name":"Pro Buy","type":"buy","rentalPrice":null,"buyPrice":"1100.00","minDeposit":0,"durationDays":365,"dailyRate":"3.80","monthlyFee":"0.00","description":"Gains optimisés sur le long terme."},{"id":9,"name":"Elite Buy","type":"buy","rentalPrice":null,"buyPrice":"2800.00","minDeposit":0,"durationDays":365,"dailyRate":"4.30","monthlyFee":"0.00","description":"Le top de la performance BlockMint."}]
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:52:50.654Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:53:00.657Z
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:53:10.658Z
+error: null value in column "kyc_status" of relation "users" violates not-null constraint
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:77:37960
+    at async Cv.createUser (file:///opt/render/project/src/dist/index.js:179:4653)
+    at async file:///opt/render/project/src/dist/index.js:274:2407
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:53:20.659Z
+6:53:24 PM [express] POST /api/login 401 in 10ms
+[ProfitJob] Processing 0 active contracts at 2026-01-27T18:53:30.659Z
