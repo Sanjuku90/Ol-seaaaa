@@ -1,0 +1,574 @@
+[6978eefc.143146-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978eefc.143146-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978eefc.143146-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:42.321 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=34056
+[6978ef1e.143170-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978eec4.143111-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978eec4.143111-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978eec4.143111-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:01:39.098 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=41620
+[6978ef1e.143170-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:08.425 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=48266
+[6978ef34.143184-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52500
+[6978ef34.143185-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52516
+[6978ef34.143185-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef34.143185-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef34.143184-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef34.143184-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef36.143186-1] user=,db=,app=,client=,LOG:  automatic vacuum of table "block_d1ek.public.contracts": index scans: 0
+	pages: 0 removed, 1 remain, 1 scanned (100.00% of total), 0 eagerly scanned
+	tuples: 64 removed, 4 remain, 0 are dead but not yet removable
+	removable cutoff: 92405, which was 0 XIDs old when operation ended
+	new relfrozenxid: 92335, which is 180 XIDs ahead of previous value
+	frozen: 0 pages from table (0.00% of total) had 0 tuples frozen
+	visibility map: 1 pages set all-visible, 0 pages set all-frozen (0 were all-visible)
+	index scan not needed: 0 pages from table (0.00% of total) had 0 dead item identifiers removed
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 60 hits, 0 reads, 0 dirtied
+	WAL usage: 3 records, 0 full page images, 517 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+[6978ef36.143186-2] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.contracts"
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 397 hits, 0 reads, 0 dirtied
+	WAL usage: 10 records, 0 full page images, 752 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.02 s
+[6978ef36.143186-3] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.session"
+	avg read rate: 0.000 MB/s, avg write rate: 1.488 MB/s
+	buffer usage: 117 hits, 0 reads, 4 dirtied
+	WAL usage: 18 records, 3 full page images, 15399 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.02 s
+[6978ef36.143186-4] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.users"
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 259 hits, 0 reads, 0 dirtied
+	WAL usage: 38 records, 0 full page images, 5501 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+[6978ef37.143187-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52522
+[6978ef37.143187-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef37.143187-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef37.143187-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978ef37.143187-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978ef37.143187-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:00.795 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52522
+[6978ef34.143185-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef34.143185-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef34.143185-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:03.410 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52516
+[6978ef34.143184-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef34.143184-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef34.143184-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:03.508 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52500
+[6978ef51.1431a3-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=39918
+[6978ef51.1431a4-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=39924
+[6978ef51.1431a3-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef51.1431a3-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef51.1431a4-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef51.1431a4-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef52.1431a6-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60734
+[6978ef52.1431a7-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60750
+[6978ef52.1431a8-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60758
+[6978ef52.1431a8-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef52.1431a8-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ec2f.142e60-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.16.118.254,LOG:  could not receive data from client: Connection reset by peer
+[6978ec2f.142e60-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.16.118.254,LOG:  disconnection: session time: 0:12:05.900 user=block_d1ek_user database=block_d1ek host=10.16.118.254 port=55218
+[6978ef16.143163-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45616
+[6978ef16.143164-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45620
+[6978ef16.143165-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45636
+[6978ef16.143165-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef16.143165-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef16.143166-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45644
+[6978ef16.143165-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.046 user=postgres database=block_d1ek host=10.16.151.0 port=45636
+[6978ef1e.143170-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=48266
+[6978ef1e.143170-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef1e.143170-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978eefc.143146-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978eefc.143146-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978eefc.143146-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:42.321 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=34056
+[6978ef1e.143170-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978eec4.143111-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978eec4.143111-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978eec4.143111-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:01:39.098 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=41620
+[6978ef1e.143170-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:08.425 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=48266
+[6978ef34.143184-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52500
+[6978ef34.143185-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52516
+[6978ef34.143185-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef34.143185-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef34.143184-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef34.143184-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef36.143186-1] user=,db=,app=,client=,LOG:  automatic vacuum of table "block_d1ek.public.contracts": index scans: 0
+	pages: 0 removed, 1 remain, 1 scanned (100.00% of total), 0 eagerly scanned
+	tuples: 64 removed, 4 remain, 0 are dead but not yet removable
+	removable cutoff: 92405, which was 0 XIDs old when operation ended
+	new relfrozenxid: 92335, which is 180 XIDs ahead of previous value
+	frozen: 0 pages from table (0.00% of total) had 0 tuples frozen
+	visibility map: 1 pages set all-visible, 0 pages set all-frozen (0 were all-visible)
+	index scan not needed: 0 pages from table (0.00% of total) had 0 dead item identifiers removed
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 60 hits, 0 reads, 0 dirtied
+	WAL usage: 3 records, 0 full page images, 517 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+[6978ef36.143186-2] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.contracts"
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 397 hits, 0 reads, 0 dirtied
+	WAL usage: 10 records, 0 full page images, 752 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.02 s
+[6978ef36.143186-3] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.session"
+	avg read rate: 0.000 MB/s, avg write rate: 1.488 MB/s
+	buffer usage: 117 hits, 0 reads, 4 dirtied
+	WAL usage: 18 records, 3 full page images, 15399 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.02 s
+[6978ef36.143186-4] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.users"
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 259 hits, 0 reads, 0 dirtied
+	WAL usage: 38 records, 0 full page images, 5501 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+[6978ef37.143187-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52522
+[6978ef37.143187-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef37.143187-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef37.143187-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978ef37.143187-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978ef37.143187-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:00.795 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52522
+[6978ef34.143185-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef34.143185-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef34.143185-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:03.410 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52516
+[6978ef34.143184-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef34.143184-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef34.143184-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:03.508 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52500
+[6978ef51.1431a3-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=39918
+[6978ef51.1431a4-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=39924
+[6978ef51.1431a3-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef51.1431a3-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef51.1431a4-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef51.1431a4-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef52.1431a6-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60734
+[6978ef52.1431a7-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60750
+[6978ef52.1431a8-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60758
+[6978ef52.1431a8-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef52.1431a8-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef52.1431a9-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60774
+[6978ef52.1431a8-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.008 user=postgres database=block_d1ek host=10.16.151.0 port=60758
+[6978ef51.1431a3-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978ef51.1431a3-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978ef51.1431a3-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:05.695 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=39918
+[6978ef51.1431a4-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef51.1431a4-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef51.1431a4-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:05.702 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=39924
+[6965816e.8b-8485] user=,db=,app=,client=,LOG:  checkpoint starting: time
+[6965816e.8b-8486] user=,db=,app=,client=,LOG:  checkpoint complete: wrote 24 buffers (0.3%), wrote 2 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.414 s, sync=0.003 s, total=2.429 s; sync files=14, longest=0.002 s, average=0.001 s; distance=182 kB, estimate=227 kB; lsn=0/3829DB0, redo lsn=0/3829D58
+[6978ef74.1431c7-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=55604
+[6978ef74.1431c8-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=55618
+[6978ef74.1431c7-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef74.1431c7-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef74.1431c8-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef74.1431c8-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef8e.1431e4-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52616
+[6978ef8e.1431e6-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52618
+[6978ef8e.1431e7-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52622
+[6978ef8e.1431e7-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef8e.1431e7-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef8e.1431e8-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52634
+[6978ef8e.1431e7-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.092 user=postgres database=block_d1ek host=10.16.151.0 port=52622
+[6978ef74.1431c7-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:30.111 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=55604
+[6978ec2f.142e60-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.16.118.254,LOG:  could not receive data from client: Connection reset by peer
+[6978ec2f.142e60-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.16.118.254,LOG:  disconnection: session time: 0:12:05.900 user=block_d1ek_user database=block_d1ek host=10.16.118.254 port=55218
+[6978ef16.143163-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45616
+[6978ef16.143164-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45620
+[6978ef16.143165-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45636
+[6978ef16.143165-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef16.143165-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef16.143166-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45644
+[6978ef16.143165-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.046 user=postgres database=block_d1ek host=10.16.151.0 port=45636
+[6978ef1e.143170-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=48266
+[6978ef1e.143170-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef1e.143170-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978eefc.143146-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978eefc.143146-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978eefc.143146-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:42.321 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=34056
+[6978ef1e.143170-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978eec4.143111-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978eec4.143111-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978eec4.143111-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:01:39.098 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=41620
+[6978ef1e.143170-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:08.425 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=48266
+[6978ef34.143184-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52500
+[6978ef34.143185-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52516
+[6978ef34.143185-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef34.143185-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef34.143184-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef34.143184-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef36.143186-1] user=,db=,app=,client=,LOG:  automatic vacuum of table "block_d1ek.public.contracts": index scans: 0
+	pages: 0 removed, 1 remain, 1 scanned (100.00% of total), 0 eagerly scanned
+	tuples: 64 removed, 4 remain, 0 are dead but not yet removable
+	removable cutoff: 92405, which was 0 XIDs old when operation ended
+	new relfrozenxid: 92335, which is 180 XIDs ahead of previous value
+	frozen: 0 pages from table (0.00% of total) had 0 tuples frozen
+	visibility map: 1 pages set all-visible, 0 pages set all-frozen (0 were all-visible)
+	index scan not needed: 0 pages from table (0.00% of total) had 0 dead item identifiers removed
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 60 hits, 0 reads, 0 dirtied
+	WAL usage: 3 records, 0 full page images, 517 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+[6978ef36.143186-2] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.contracts"
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 397 hits, 0 reads, 0 dirtied
+	WAL usage: 10 records, 0 full page images, 752 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.02 s
+[6978ef36.143186-3] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.session"
+	avg read rate: 0.000 MB/s, avg write rate: 1.488 MB/s
+	buffer usage: 117 hits, 0 reads, 4 dirtied
+	WAL usage: 18 records, 3 full page images, 15399 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.02 s
+[6978ef36.143186-4] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.users"
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 259 hits, 0 reads, 0 dirtied
+	WAL usage: 38 records, 0 full page images, 5501 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+[6978ef37.143187-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52522
+[6978ef37.143187-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef37.143187-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef37.143187-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978ef37.143187-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978ef37.143187-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:00.795 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52522
+[6978ef34.143185-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef34.143185-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef34.143185-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:03.410 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52516
+[6978ef34.143184-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef34.143184-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef34.143184-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:03.508 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52500
+[6978ef51.1431a3-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=39918
+[6978ef51.1431a4-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=39924
+[6978ef51.1431a3-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef51.1431a3-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef51.1431a4-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef51.1431a4-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef52.1431a6-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60734
+[6978ef52.1431a7-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60750
+[6978ef52.1431a8-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60758
+[6978ef52.1431a8-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef52.1431a8-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef52.1431a9-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60774
+[6978ef52.1431a8-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.008 user=postgres database=block_d1ek host=10.16.151.0 port=60758
+[6978ef51.1431a3-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978ef51.1431a3-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978ef51.1431a3-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:05.695 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=39918
+[6978ef51.1431a4-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef51.1431a4-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef51.1431a4-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:05.702 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=39924
+[6965816e.8b-8485] user=,db=,app=,client=,LOG:  checkpoint starting: time
+[6965816e.8b-8486] user=,db=,app=,client=,LOG:  checkpoint complete: wrote 24 buffers (0.3%), wrote 2 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.414 s, sync=0.003 s, total=2.429 s; sync files=14, longest=0.002 s, average=0.001 s; distance=182 kB, estimate=227 kB; lsn=0/3829DB0, redo lsn=0/3829D58
+[6978ef74.1431c7-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=55604
+[6978ef74.1431c8-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=55618
+[6978ef74.1431c7-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef74.1431c7-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef74.1431c8-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef74.1431c8-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef8e.1431e4-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52616
+[6978ef8e.1431e6-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52618
+[6978ef8e.1431e7-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52622
+[6978ef8e.1431e7-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef8e.1431e7-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef8e.1431e8-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52634
+[6978ef8e.1431e7-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.092 user=postgres database=block_d1ek host=10.16.151.0 port=52622
+[6978ef74.1431c7-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:30.111 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=55604
+[6978ec2f.142e60-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.16.118.254,LOG:  could not receive data from client: Connection reset by peer
+[6978ec2f.142e60-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.16.118.254,LOG:  disconnection: session time: 0:12:05.900 user=block_d1ek_user database=block_d1ek host=10.16.118.254 port=55218
+[6978ef16.143163-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45616
+[6978ef16.143164-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45620
+[6978ef16.143165-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45636
+[6978ef16.143165-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef16.143165-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef16.143166-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45644
+[6978ef16.143165-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.046 user=postgres database=block_d1ek host=10.16.151.0 port=45636
+[6978ef1e.143170-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=48266
+[6978ef1e.143170-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef1e.143170-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978eefc.143146-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978eefc.143146-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978eefc.143146-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:42.321 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=34056
+[6978ef1e.143170-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978eec4.143111-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978eec4.143111-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978eec4.143111-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:01:39.098 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=41620
+[6978ef1e.143170-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:08.425 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=48266
+[6978ef34.143184-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52500
+[6978ef34.143185-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52516
+[6978ef34.143185-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef34.143185-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef34.143184-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef34.143184-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef36.143186-1] user=,db=,app=,client=,LOG:  automatic vacuum of table "block_d1ek.public.contracts": index scans: 0
+	pages: 0 removed, 1 remain, 1 scanned (100.00% of total), 0 eagerly scanned
+	tuples: 64 removed, 4 remain, 0 are dead but not yet removable
+	removable cutoff: 92405, which was 0 XIDs old when operation ended
+	new relfrozenxid: 92335, which is 180 XIDs ahead of previous value
+	frozen: 0 pages from table (0.00% of total) had 0 tuples frozen
+	visibility map: 1 pages set all-visible, 0 pages set all-frozen (0 were all-visible)
+	index scan not needed: 0 pages from table (0.00% of total) had 0 dead item identifiers removed
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 60 hits, 0 reads, 0 dirtied
+	WAL usage: 3 records, 0 full page images, 517 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+[6978ef36.143186-2] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.contracts"
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 397 hits, 0 reads, 0 dirtied
+	WAL usage: 10 records, 0 full page images, 752 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.02 s
+[6978ef36.143186-3] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.session"
+	avg read rate: 0.000 MB/s, avg write rate: 1.488 MB/s
+	buffer usage: 117 hits, 0 reads, 4 dirtied
+	WAL usage: 18 records, 3 full page images, 15399 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.02 s
+[6978ef36.143186-4] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.users"
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 259 hits, 0 reads, 0 dirtied
+	WAL usage: 38 records, 0 full page images, 5501 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+[6978ef37.143187-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52522
+[6978ef37.143187-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef37.143187-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef37.143187-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978ef37.143187-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978ef37.143187-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:00.795 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52522
+[6978ef34.143185-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef34.143185-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef34.143185-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:03.410 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52516
+[6978ef34.143184-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef34.143184-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef34.143184-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:03.508 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52500
+[6978ef51.1431a3-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=39918
+[6978ef51.1431a4-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=39924
+[6978ef51.1431a3-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef51.1431a3-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef51.1431a4-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef51.1431a4-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef52.1431a6-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60734
+[6978ef52.1431a7-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60750
+[6978ef52.1431a8-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60758
+[6978ef52.1431a8-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef52.1431a8-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef52.1431a9-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60774
+[6978ef52.1431a8-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.008 user=postgres database=block_d1ek host=10.16.151.0 port=60758
+[6978ef51.1431a3-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978ef51.1431a3-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978ef51.1431a3-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:05.695 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=39918
+[6978ef51.1431a4-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef51.1431a4-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef51.1431a4-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:05.702 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=39924
+[6965816e.8b-8485] user=,db=,app=,client=,LOG:  checkpoint starting: time
+[6965816e.8b-8486] user=,db=,app=,client=,LOG:  checkpoint complete: wrote 24 buffers (0.3%), wrote 2 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.414 s, sync=0.003 s, total=2.429 s; sync files=14, longest=0.002 s, average=0.001 s; distance=182 kB, estimate=227 kB; lsn=0/3829DB0, redo lsn=0/3829D58
+[6978ef74.1431c7-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=55604
+[6978ef74.1431c8-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=55618
+[6978ef74.1431c7-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef74.1431c7-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef74.1431c8-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef74.1431c8-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+Menu
+[6978ef8e.1431e4-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52616
+[6978ef8e.1431e6-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52618
+[6978ef8e.1431e7-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52622
+[6978ef8e.1431e7-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef8e.1431e7-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef8e.1431e8-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52634
+[6978ef8e.1431e7-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.092 user=postgres database=block_d1ek host=10.16.151.0 port=52622
+[6978ef74.1431c7-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:30.111 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=55604
+[6978ec2f.142e60-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.16.118.254,LOG:  could not receive data from client: Connection reset by peer
+[6978ec2f.142e60-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.16.118.254,LOG:  disconnection: session time: 0:12:05.900 user=block_d1ek_user database=block_d1ek host=10.16.118.254 port=55218
+[6978ef16.143163-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45616
+[6978ef16.143164-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45620
+[6978ef16.143165-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45636
+[6978ef16.143165-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef16.143165-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef16.143166-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45644
+[6978ef16.143165-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.046 user=postgres database=block_d1ek host=10.16.151.0 port=45636
+[6978ef1e.143170-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=48266
+[6978ef1e.143170-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef1e.143170-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978eefc.143146-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978eefc.143146-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978eefc.143146-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:42.321 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=34056
+[6978ef1e.143170-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978eec4.143111-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978eec4.143111-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978eec4.143111-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:01:39.098 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=41620
+[6978ef1e.143170-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:08.425 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=48266
+[6978ef34.143184-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52500
+[6978ef34.143185-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52516
+[6978ef34.143185-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef34.143185-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef34.143184-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef34.143184-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef36.143186-1] user=,db=,app=,client=,LOG:  automatic vacuum of table "block_d1ek.public.contracts": index scans: 0
+	pages: 0 removed, 1 remain, 1 scanned (100.00% of total), 0 eagerly scanned
+	tuples: 64 removed, 4 remain, 0 are dead but not yet removable
+	removable cutoff: 92405, which was 0 XIDs old when operation ended
+	new relfrozenxid: 92335, which is 180 XIDs ahead of previous value
+	frozen: 0 pages from table (0.00% of total) had 0 tuples frozen
+	visibility map: 1 pages set all-visible, 0 pages set all-frozen (0 were all-visible)
+	index scan not needed: 0 pages from table (0.00% of total) had 0 dead item identifiers removed
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 60 hits, 0 reads, 0 dirtied
+	WAL usage: 3 records, 0 full page images, 517 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+[6978ef36.143186-2] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.contracts"
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 397 hits, 0 reads, 0 dirtied
+	WAL usage: 10 records, 0 full page images, 752 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.02 s
+[6978ef36.143186-3] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.session"
+	avg read rate: 0.000 MB/s, avg write rate: 1.488 MB/s
+	buffer usage: 117 hits, 0 reads, 4 dirtied
+	WAL usage: 18 records, 3 full page images, 15399 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.02 s
+[6978ef36.143186-4] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.users"
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 259 hits, 0 reads, 0 dirtied
+	WAL usage: 38 records, 0 full page images, 5501 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+[6978ef37.143187-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52522
+[6978ef37.143187-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef37.143187-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef37.143187-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978ef37.143187-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978ef37.143187-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:00.795 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52522
+[6978ef34.143185-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef34.143185-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef34.143185-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:03.410 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52516
+[6978ef34.143184-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef34.143184-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef34.143184-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:03.508 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52500
+[6978ef51.1431a3-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=39918
+[6978ef51.1431a4-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=39924
+[6978ef51.1431a3-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef51.1431a3-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef51.1431a4-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef51.1431a4-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef52.1431a6-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60734
+[6978ef52.1431a7-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60750
+[6978ef52.1431a8-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60758
+[6978ef52.1431a8-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef52.1431a8-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef52.1431a9-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60774
+[6978ef52.1431a8-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.008 user=postgres database=block_d1ek host=10.16.151.0 port=60758
+[6978ef51.1431a3-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978ef51.1431a3-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978ef51.1431a3-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:05.695 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=39918
+[6978ef51.1431a4-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef51.1431a4-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef51.1431a4-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:05.702 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=39924
+[6965816e.8b-8485] user=,db=,app=,client=,LOG:  checkpoint starting: time
+[6965816e.8b-8486] user=,db=,app=,client=,LOG:  checkpoint complete: wrote 24 buffers (0.3%), wrote 2 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.414 s, sync=0.003 s, total=2.429 s; sync files=14, longest=0.002 s, average=0.001 s; distance=182 kB, estimate=227 kB; lsn=0/3829DB0, redo lsn=0/3829D58
+[6978ef74.1431c7-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=55604
+[6978ef74.1431c8-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=55618
+[6978ef74.1431c7-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef74.1431c7-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef74.1431c8-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef74.1431c8-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef8e.1431e4-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52616
+[6978ef8e.1431e6-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52618
+[6978ef8e.1431e7-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52622
+[6978ef8e.1431e7-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef8e.1431e7-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef8e.1431e8-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52634
+[6978ef8e.1431e7-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.092 user=postgres database=block_d1ek host=10.16.151.0 port=52622
+Menu
+[6978ef74.1431c7-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:30.111 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=55604
+[6978ec2f.142e60-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.16.118.254,LOG:  could not receive data from client: Connection reset by peer
+[6978ec2f.142e60-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.16.118.254,LOG:  disconnection: session time: 0:12:05.900 user=block_d1ek_user database=block_d1ek host=10.16.118.254 port=55218
+[6978ef16.143163-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45616
+[6978ef16.143164-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45620
+[6978ef16.143165-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45636
+[6978ef16.143165-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef16.143165-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef16.143166-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=45644
+[6978ef16.143165-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.046 user=postgres database=block_d1ek host=10.16.151.0 port=45636
+[6978ef1e.143170-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=48266
+[6978ef1e.143170-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef1e.143170-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978eefc.143146-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978eefc.143146-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978eefc.143146-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:42.321 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=34056
+[6978ef1e.143170-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978eec4.143111-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978eec4.143111-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978eec4.143111-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:01:39.098 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=41620
+[6978ef1e.143170-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:08.425 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=48266
+[6978ef34.143184-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52500
+[6978ef34.143185-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52516
+[6978ef34.143185-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef34.143185-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef34.143184-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef34.143184-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef36.143186-1] user=,db=,app=,client=,LOG:  automatic vacuum of table "block_d1ek.public.contracts": index scans: 0
+	pages: 0 removed, 1 remain, 1 scanned (100.00% of total), 0 eagerly scanned
+	tuples: 64 removed, 4 remain, 0 are dead but not yet removable
+	removable cutoff: 92405, which was 0 XIDs old when operation ended
+	new relfrozenxid: 92335, which is 180 XIDs ahead of previous value
+	frozen: 0 pages from table (0.00% of total) had 0 tuples frozen
+	visibility map: 1 pages set all-visible, 0 pages set all-frozen (0 were all-visible)
+	index scan not needed: 0 pages from table (0.00% of total) had 0 dead item identifiers removed
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 60 hits, 0 reads, 0 dirtied
+	WAL usage: 3 records, 0 full page images, 517 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+[6978ef36.143186-2] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.contracts"
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 397 hits, 0 reads, 0 dirtied
+	WAL usage: 10 records, 0 full page images, 752 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.02 s
+[6978ef36.143186-3] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.session"
+	avg read rate: 0.000 MB/s, avg write rate: 1.488 MB/s
+	buffer usage: 117 hits, 0 reads, 4 dirtied
+	WAL usage: 18 records, 3 full page images, 15399 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.02 s
+[6978ef36.143186-4] user=,db=,app=,client=,LOG:  automatic analyze of table "block_d1ek.public.users"
+	avg read rate: 0.000 MB/s, avg write rate: 0.000 MB/s
+	buffer usage: 259 hits, 0 reads, 0 dirtied
+	WAL usage: 38 records, 0 full page images, 5501 bytes, 0 buffers full
+	system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+[6978ef37.143187-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=52522
+[6978ef37.143187-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef37.143187-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef37.143187-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978ef37.143187-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978ef37.143187-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:00.795 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52522
+[6978ef34.143185-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef34.143185-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef34.143185-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:03.410 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52516
+[6978ef34.143184-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef34.143184-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef34.143184-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:03.508 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=52500
+[6978ef51.1431a3-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=39918
+[6978ef51.1431a4-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=39924
+[6978ef51.1431a3-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef51.1431a3-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef51.1431a4-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef51.1431a4-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef52.1431a6-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60734
+[6978ef52.1431a7-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60750
+[6978ef52.1431a8-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60758
+[6978ef52.1431a8-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef52.1431a8-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef52.1431a9-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=60774
+[6978ef52.1431a8-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.008 user=postgres database=block_d1ek host=10.16.151.0 port=60758
+[6978ef51.1431a3-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,ERROR:  relation "login_attempts" does not exist at character 69
+[6978ef51.1431a3-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,STATEMENT:  select "id", "email", "password", "status", "ip", "created_at" from "login_attempts" order by "login_attempts"."created_at" desc
+[6978ef51.1431a3-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:05.695 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=39918
+[6978ef51.1431a4-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  SSL error: unexpected eof while reading
+[6978ef51.1431a4-5] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  could not receive data from client: Connection reset by peer
+[6978ef51.1431a4-6] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:05.702 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=39924
+[6965816e.8b-8485] user=,db=,app=,client=,LOG:  checkpoint starting: time
+[6965816e.8b-8486] user=,db=,app=,client=,LOG:  checkpoint complete: wrote 24 buffers (0.3%), wrote 2 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.414 s, sync=0.003 s, total=2.429 s; sync files=14, longest=0.002 s, average=0.001 s; distance=182 kB, estimate=227 kB; lsn=0/3829DB0, redo lsn=0/3829D58
+[6978ef74.1431c7-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=55604
+[6978ef74.1431c8-1] user=[unknown],db=[unknown],app=[unknown],client=10.17.173.231,LOG:  connection received: host=10.17.173.231 port=55618
+[6978ef74.1431c7-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef74.1431c7-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef74.1431c8-2] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authenticated: identity="block_d1ek_user" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef74.1431c8-3] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  connection authorized: user=block_d1ek_user database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef8e.1431e4-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52616
+[6978ef8e.1431e6-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52618
+[6978ef8e.1431e7-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52622
+[6978ef8e.1431e7-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978ef8e.1431e7-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978ef8e.1431e8-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=52634
+[6978ef8e.1431e7-4] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  disconnection: session time: 0:00:03.092 user=postgres database=block_d1ek host=10.16.151.0 port=52622
+Menu
+[6978ef74.1431c7-4] user=block_d1ek_user,db=block_d1ek,app=[unknown],client=10.17.173.231,LOG:  disconnection: session time: 0:00:30.111 user=block_d1ek_user database=block_d1ek host=10.17.173.231 port=55604
+[6978efca.143221-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=54464
+[6978efca.143222-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=54470
+[6978efca.143224-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=54474
+[6978efca.143224-2] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d5io2hidbo4c73e9rgf0-a/pg_hba.conf:88)
+[6978efca.143224-3] user=postgres,db=block_d1ek,app=[unknown],client=10.16.151.0,LOG:  connection authorized: user=postgres database=block_d1ek SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+[6978efca.143225-1] user=[unknown],db=[unknown],app=[unknown],client=10.16.151.0,LOG:  connection received: host=10.16.151.0 port=54484
+[6978efca.143224-4] user=postgres,db
