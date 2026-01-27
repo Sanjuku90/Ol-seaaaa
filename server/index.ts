@@ -65,6 +65,31 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Production migration helper: ensure tables exist before starting routes
+  if (process.env.NODE_ENV === "production" || process.env.RENDER) {
+    const { pool } = await import("./db");
+    let retries = 5;
+    while (retries > 0) {
+      try {
+        const client = await pool.connect();
+        try {
+          // Simple check for machines table
+          const res = await client.query("SELECT 1 FROM information_schema.tables WHERE table_name = 'machines'");
+          if (res.rowCount === 0) {
+            console.log("[db] Tables missing, please run db:push or ensure schema is synced.");
+          }
+        } finally {
+          client.release();
+        }
+        break;
+      } catch (err) {
+        console.error(`[db] Connection retry ${6 - retries}/5 failed:`, err);
+        retries--;
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+    }
+  }
+
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
