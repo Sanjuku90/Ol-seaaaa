@@ -76,7 +76,24 @@ app.use((req, res, next) => {
           // Simple check for machines table
           const res = await client.query("SELECT 1 FROM information_schema.tables WHERE table_name = 'machines'");
           if (res.rowCount === 0) {
-            console.log("[db] Tables missing, please run db:push or ensure schema is synced.");
+            console.log("[db] Tables missing, attempting auto-migration...");
+            // Run drizzle-kit push programmatically or via shell if possible
+            // For now, we will at least create the machines table if it's the one blocking
+            await client.query(`
+              CREATE TABLE IF NOT EXISTS machines (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                type TEXT NOT NULL,
+                rental_price DECIMAL(10,2),
+                buy_price DECIMAL(10,2),
+                min_deposit DECIMAL(10,2) DEFAULT 0 NOT NULL,
+                duration_days INTEGER NOT NULL,
+                daily_rate DECIMAL(10,2) NOT NULL,
+                monthly_fee DECIMAL(10,2) DEFAULT 0 NOT NULL,
+                description TEXT
+              );
+            `);
+            console.log("[db] Machines table created successfully.");
           }
         } finally {
           client.release();
