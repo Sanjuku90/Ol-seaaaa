@@ -102,16 +102,19 @@ export default function Overview() {
 
   useEffect(() => {
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    // Construct WebSocket URL correctly for Replit environment
     const host = window.location.host;
     const wsUrl = `${protocol}//${host}/ws`;
     const socket = new WebSocket(wsUrl);
+
+    socket.onopen = () => {
+      console.log("WebSocket connected successfully for real-time updates");
+    };
 
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
         if (data.type === "BALANCE_UPDATE" || data.type === "PROFIT_GENERATED" || data.type === "TRANSACTION_UPDATE") {
-          // Force immediate invalidate and refetch
+          // Force immediate refetch of user and contracts data
           queryClient.invalidateQueries({ queryKey: ["/api/user"] });
           queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
         }
@@ -124,7 +127,16 @@ export default function Overview() {
       console.error("WebSocket error:", error);
     };
 
-    return () => socket.close();
+    // Fallback refetch interval just in case
+    const interval = setInterval(() => {
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
+    }, 10000);
+
+    return () => {
+      socket.close();
+      clearInterval(interval);
+    };
   }, [queryClient]);
 
   const activeContracts = contracts?.filter(c => c.status === "active" || c.status === "suspended") || [];
@@ -188,7 +200,9 @@ export default function Overview() {
           <div className="grid grid-cols-1 gap-4 mb-4 text-sm">
             <div>
               <p className="text-muted-foreground">Gains cumulés</p>
-              <p className="font-bold text-emerald-400">${accumulated.toFixed(4)}</p>
+              <p className="font-bold text-emerald-400">
+                $<CountUp end={accumulated} decimals={4} duration={0.5} preserveValue={true} />
+              </p>
             </div>
           </div>
 

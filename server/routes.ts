@@ -657,91 +657,88 @@ export async function registerRoutes(
 
     // Background profit generator and monthly fee deduction
     setInterval(async () => {
-      const activeContracts = await db.select().from(contracts).where(eq(contracts.status, "active"));
-      const now = new Date();
+      try {
+        const activeContracts = await db.select().from(contracts).where(eq(contracts.status, "active"));
+        const now = new Date();
 
-      for (const contract of activeContracts) {
-        const machine = await storage.getMachine(contract.machineId);
-        if (!machine) continue;
-
-        // 1. Profit Calculation (every 10 seconds for demo/real-time feel)
-        const baseAmount = machine.type === "buy" ? Number(machine.buyPrice || 0) : Number(contract.amount || 0);
-        const dailyRate = Number(machine.dailyRate || 0);
-        const dailyProfit = (baseAmount * dailyRate) / 100;
-        
-        // Correct interval calculation for 10 seconds
-        // There are 8640 intervals of 10 seconds in a day (24 * 60 * 6)
-        const profit = dailyProfit / (24 * 60 * 6);
-
-        if (profit > 0) {
-          const currentAccumulated = Number(contract.accumulatedRewards || 0);
-          const newAccumulated = currentAccumulated + profit;
-
-          // Update user global balance
-          await storage.updateUserBalance(contract.userId, profit);
-          
-          // Update accumulated rewards in contract
-          await db.update(contracts)
-            .set({ accumulatedRewards: newAccumulated.toFixed(4) })
-            .where(eq(contracts.id, contract.id));
-
-          broadcast({
-            type: "BALANCE_UPDATE",
-            payload: { 
-              userId: contract.userId, 
-              amount: profit.toFixed(4),
-              totalBalance: profit
-            }
-          });
+        if (activeContracts.length > 0) {
+          console.log(`[ProfitJob] Processing ${activeContracts.length} active contracts at ${now.toISOString()}`);
         }
 
-        // 2. Monthly Fee Deduction & Expiration Check
-        // We check if 30 days have passed since start or last deduction
-        const startDate = new Date(contract.startDate!);
-        const daysActive = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-        
-        if (daysActive >= machine.durationDays && contract.status === "active") {
-          if (machine.type === "rent") {
-            const monthlyFee = Number(machine.monthlyFee || 0);
-            const user = await storage.getUser(contract.userId);
-            
-            if (user && Number(user.balance) >= monthlyFee && monthlyFee > 0) {
-              // Deduct monthly fee and extend
-              await storage.updateUserBalance(contract.userId, -monthlyFee);
-              await storage.createTransaction(contract.userId, "maintenance", monthlyFee);
-              
-              const newEndDate = new Date();
-              newEndDate.setDate(newEndDate.getDate() + machine.durationDays);
-              
-              await db.update(contracts)
-                .set({ endDate: newEndDate })
-                .where(eq(contracts.id, contract.id));
-                
-              console.log(`[Fee] Deducted ${monthlyFee} from user ${user.id} for machine ${machine.name}`);
-            } else if (monthlyFee > 0) {
-              // Not enough balance, suspend contract
-              await db.update(contracts)
-                .set({ status: "suspended" })
-                .where(eq(contracts.id, contract.id));
-              console.log(`[Contract] Suspended contract ${contract.id} due to insufficient balance for fee`);
+        for (const contract of activeContracts) {
+          const machine = await storage.getMachine(contract.machineId);
+          if (!machine) {
+            console.log(`[ProfitJob] Machine ${contract.machineId} not found for contract ${contract.id}`);
+            continue;
+          }
 
+          // 1. Profit Calculation (every 10 seconds)
+          const baseAmount = machine.type === "buy" ? Number(machine.buyPrice || 0) : Number(contract.amount || 0);
+          const dailyRate = Number(machine.dailyRate || 0);
+          
+          if (baseAmount > 0 && dailyRate > 0) {
+            const dailyProfit = (baseAmount * dailyRate) / 100;
+            const profitPerInterval = dailyProfit / 8640;
+
+            if (profitPerInterval > 0) {
+              const currentAccumulated = Number(contract.accumulatedRewards || 0);
+              const newAccumulated = currentAccumulated + profitPerInterval;
+
+              // Update global user balance
+              await storage.updateUserBalance(contract.userId, profitPerInterval);
+              
+              // Update contract rewards
+              await db.update(contracts)
+                .set({ accumulatedRewards: newAccumulated.toFixed(6) })
+                .where(eq(contracts.id, contract.id));
+
+              // Broadcast update
               broadcast({
-                type: "CONTRACT_SUSPENDED",
-                payload: {
+                type: "BALANCE_UPDATE",
+                payload: { 
                   userId: contract.userId,
+                  amount: profitPerInterval.toFixed(6),
                   contractId: contract.id,
-                  message: `Votre machine ${machine.name} a été suspendue faute de solde suffisant pour les frais.`
+                  accumulated: newAccumulated.toFixed(6)
                 }
               });
             }
-          } else {
-            // Purchase machines might just expire or stay active forever depending on durationDays
-            // If durationDays is reached, we set to expired
-            await db.update(contracts)
-              .set({ status: "expired" })
-              .where(eq(contracts.id, contract.id));
+          }
+
+
+          // 2. Cycle/Fee Check
+          const startDate = new Date(contract.startDate!);
+          const diffMs = now.getTime() - startDate.getTime();
+          const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+          if (diffDays >= 30) {
+            if (machine.type === "rent") {
+              const fee = Number(machine.monthlyFee || 3);
+              const user = await storage.getUser(contract.userId);
+              
+              if (user && Number(user.balance) >= fee) {
+                await storage.updateUserBalance(user.id, -fee);
+                await storage.createTransaction(user.id, "maintenance", fee);
+                await db.update(contracts)
+                  .set({ startDate: now })
+                  .where(eq(contracts.id, contract.id));
+              } else {
+                await db.update(contracts)
+                  .set({ status: "suspended" })
+                  .where(eq(contracts.id, contract.id));
+              }
+            } else {
+              // Purchase machines check durationDays
+              if (diffDays >= (machine.durationDays || 365)) {
+                await db.update(contracts)
+                  .set({ status: "expired" })
+                  .where(eq(contracts.id, contract.id));
+              }
+            }
           }
         }
+      } catch (err) {
+        console.error("[ProfitJob] Error:", err);
       }
     }, 10000);
 
