@@ -59,7 +59,46 @@ export class DatabaseStorage implements IStorage {
 
   async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
+    if (user) {
+      await this.updateOfflineEarnings(user);
+      // Re-fetch user after potential balance update
+      const [updatedUser] = await db.select().from(users).where(eq(users.id, id));
+      return updatedUser;
+    }
     return user;
+  }
+
+  private async updateOfflineEarnings(user: User): Promise<void> {
+    const now = new Date();
+    const lastUpdate = user.lastEarningsUpdate ? new Date(user.lastEarningsUpdate) : new Date(user.createdAt || now);
+    const diffMs = now.getTime() - lastUpdate.getTime();
+    const diffHours = diffMs / (1000 * 60 * 60);
+
+    if (diffHours < 0.01) return; // Update every 36 seconds minimum to avoid spam
+
+    const userContracts = await this.getContracts(user.id);
+    const activeContracts = userContracts.filter(c => c.status === "active");
+    
+    let totalEarnings = 0;
+    for (const contract of activeContracts) {
+      const dailyRate = Number(contract.machine.dailyRate) / 100;
+      const hourlyRate = (Number(contract.amount) * dailyRate) / 24;
+      totalEarnings += hourlyRate * diffHours;
+    }
+
+    if (totalEarnings > 0) {
+      const totalEarningsStr = totalEarnings.toFixed(4);
+      await db.update(users)
+        .set({ 
+          balance: sql`ROUND((${users.balance}::numeric + ${totalEarningsStr}::numeric), 4)`,
+          lastEarningsUpdate: now
+        })
+        .where(eq(users.id, user.id));
+    } else {
+      await db.update(users)
+        .set({ lastEarningsUpdate: now })
+        .where(eq(users.id, user.id));
+    }
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {

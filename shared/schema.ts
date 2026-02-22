@@ -39,6 +39,7 @@ export const users = pgTable("users", {
   referralEarnings: decimal("referral_earnings", { precision: 10, scale: 2 }).default("0").notNull(),
   indirectReferralEarnings: decimal("indirect_referral_earnings", { precision: 10, scale: 2 }).default("0").notNull(),
   activeReferrals: integer("active_referrals").default(0),
+  lastEarningsUpdate: timestamp("last_earnings_update").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

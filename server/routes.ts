@@ -46,6 +46,12 @@ export async function registerRoutes(
     next();
   });
 
+  app.get("/api/user", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const user = await storage.getUser((req.user as any).id);
+    res.json(user);
+  });
+
   // Machines
   app.get(api.machines.list.path, async (req, res) => {
     const machinesList = await storage.getMachines();
