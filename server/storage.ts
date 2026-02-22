@@ -74,7 +74,8 @@ export class DatabaseStorage implements IStorage {
     const diffMs = now.getTime() - lastUpdate.getTime();
     const diffHours = diffMs / (1000 * 60 * 60);
 
-    if (diffHours < 0.01) return; // Mise à jour toutes les 36 secondes minimum pour éviter le spam
+    // Only update if at least 1 minute has passed to avoid excessive DB writes
+    if (diffHours < (1 / 60)) return;
 
     const userContracts = await this.getContracts(user.id);
     const activeContracts = userContracts.filter(c => c.status === "active");
@@ -87,10 +88,10 @@ export class DatabaseStorage implements IStorage {
     }
 
     if (totalEarnings > 0) {
-      const totalEarningsStr = totalEarnings.toFixed(4);
+      const totalEarningsStr = totalEarnings.toFixed(6);
       await db.update(users)
         .set({ 
-          balance: sql`ROUND((${users.balance}::numeric + ${totalEarningsStr}::numeric), 4)`,
+          balance: sql`${users.balance} + ${totalEarningsStr}::numeric`,
           lastEarningsUpdate: now
         })
         .where(eq(users.id, user.id));
