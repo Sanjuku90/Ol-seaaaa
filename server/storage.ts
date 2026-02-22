@@ -74,7 +74,7 @@ export class DatabaseStorage implements IStorage {
     const diffMs = now.getTime() - lastUpdate.getTime();
     const diffHours = diffMs / (1000 * 60 * 60);
 
-    if (diffHours < 0.01) return; // Update every 36 seconds minimum to avoid spam
+    if (diffHours < 0.01) return; // Mise à jour toutes les 36 secondes minimum pour éviter le spam
 
     const userContracts = await this.getContracts(user.id);
     const activeContracts = userContracts.filter(c => c.status === "active");
