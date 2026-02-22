@@ -619,54 +619,39 @@ export async function registerRoutes(
     // Background profit generator and monthly fee deduction
     setInterval(async () => {
       try {
-        const activeContracts = await db.select().from(contracts).where(eq(contracts.status, "active"));
+        const activeContracts = await db.select({
+          id: contracts.id,
+          userId: contracts.userId,
+          amount: contracts.amount,
+          machineId: contracts.machineId,
+          startDate: contracts.startDate,
+          accumulatedRewards: contracts.accumulatedRewards
+        })
+        .from(contracts)
+        .where(eq(contracts.status, "active"));
+
         const now = new Date();
 
-        // Plus de logs verbeux pour confirmer le fonctionnement
-        console.log(`[ProfitJob] Processing ${activeContracts.length} active contracts at ${now.toISOString()}`);
+        if (activeContracts.length > 0) {
+          console.log(`[ProfitJob] Processing ${activeContracts.length} active contracts at ${now.toISOString()}`);
+        }
 
         for (const contract of activeContracts) {
+          // Trigger offline earnings calculation by getting user
+          const user = await storage.getUser(contract.userId);
+          if (!user) continue;
+
           const machine = await storage.getMachine(contract.machineId);
-          if (!machine) {
-            console.log(`[ProfitJob] Machine ${contract.machineId} not found for contract ${contract.id}`);
-            continue;
-          }
+          if (!machine) continue;
 
-          // 1. Profit Calculation (every 10 seconds)
-          const baseAmount = machine.type === "buy" ? Number(machine.buyPrice || 0) : Number(contract.amount || 0);
-          const dailyRate = Number(machine.dailyRate || 0);
-          
-          if (baseAmount > 0 && dailyRate > 0) {
-            const dailyProfit = (baseAmount * dailyRate) / 100;
-            const profitPerInterval = dailyProfit / 8640;
-
-            if (profitPerInterval > 0) {
-              const currentAccumulated = Number(contract.accumulatedRewards || 0);
-              const newAccumulated = currentAccumulated + profitPerInterval;
-
-              // Update global user balance
-              await storage.updateUserBalance(contract.userId, profitPerInterval);
-              
-              // Update contract rewards
-              await db.update(contracts)
-                .set({ accumulatedRewards: newAccumulated.toFixed(6) })
-                .where(eq(contracts.id, contract.id));
-
-              console.log(`[ProfitJob] User ${contract.userId}: +${profitPerInterval.toFixed(6)} (Total: ${newAccumulated.toFixed(6)})`);
-
-              // Broadcast update
-              broadcast({
-                type: "BALANCE_UPDATE",
-                payload: { 
-                  userId: contract.userId,
-                  amount: profitPerInterval.toFixed(6),
-                  contractId: contract.id,
-                  accumulated: newAccumulated.toFixed(6)
-                }
-              });
+          // Broadcast real-time update
+          broadcast({
+            type: "BALANCE_UPDATE",
+            payload: { 
+              userId: user.id,
+              balance: user.balance
             }
-          }
-
+          });
 
           // 2. Cycle/Fee Check
           const startDate = new Date(contract.startDate!);
@@ -676,9 +661,8 @@ export async function registerRoutes(
           if (diffDays >= 30) {
             if (machine.type === "rent") {
               const fee = Number(machine.monthlyFee || 3);
-              const user = await storage.getUser(contract.userId);
               
-              if (user && Number(user.balance) >= fee) {
+              if (Number(user.balance) >= fee) {
                 await storage.updateUserBalance(user.id, -fee);
                 await storage.createTransaction(user.id, "maintenance", fee);
                 await db.update(contracts)
