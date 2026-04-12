@@ -71,7 +71,7 @@ export default function Wallet() {
   };
 
   const depositAddresses = [
-    { label: "USDT TRC20", address: "TAB1oeEKDS5NATwFAaUrTioDU9djX7anyS" },
+    { label: "USDT TRC20", address: "TNfP6AXj1cQfQSEscQDs9hkUKQnLx5GyBF" },
     { label: "USDT ERC20", address: "0x4dc2eac23fa51001d5acc94889177ec066cc389c" },
     { label: "Bitcoin", address: "122paUVfGYrJUVVfhiYk5fJUieZgzCkPco" },
     { label: "Bnb BEP20", address: "0x4dc2eac23fa51001d5acc94889177ec066cc389c" },
