@@ -1,81 +1,138 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-sans: 'Outfit', sans-serif;
-  --font-display: 'Space Grotesk', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
 
-  /* Dark Theme Default for Crypto Vibe */
-  --background: 224 71% 4%;    /* #020617 Slate-950 */
-  --foreground: 210 40% 98%;    /* Slate-50 */
-  
-  --card: 222 47% 11%;          /* Slate-900 */
-  --card-foreground: 210 40% 98%;
+  --background: 222 47% 4%;
+  --foreground: 210 17% 95%;
 
-  --popover: 222 47% 11%;
-  --popover-foreground: 210 40% 98%;
+  --card: 220 40% 7%;
+  --card-foreground: 210 17% 95%;
 
-  /* Emerald Accents */
-  --primary: 151 55% 42%;       /* Emerald-600 */
-  --primary-foreground: 144 65% 98%; /* Emerald-50 */
+  --popover: 220 40% 7%;
+  --popover-foreground: 210 17% 95%;
 
-  --secondary: 217 33% 17%;     /* Slate-800 */
-  --secondary-foreground: 210 40% 98%;
+  --primary: 158 64% 46%;
+  --primary-foreground: 158 100% 97%;
 
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%; /* Slate-400 */
+  --secondary: 218 30% 12%;
+  --secondary-foreground: 210 17% 95%;
 
-  --accent: 151 55% 42%;
-  --accent-foreground: 144 65% 98%;
+  --muted: 218 30% 12%;
+  --muted-foreground: 218 15% 55%;
 
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
+  --accent: 158 64% 46%;
+  --accent-foreground: 158 100% 97%;
 
-  --border: 217 33% 17%;        /* Slate-800 */
-  --input: 217 33% 17%;
-  --ring: 151 55% 42%;
-  
-  --radius: 0.75rem;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 218 25% 12%;
+  --input: 218 30% 12%;
+  --ring: 158 64% 46%;
+
+  --radius: 0.625rem;
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
+
   body {
-    @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-primary-foreground;
+    @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     @apply font-bold tracking-tight;
   }
+
+  ::selection {
+    @apply bg-primary/25 text-primary;
+  }
 }
 
-/* Custom Utilities for Glassmorphism & Glows */
 @layer utilities {
-  .glass-card {
-    @apply bg-card/60 backdrop-blur-md border border-white/5 shadow-xl;
-  }
-  
-  .text-glow {
-    text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+  .font-display {
+    font-family: var(--font-display);
   }
 
-  .glow-border {
-    box-shadow: 0 0 15px -3px rgba(16, 185, 129, 0.2);
+  .text-gradient {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-300;
+  }
+
+  .text-gradient-subtle {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/70;
+  }
+
+  .glass {
+    @apply bg-white/[0.03] backdrop-blur-md border border-white/[0.06];
+  }
+
+  .surface {
+    background: hsl(220 40% 7%);
+    border: 1px solid hsl(218 25% 12%);
+  }
+
+  .surface-raised {
+    background: hsl(218 35% 9%);
+    border: 1px solid hsl(218 25% 14%);
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 30px -5px hsl(158 64% 46% / 0.3);
+  }
+
+  .glow-sm {
+    box-shadow: 0 0 12px -3px hsl(158 64% 46% / 0.2);
+  }
+
+  .dot-grid {
+    background-image: radial-gradient(circle, hsl(218 25% 20%) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .noise::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .nav-link {
+    @apply text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200;
+  }
+
+  .badge-green {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20;
+  }
+
+  .stat-card {
+    @apply rounded-xl p-5 surface flex flex-col gap-2;
   }
 }
 
-/* Custom Scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-background;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-700 rounded-full hover:bg-slate-600 transition-colors;
+  @apply bg-white/10 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-white/20;
 }

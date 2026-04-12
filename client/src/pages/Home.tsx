@@ -1,253 +1,362 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { useMachines } from "@/hooks/use-platform";
-import { motion } from "framer-motion";
 import { Link } from "wouter";
-import { ArrowRight, Calculator, CheckCircle2, ShieldCheck, Zap } from "lucide-react";
+import {
+  ArrowRight,
+  TrendingUp,
+  Shield,
+  Zap,
+  ChevronDown,
+  CheckCircle,
+  Clock,
+  BarChart3,
+  Lock,
+  Globe,
+  Star,
+} from "lucide-react";
 import { useState } from "react";
 import { Slider } from "@/components/ui/slider";
+import CountUp from "react-countup";
 import logoImg from "@assets/generated_images/blockmint_modern_crypto_mining_logo.png";
 
-import CountUp from 'react-countup';
-
 export default function Home() {
-  const { data: machines } = useMachines();
-  const [calcAmount, setCalcAmount] = useState([1000]);
-  const [selectedDuration, setSelectedDuration] = useState(30);
+  const [calcAmount, setCalcAmount] = useState([500]);
+  const dailyRate = 2.5;
+  const netDaily = (calcAmount[0] * dailyRate) / 100;
+  const monthly = netDaily * 30;
 
-  // Simple calculation logic for demo based on official data
-  const maintenanceFee = 0.4;
-  const electricityFee = 0.5;
-  const dailyRate = 2.5; // Average rate
-  const netDailyRate = dailyRate - maintenanceFee - electricityFee;
-  const dailyProfit = (calcAmount[0] * netDailyRate) / 100;
-  const totalProfit = dailyProfit * selectedDuration;
+  const stats = [
+    { value: 12450, suffix: "+", label: "Investisseurs actifs" },
+    { value: 4.2, prefix: "$", suffix: "M+", label: "Gains distribués" },
+    { value: 99.99, suffix: "%", label: "Disponibilité système" },
+    { value: 3, suffix: " ans", label: "D'expérience" },
+  ];
+
+  const features = [
+    {
+      icon: Zap,
+      title: "Mode Location",
+      desc: "Accès immédiat à une machine de minage moyennant un abonnement mensuel et un dépôt minimum. Idéal pour débuter.",
+      points: ["Dépôt min. 30 $", "Gains quotidiens", "Frais maintenance 3$/mois"],
+      color: "text-amber-400",
+      bg: "bg-amber-400/8",
+      border: "border-amber-400/15",
+    },
+    {
+      icon: Shield,
+      title: "Mode Achat",
+      desc: "Paiement unique pour devenir propriétaire de votre machine. Rendement supérieur et retraits simplifiés à 4%.",
+      points: ["Paiement unique", "Rendement 2.8–4.3%/jour", "Machine permanente"],
+      color: "text-emerald-400",
+      bg: "bg-emerald-400/8",
+      border: "border-emerald-400/15",
+    },
+  ];
+
+  const steps = [
+    { n: "01", title: "Créez votre compte", desc: "Inscription en moins d'une minute, sans vérification complexe." },
+    { n: "02", title: "Déposez des fonds", desc: "Envoyez votre dépôt en USDT TRC20, ERC20, Bitcoin ou BNB." },
+    { n: "03", title: "Choisissez une machine", desc: "Location ou achat selon votre budget et vos objectifs." },
+    { n: "04", title: "Percevez vos gains", desc: "Les revenus s'accumulent chaque jour et sont retirables à tout moment." },
+  ];
+
+  const faqs = [
+    { q: "Quel est le dépôt minimum ?", a: "Pour les machines en location, le dépôt minimum est de 30 $. Pour les achats, le prix de départ est de 126 $ (après promo -30%)." },
+    { q: "Comment sont calculés les gains ?", a: "Les gains sont calculés quotidiennement en fonction du taux journalier de chaque machine (entre 1.90% et 4.30% selon le modèle)." },
+    { q: "Quels sont les frais de retrait ?", a: "Les frais de retrait sont de 4% une fois la maturité atteinte, et de 19% avant maturité." },
+    { q: "Quelles cryptomonnaies sont acceptées ?", a: "Nous acceptons USDT TRC20, USDT ERC20, Bitcoin et BNB BEP20." },
+    { q: "Puis-je avoir plusieurs machines ?", a: "Oui, vous pouvez activer jusqu'à 2 machines du même type, et autant de types différents que vous souhaitez." },
+  ];
 
   return (
-    <div className="min-h-screen bg-background selection:bg-primary/20">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
-      
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        {/* Background Gradients */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-primary/20 rounded-full blur-[128px]" />
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-[128px]" />
-        </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-secondary/50 border border-white/5 mb-8 backdrop-blur-sm">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-sm font-medium text-muted-foreground">Live Mining Operations Active</span>
-            </div>
-            
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-foreground mb-6 leading-tight">
-              Minez le Futur avec <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300 text-glow">
-                BlockMint
+      {/* Hero */}
+      <section className="relative pt-28 pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
+        <div className="absolute inset-0 dot-grid opacity-40 pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/8 border border-emerald-500/20 mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-xs font-semibold text-emerald-400 tracking-wide uppercase">Opérations de minage actives</span>
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-display font-bold leading-[1.08] tracking-tight mb-6">
+            Générez des revenus passifs{" "}
+            <span className="text-gradient">chaque jour</span>
+          </h1>
+
+          <p className="max-w-xl mx-auto text-base md:text-lg text-muted-foreground leading-relaxed mb-10">
+            Louez ou achetez une machine de minage cloud et commencez à percevoir des gains dès aujourd'hui. Transparent, sécurisé, rentable.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16">
+            <Link href="/register">
+              <Button size="lg" className="h-12 px-7 bg-emerald-500 hover:bg-emerald-400 text-white shadow-xl shadow-emerald-500/25 font-semibold gap-2 text-[15px]">
+                Commencer gratuitement
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+            <a href="#how-it-works">
+              <Button size="lg" variant="outline" className="h-12 px-7 border-white/10 hover:bg-white/[0.04] text-muted-foreground hover:text-foreground gap-2 text-[15px]">
+                Comment ça marche
+                <ChevronDown className="w-4 h-4" />
+              </Button>
+            </a>
+          </div>
+
+          {/* Trust row */}
+          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground/60">
+            {["SSL sécurisé", "Retraits sous 48h", "Support 24/7", "Promo -30% actuelle"].map((t) => (
+              <span key={t} className="flex items-center gap-1.5">
+                <CheckCircle className="w-3.5 h-3.5 text-emerald-500/60" />
+                {t}
               </span>
-            </h1>
-            
-            <p className="max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground mb-10">
-              Louez ou achetez une machine de minage et commencez à générer des gains chaque jour ! 
-              Solutions flexibles avec progression de retrait ou achat permanent.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/register">
-                <Button size="lg" className="w-full sm:w-auto h-12 px-8 text-base shadow-xl shadow-primary/20">
-                  Commencer Maintenant
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
-              <Link href="/dashboard/machines">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto h-12 px-8 text-base bg-white/5 border-white/10 hover:bg-white/10">
-                  Voir le Catalogue
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Stats Banner */}
-      <section className="border-y border-white/5 bg-white/[0.02] backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { label: "Utilisateurs Actifs", value: 12450, suffix: "+" },
-              { label: "Gains Distribués", value: 4.2, prefix: "$", suffix: "M+" },
-              { label: "Puissance Totale", value: 85.2, suffix: " PH/s" },
-              { label: "Uptime Système", value: 99.99, suffix: "%" },
-            ].map((stat, i) => (
-              <div key={i} className="text-center">
-                <div className="text-3xl font-display font-bold text-foreground mb-1">
-                  <CountUp 
-                    end={stat.value} 
-                    decimals={stat.value % 1 === 0 ? 0 : 2} 
-                    duration={2.5} 
-                    prefix={stat.prefix} 
-                    suffix={stat.suffix} 
-                    enableScrollSpy 
+      {/* Stats */}
+      <section className="border-y border-white/[0.05] bg-white/[0.015]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 lg:divide-x lg:divide-white/[0.05]">
+            {stats.map((s, i) => (
+              <div key={i} className="text-center lg:px-8">
+                <div className="text-2xl md:text-3xl font-display font-bold text-foreground mb-1">
+                  <CountUp
+                    end={s.value}
+                    decimals={s.value % 1 !== 0 ? 2 : 0}
+                    duration={2.2}
+                    prefix={s.prefix}
+                    suffix={s.suffix}
+                    enableScrollSpy
+                    scrollSpyDelay={200}
                   />
                 </div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <p className="text-xs text-muted-foreground">{s.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Machines Showcase */}
-      <section id="machines" className="py-24 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Choose Your Hardware</h2>
-            <p className="text-muted-foreground">Select a plan that fits your investment goals.</p>
+      {/* Features */}
+      <section id="machines" className="py-24">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400 mb-3">Nos offres</p>
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Deux façons d'investir</h2>
+            <p className="text-muted-foreground max-w-md mx-auto">Choisissez la formule qui correspond à votre profil d'investisseur.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {machines && machines.length > 0 ? (
-              machines.map((machine, idx) => (
-                <motion.div
-                  key={machine.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="glass-card rounded-2xl p-8 relative hover:-translate-y-2 transition-transform duration-300"
-                >
-                  {machine.name === 'Pro' && (
-                    <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-bl-xl">
-                      POPULAR
-                    </div>
-                  )}
-                  <h3 className="text-2xl font-bold font-display mb-2">{machine.name}</h3>
-                  <div className="flex items-baseline space-x-1 mb-6">
-                    <span className="text-4xl font-bold text-primary">${machine.minDeposit}</span>
-                    <span className="text-muted-foreground">min deposit</span>
-                  </div>
-
-                  <div className="space-y-4 mb-8">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Daily Rate</span>
-                      <span className="font-semibold text-emerald-400">{machine.dailyRate}%</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Duration</span>
-                      <span className="font-semibold">{machine.durationDays} Days</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Hardware</span>
-                      <span className="font-semibold">ASIC S{19 + idx} Pro</span>
-                    </div>
-                  </div>
-
-                  <Link href="/register">
-                    <Button className="w-full" variant={idx === 1 ? 'default' : 'secondary'}>
-                      Invest Now
-                    </Button>
-                  </Link>
-                </motion.div>
-              ))
-            ) : !machines ? (
-              [1, 2, 3].map((i) => (
-                <div key={i} className="h-96 rounded-2xl bg-secondary/50 animate-pulse" />
-              ))
-            ) : (
-              <div className="col-span-full py-10 text-center text-muted-foreground">
-                Aucune machine disponible pour le moment.
+          <div className="grid md:grid-cols-2 gap-6">
+            {features.map((f, i) => (
+              <div key={i} className={`rounded-2xl p-7 border ${f.border} ${f.bg} relative overflow-hidden`}>
+                <div className={`inline-flex p-2.5 rounded-xl ${f.bg} border ${f.border} mb-5`}>
+                  <f.icon className={`w-5 h-5 ${f.color}`} />
+                </div>
+                <h3 className="text-xl font-display font-bold mb-3">{f.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-5">{f.desc}</p>
+                <ul className="space-y-2">
+                  {f.points.map((p, j) => (
+                    <li key={j} className="flex items-center gap-2 text-sm">
+                      <CheckCircle className={`w-4 h-4 ${f.color} flex-shrink-0`} />
+                      <span className="text-foreground/80">{p}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            )}
+            ))}
+          </div>
+
+          <div className="mt-8 text-center">
+            <Link href="/dashboard/machines">
+              <Button variant="outline" className="border-white/10 hover:bg-white/[0.04] gap-2">
+                Voir tout le catalogue
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Calculator Section */}
-      <section id="calculator" className="py-24 bg-secondary/20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="glass-card rounded-3xl p-8 md:p-12 border border-primary/20">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-display font-bold mb-4 flex items-center justify-center gap-3">
-                <Calculator className="w-8 h-8 text-primary" />
-                Profit Calculator
-              </h2>
-              <p className="text-muted-foreground">Estimate your potential returns based on current difficulty.</p>
-            </div>
+      {/* How it works */}
+      <section id="how-it-works" className="py-24 bg-white/[0.015] border-y border-white/[0.05]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400 mb-3">Processus</p>
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Démarrer en 4 étapes</h2>
+          </div>
 
-            <div className="space-y-12">
-              <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <label className="text-lg font-medium">Investment Amount</label>
-                  <span className="text-2xl font-bold text-primary">${calcAmount[0]}</span>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {steps.map((s, i) => (
+              <div key={i} className="relative">
+                {i < steps.length - 1 && (
+                  <div className="hidden lg:block absolute top-5 left-full w-full h-px bg-gradient-to-r from-white/10 to-transparent z-0" />
+                )}
+                <div className="relative z-10">
+                  <div className="text-3xl font-display font-black text-emerald-500/20 mb-4">{s.n}</div>
+                  <h3 className="font-display font-bold text-base mb-2">{s.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
                 </div>
-                <Slider 
-                  value={calcAmount} 
-                  onValueChange={setCalcAmount} 
-                  max={10000} 
-                  min={100} 
-                  step={100} 
-                  className="py-4"
-                />
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="p-6 rounded-2xl bg-background/50 border border-white/5">
-                  <div className="text-sm text-muted-foreground mb-1">Daily Profit</div>
-                  <div className="text-3xl font-bold text-emerald-400">${dailyProfit.toFixed(2)}</div>
-                </div>
-                <div className="p-6 rounded-2xl bg-background/50 border border-white/5">
-                  <div className="text-sm text-muted-foreground mb-1">Total Return (30 Days)</div>
-                  <div className="text-3xl font-bold text-emerald-400">${totalProfit.toFixed(2)}</div>
-                </div>
+      {/* Calculator */}
+      <section id="calculator" className="py-24">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400 mb-3">Simulateur</p>
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Estimez vos gains</h2>
+            <p className="text-muted-foreground">Calculez vos revenus potentiels selon votre investissement.</p>
+          </div>
+
+          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-7 md:p-10">
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-sm font-medium text-muted-foreground">Montant investi</span>
+                <span className="text-2xl font-display font-bold text-emerald-400">${calcAmount[0].toLocaleString()}</span>
+              </div>
+              <Slider
+                value={calcAmount}
+                onValueChange={setCalcAmount}
+                max={10000}
+                min={30}
+                step={10}
+                className="py-2"
+              />
+              <div className="flex justify-between text-xs text-muted-foreground/50 mt-1">
+                <span>$30</span>
+                <span>$10 000</span>
               </div>
             </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-xl p-5 bg-emerald-500/5 border border-emerald-500/10 text-center">
+                <BarChart3 className="w-4 h-4 text-emerald-400/60 mx-auto mb-2" />
+                <p className="text-xs text-muted-foreground mb-1">Gain journalier estimé</p>
+                <p className="text-2xl font-display font-bold text-emerald-400">${netDaily.toFixed(2)}</p>
+              </div>
+              <div className="rounded-xl p-5 bg-emerald-500/5 border border-emerald-500/10 text-center">
+                <TrendingUp className="w-4 h-4 text-emerald-400/60 mx-auto mb-2" />
+                <p className="text-xs text-muted-foreground mb-1">Gain mensuel estimé</p>
+                <p className="text-2xl font-display font-bold text-emerald-400">${monthly.toFixed(2)}</p>
+              </div>
+            </div>
+
+            <p className="text-center text-xs text-muted-foreground/40 mt-4">
+              * Estimation basée sur un taux moyen de 2.5%/jour. Résultats non garantis.
+            </p>
+
+            <Link href="/register">
+              <Button className="w-full mt-6 bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/20 font-semibold gap-2">
+                Commencer maintenant
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <Card className="border-white/5 bg-white/[0.02] p-8">
-              <Zap className="w-12 h-12 text-primary mb-6" />
-              <h3 className="text-2xl font-display font-bold mb-4">Mode Location</h3>
-              <p className="text-muted-foreground mb-6">
-                Payez l'abonnement mensuel et un dépôt minimum de 30 $ pour activer votre machine. 
-                La barre de progression vous indique quand vous pouvez retirer avec des frais réduits (4%).
-              </p>
-              <ul className="space-y-3 text-sm">
-                <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> Frais électricité & maintenance : $3/mois</li>
-                <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> Gains générés quotidiennement</li>
-              </ul>
-            </Card>
+      {/* Why BlockMint */}
+      <section className="py-24 bg-white/[0.015] border-y border-white/[0.05]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400 mb-3">Pourquoi nous</p>
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Conçu pour la performance</h2>
+          </div>
 
-            <Card className="border-white/5 bg-white/[0.02] p-8">
-              <ShieldCheck className="w-12 h-12 text-primary mb-6" />
-              <h3 className="text-2xl font-display font-bold mb-4">Mode Achat</h3>
-              <p className="text-muted-foreground mb-6">
-                Paiement unique pour une machine permanente avec un rendement supérieur. 
-                Aucun autre dépôt requis. Retraits simples à 4%.
-              </p>
-              <ul className="space-y-3 text-sm">
-                <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> Rendement élevé : 2.8% à 4.3%</li>
-                <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> Machine permanente</li>
-              </ul>
-            </Card>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              { icon: Lock, title: "Sécurisé", desc: "Infrastructure chiffrée SSL, fonds protégés, authentification robuste." },
+              { icon: Clock, title: "Retraits rapides", desc: "Demandes traitées en moins de 48h, 7j/7 sur toutes les cryptos acceptées." },
+              { icon: Globe, title: "Disponible 24h/24", desc: "Vos machines minent en continu sans interruption, génération automatique des gains." },
+              { icon: BarChart3, title: "Rendements compétitifs", desc: "Jusqu'à 4.30% de rendement journalier avec les machines Elite." },
+              { icon: Shield, title: "Transparent", desc: "Historique complet de vos transactions, gains et retraits accessible à tout moment." },
+              { icon: Star, title: "Programme d'affiliation", desc: "Gagnez des commissions en parrainant de nouveaux investisseurs sur la plateforme." },
+            ].map((item, i) => (
+              <div key={i} className="rounded-xl p-6 border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.035] transition-colors">
+                <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-4">
+                  <item.icon className="w-4 h-4 text-emerald-400" />
+                </div>
+                <h3 className="font-display font-semibold text-sm mb-2">{item.title}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <footer className="py-12 border-t border-white/5 bg-secondary/20">
-        <div className="max-w-7xl mx-auto px-4 text-center text-muted-foreground">
-          <p>© 2024 BlockMint. All rights reserved.</p>
+      {/* FAQ */}
+      <section id="faq" className="py-24">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400 mb-3">FAQ</p>
+            <h2 className="text-3xl md:text-4xl font-display font-bold">Questions fréquentes</h2>
+          </div>
+
+          <div className="space-y-3">
+            {faqs.map((faq, i) => (
+              <details key={i} className="group rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
+                <summary className="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer list-none text-sm font-semibold hover:text-foreground text-foreground/90 transition-colors">
+                  {faq.q}
+                  <ChevronDown className="w-4 h-4 text-muted-foreground flex-shrink-0 group-open:rotate-180 transition-transform duration-200" />
+                </summary>
+                <div className="px-5 pb-4 text-sm text-muted-foreground leading-relaxed border-t border-white/[0.04] pt-3">
+                  {faq.a}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20">
+        <div className="max-w-2xl mx-auto px-4 text-center">
+          <div className="rounded-2xl border border-emerald-500/15 bg-emerald-500/5 p-10 md:p-14 relative overflow-hidden">
+            <div className="absolute inset-0 dot-grid opacity-30 pointer-events-none" />
+            <div className="relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
+                <Star className="w-3 h-3 text-emerald-400" />
+                <span className="text-xs font-semibold text-emerald-400">Promo -30% sur les achats</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Prêt à commencer ?</h2>
+              <p className="text-muted-foreground mb-8">Rejoignez des milliers d'investisseurs qui génèrent des revenus quotidiens avec BlockMint.</p>
+              <Link href="/register">
+                <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-white shadow-xl shadow-emerald-500/20 font-semibold gap-2 h-12 px-8">
+                  Créer mon compte
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/[0.05] py-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2.5">
+              <div className="w-6 h-6 rounded-md overflow-hidden bg-emerald-500/10 flex items-center justify-center p-0.5">
+                <img src={logoImg} alt="BlockMint" className="w-full h-full object-contain" />
+              </div>
+              <span className="font-display font-bold text-sm">Block<span className="text-emerald-400">Mint</span></span>
+            </div>
+            <p className="text-xs text-muted-foreground/50">© {new Date().getFullYear()} BlockMint. Tous droits réservés.</p>
+            <div className="flex items-center gap-5 text-xs text-muted-foreground/50">
+              <a href="#" className="hover:text-muted-foreground transition-colors">Conditions</a>
+              <a href="#" className="hover:text-muted-foreground transition-colors">Confidentialité</a>
+              <Link href="/dashboard/support" className="hover:text-muted-foreground transition-colors">Support</Link>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
