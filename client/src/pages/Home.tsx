@@ -61,7 +61,7 @@ export default function Home() {
   ];
 
   const faqs = [
-    { q: "Quel est le dépôt minimum ?", a: "Pour les machines en location, le dépôt minimum est de 30 $. Pour les achats, le prix de départ est de 90 $ (après promo -50%)." },
+    { q: "Quel est le dépôt minimum ?", a: "Pour les machines en location, le dépôt minimum est de 10 $. Pour les achats, le prix de départ est de 90 $ (après promo -50%)." },
     { q: "Comment sont calculés les gains ?", a: "Les gains sont calculés quotidiennement en fonction du taux journalier de chaque machine (entre 1.90% et 4.30% selon le modèle)." },
     { q: "Quels sont les frais de retrait ?", a: "Les frais de retrait sont de 4% une fois la maturité atteinte, et de 19% avant maturité." },
     { q: "Quelles cryptomonnaies sont acceptées ?", a: "Nous acceptons USDT TRC20, USDT ERC20, Bitcoin et BNB BEP20." },

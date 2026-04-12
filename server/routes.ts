@@ -695,15 +695,18 @@ export async function registerRoutes(
 }
 
 async function seedDatabase() {
+  // Migrate existing rent machines to new minDeposit of 10
+  await db.update(machines).set({ minDeposit: 10 }).where(eq(machines.type, "rent"));
+
   const existingMachines = await storage.getMachines();
   if (existingMachines.length === 0) {
     await db.insert(machines).values([
       // Rental Machines
-      { name: "Rent Mini", type: "rent", rentalPrice: "4.99", minDeposit: 30, dailyRate: "1.9", durationDays: 30, description: "Location abordable pour débuter." },
-      { name: "Rent Starter", type: "rent", rentalPrice: "14.99", minDeposit: 30, dailyRate: "2.3", durationDays: 30, description: "Idéal pour booster vos premiers gains." },
-      { name: "Rent Standard", type: "rent", rentalPrice: "24.99", minDeposit: 30, dailyRate: "2.8", durationDays: 30, description: "Bon équilibre entre coût et rendement." },
-      { name: "Rent Pro", type: "rent", rentalPrice: "29.99", minDeposit: 30, dailyRate: "3.3", durationDays: 30, description: "Pour les mineurs avertis." },
-      { name: "Rent Elite", type: "rent", rentalPrice: "49.99", minDeposit: 30, dailyRate: "3.8", durationDays: 30, description: "Performance maximale en location." },
+      { name: "Rent Mini", type: "rent", rentalPrice: "4.99", minDeposit: 10, dailyRate: "1.9", durationDays: 30, description: "Location abordable pour débuter." },
+      { name: "Rent Starter", type: "rent", rentalPrice: "14.99", minDeposit: 10, dailyRate: "2.3", durationDays: 30, description: "Idéal pour booster vos premiers gains." },
+      { name: "Rent Standard", type: "rent", rentalPrice: "24.99", minDeposit: 10, dailyRate: "2.8", durationDays: 30, description: "Bon équilibre entre coût et rendement." },
+      { name: "Rent Pro", type: "rent", rentalPrice: "29.99", minDeposit: 10, dailyRate: "3.3", durationDays: 30, description: "Pour les mineurs avertis." },
+      { name: "Rent Elite", type: "rent", rentalPrice: "49.99", minDeposit: 10, dailyRate: "3.8", durationDays: 30, description: "Performance maximale en location." },
       // Purchase Machines
       { name: "Starter Buy", type: "buy", buyPrice: "180", minDeposit: 0, dailyRate: "2.8", durationDays: 365, description: "Achat unique, minage permanent." },
       { name: "Standard Buy", type: "buy", buyPrice: "450", minDeposit: 0, dailyRate: "3.3", durationDays: 365, description: "Rendement supérieur pour investisseurs." },
