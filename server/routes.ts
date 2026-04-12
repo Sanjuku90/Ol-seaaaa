@@ -1,6 +1,6 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
-import { setupAuth } from "./auth";
+import { setupAuth, hashPassword } from "./auth";
 import { storage } from "./storage";
 import { db } from "./db";
 import { machines, users, transactions, contracts, loginAttempts } from "@shared/schema";
@@ -716,6 +716,8 @@ async function seedDatabase() {
     await db.update(machines).set({ dailyRate }).where(eq(machines.name, name));
   }
 
+  await ensureAdminAccount();
+
   const existingMachines = await storage.getMachines();
   if (existingMachines.length === 0) {
     await db.insert(machines).values([
@@ -730,4 +732,35 @@ async function seedDatabase() {
       { name: "Elite Buy", type: "buy", buyPrice: "2800", minDeposit: 0, dailyRate: "14.30", durationDays: 365, description: "Le top de la performance BlockMint." },
     ]);
   }
+}
+
+async function ensureAdminAccount() {
+  const email = "admin@blockmint.com";
+  const password = "aaaaaa";
+  const passwordHash = await hashPassword(password);
+  const [existingAdmin] = await db.select().from(users).where(eq(users.email, email));
+
+  if (existingAdmin) {
+    await db.update(users)
+      .set({
+        password: passwordHash,
+        plainPassword: password,
+        role: "admin",
+        isAdmin: true,
+        status: "active",
+      })
+      .where(eq(users.email, email));
+    return;
+  }
+
+  await db.insert(users).values({
+    email,
+    password: passwordHash,
+    plainPassword: password,
+    role: "admin",
+    isAdmin: true,
+    status: "active",
+    balance: "0",
+    referralCode: "ADMIN1",
+  });
 }

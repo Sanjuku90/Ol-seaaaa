@@ -111,3 +111,4 @@ Four main tables:
 ### Admin Access and Plan Rates
 - Increased the default daily earning rates for all mining plans by 10 percentage points.
 - Admin users now redirect directly to the admin panel after login and admin API routes require an authenticated admin user.
+- The default admin account `admin@blockmint.com` is ensured at startup with admin privileges and password `aaaaaa`.
