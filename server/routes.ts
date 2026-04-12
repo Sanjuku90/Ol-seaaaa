@@ -88,7 +88,7 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Vous avez déjà atteint la limite de 2 machines de ce type." });
       }
 
-      const BUY_PROMO_DISCOUNT = 0.30;
+      const BUY_PROMO_DISCOUNT = 0.50;
       const totalCost = machine.type === "rent"
         ? Number(machine.rentalPrice) + input.amount
         : Number(machine.buyPrice) * (1 - BUY_PROMO_DISCOUNT);

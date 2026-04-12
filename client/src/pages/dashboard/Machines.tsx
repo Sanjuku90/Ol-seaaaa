@@ -111,7 +111,7 @@ export default function Machines() {
     });
   };
 
-  const PROMO_DISCOUNT = 0.30;
+  const PROMO_DISCOUNT = 0.50;
 
   const renderMachineCard = (machine: Machine) => {
     const profits = calculateProfit(machine, Number(calcAmount) || 0);
@@ -124,7 +124,7 @@ export default function Machines() {
       <Card key={machine.id} className={`relative overflow-hidden border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors ${existingContract?.status === "suspended" ? "border-amber-500/50" : ""} ${isBuy ? "border-rose-500/20" : ""}`}>
         {isBuy && (
           <div className="absolute top-3 right-3 z-10 bg-rose-500 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full shadow-lg">
-            🔥 -30% PROMO
+            🔥 -50% PROMO
           </div>
         )}
         <CardHeader>
@@ -266,7 +266,7 @@ export default function Machines() {
             <DialogDescription>
               {selectedMachine?.type === "rent" 
                 ? `Prix location: $${selectedMachine?.rentalPrice} + Dépôt min: $${selectedMachine?.minDeposit}`
-                : `Prix d'achat: $${(Number(selectedMachine?.buyPrice) * 0.70).toFixed(2)} · Promo -30% appliquée`}
+                : `Prix d'achat: $${(Number(selectedMachine?.buyPrice) * 0.50).toFixed(2)} · Promo -50% appliquée`}
             </DialogDescription>
           </DialogHeader>
           
@@ -295,8 +295,8 @@ export default function Machines() {
                   <span>${Number(selectedMachine?.buyPrice).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-rose-400 font-semibold">
-                  <span>Remise promo (-30%)</span>
-                  <span>-${(Number(selectedMachine?.buyPrice) * 0.30).toFixed(2)}</span>
+                  <span>Remise promo (-50%)</span>
+                  <span>-${(Number(selectedMachine?.buyPrice) * 0.50).toFixed(2)}</span>
                 </div>
               </>
             )}
@@ -311,7 +311,7 @@ export default function Machines() {
               <span>
                 ${selectedMachine?.type === "rent" 
                   ? (Number(selectedMachine?.rentalPrice) + Number(amount)).toFixed(2)
-                  : (Number(selectedMachine?.buyPrice) * 0.70).toFixed(2)}
+                  : (Number(selectedMachine?.buyPrice) * 0.50).toFixed(2)}
               </span>
             </div>
           </div>

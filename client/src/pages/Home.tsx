@@ -61,7 +61,7 @@ export default function Home() {
   ];
 
   const faqs = [
-    { q: "Quel est le dépôt minimum ?", a: "Pour les machines en location, le dépôt minimum est de 30 $. Pour les achats, le prix de départ est de 126 $ (après promo -30%)." },
+    { q: "Quel est le dépôt minimum ?", a: "Pour les machines en location, le dépôt minimum est de 30 $. Pour les achats, le prix de départ est de 90 $ (après promo -50%)." },
     { q: "Comment sont calculés les gains ?", a: "Les gains sont calculés quotidiennement en fonction du taux journalier de chaque machine (entre 1.90% et 4.30% selon le modèle)." },
     { q: "Quels sont les frais de retrait ?", a: "Les frais de retrait sont de 4% une fois la maturité atteinte, et de 19% avant maturité." },
     { q: "Quelles cryptomonnaies sont acceptées ?", a: "Nous acceptons USDT TRC20, USDT ERC20, Bitcoin et BNB BEP20." },
@@ -109,7 +109,7 @@ export default function Home() {
 
           {/* Trust row */}
           <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground/60">
-            {["SSL sécurisé", "Retraits sous 48h", "Support 24/7", "Promo -30% actuelle"].map((t) => (
+            {["SSL sécurisé", "Retraits sous 48h", "Support 24/7", "Promo -50% actuelle"].map((t) => (
               <span key={t} className="flex items-center gap-1.5">
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-500/60" />
                 {t}
@@ -325,7 +325,7 @@ export default function Home() {
             <div className="relative z-10">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
                 <Star className="w-3 h-3 text-emerald-400" />
-                <span className="text-xs font-semibold text-emerald-400">Promo -30% sur les achats</span>
+                <span className="text-xs font-semibold text-emerald-400">Promo -50% sur les achats</span>
               </div>
               <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Prêt à commencer ?</h2>
               <p className="text-muted-foreground mb-8">Rejoignez des milliers d'investisseurs qui génèrent des revenus quotidiens avec BlockMint.</p>

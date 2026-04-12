@@ -30,7 +30,7 @@ export default function Register() {
   const benefits = [
     "Inscription en moins d'une minute",
     "Gains dès le premier dépôt",
-    "Promo -30% sur les achats de machines",
+    "Promo -50% sur les achats de machines",
     "Support disponible 24h/24",
   ];
 
@@ -49,7 +49,7 @@ export default function Register() {
           <div className="mb-7">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/8 border border-emerald-500/20 mb-4">
               <Star className="w-3 h-3 text-emerald-400" />
-              <span className="text-xs font-semibold text-emerald-400">Offre promo -30% active</span>
+              <span className="text-xs font-semibold text-emerald-400">Offre promo -50% active</span>
             </div>
             <h1 className="text-2xl font-display font-bold mb-1.5">Créer un compte</h1>
             <p className="text-sm text-muted-foreground">Commencez à miner en moins de 2 minutes.</p>
@@ -170,7 +170,7 @@ export default function Register() {
               <div>
                 <p className="text-sm font-semibold text-foreground mb-1">Promotion limitée</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Profitez de -30% sur tous les achats de machines. Offre valable pendant une durée limitée.
+                  Profitez de -50% sur tous les achats de machines. Offre valable pendant une durée limitée.
                 </p>
               </div>
             </div>
