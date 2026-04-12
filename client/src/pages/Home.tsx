@@ -22,7 +22,7 @@ import logoImg from "@assets/generated_images/blockmint_modern_crypto_mining_log
 
 export default function Home() {
   const [calcAmount, setCalcAmount] = useState([500]);
-  const dailyRate = 2.5;
+  const dailyRate = 2.75;
   const netDaily = (calcAmount[0] * dailyRate) / 100;
   const monthly = netDaily * 30;
 
@@ -48,7 +48,7 @@ export default function Home() {
       icon: Shield,
       title: "Mode Achat",
       desc: "Paiement unique pour devenir propriétaire de votre machine. Rendement supérieur et retraits simplifiés à 4%.",
-      points: ["Paiement unique", "Rendement 2.8–4.3%/jour", "Machine permanente"],
+      points: ["Paiement unique", "Rendement 3.08–4.73%/jour", "Machine permanente"],
       color: "text-violet-400",
       bg: "bg-violet-500/8",
       border: "border-violet-500/15",
@@ -65,7 +65,7 @@ export default function Home() {
 
   const faqs = [
     { q: "Quel est le dépôt minimum ?", a: "Pour les machines en location, le dépôt minimum est de 10 $. Pour les achats, le prix de départ est de 90 $ (après promo -50%)." },
-    { q: "Comment sont calculés les gains ?", a: "Les gains sont calculés quotidiennement en fonction du taux journalier de chaque machine (entre 1.90% et 4.30% selon le modèle)." },
+    { q: "Comment sont calculés les gains ?", a: "Les gains sont calculés quotidiennement en fonction du taux journalier de chaque machine (entre 2.09% et 4.73% selon le modèle)." },
     { q: "Quels sont les frais de retrait ?", a: "Les frais de retrait sont de 4% une fois la maturité atteinte, et de 19% avant maturité." },
     { q: "Quelles cryptomonnaies sont acceptées ?", a: "Nous acceptons USDT TRC20, USDT ERC20, Bitcoin et BNB BEP20." },
     { q: "Puis-je avoir plusieurs machines ?", a: "Oui, vous pouvez activer jusqu'à 2 machines du même type, et autant de types différents que vous souhaitez." },
@@ -264,7 +264,7 @@ export default function Home() {
               </div>
 
               <p className="text-center text-xs text-muted-foreground/40 mt-4">
-                * Estimation basée sur un taux moyen de 2.5%/jour. Résultats non garantis.
+                * Estimation basée sur un taux moyen de 2.75%/jour. Résultats non garantis.
               </p>
 
               <Link href="/register">
@@ -292,7 +292,7 @@ export default function Home() {
               { icon: Lock, title: "Sécurisé", desc: "Infrastructure chiffrée SSL, fonds protégés, authentification robuste.", color: "text-violet-400", bg: "bg-violet-500/10", border: "border-violet-500/15" },
               { icon: Clock, title: "Retraits rapides", desc: "Demandes traitées en moins de 48h, 7j/7 sur toutes les cryptos acceptées.", color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/15" },
               { icon: Globe, title: "Disponible 24h/24", desc: "Vos machines minent en continu sans interruption, génération automatique des gains.", color: "text-indigo-400", bg: "bg-indigo-500/10", border: "border-indigo-500/15" },
-              { icon: BarChart3, title: "Rendements compétitifs", desc: "Jusqu'à 4.30% de rendement journalier avec les machines Elite.", color: "text-violet-400", bg: "bg-violet-500/10", border: "border-violet-500/15" },
+              { icon: BarChart3, title: "Rendements compétitifs", desc: "Jusqu'à 4.73% de rendement journalier avec les machines Elite.", color: "text-violet-400", bg: "bg-violet-500/10", border: "border-violet-500/15" },
               { icon: Shield, title: "Transparent", desc: "Historique complet de vos transactions, gains et retraits accessible à tout moment.", color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/15" },
               { icon: Star, title: "Programme d'affiliation", desc: "Gagnez des commissions en parrainant de nouveaux investisseurs sur la plateforme.", color: "text-indigo-400", bg: "bg-indigo-500/10", border: "border-indigo-500/15" },
             ].map((item, i) => (

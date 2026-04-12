@@ -107,3 +107,7 @@ Four main tables:
 - Configured the app to run as a Replit web app on port 5000 through the existing Express server.
 - Moved outgoing email credentials out of source code and into environment variables.
 - Updated Vite HMR settings for Replit's proxied preview environment.
+
+### Admin Access and Plan Rates
+- Increased the default daily earning rates for all mining plans by 10%.
+- Admin users now redirect directly to the admin panel after login and admin API routes require an authenticated admin user.

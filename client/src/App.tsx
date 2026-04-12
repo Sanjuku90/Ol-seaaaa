@@ -32,12 +32,12 @@ function ProtectedRoute({ component: Component, adminOnly = false }: { component
     );
   }
 
-  if (adminOnly) {
-    return <Component />;
-  }
-
   if (!user) {
     return <Redirect to="/login" />;
+  }
+
+  if (adminOnly && !user.isAdmin) {
+    return <Redirect to="/dashboard" />;
   }
 
   return <Component />;
@@ -52,7 +52,7 @@ function Router() {
       
       {/* Dashboard Routes */}
       <Route path="/dashboard">
-        {() => <ProtectedRoute component={Overview} />}
+        {() => <ProtectedRoute component={DashboardHomeRedirect} />}
       </Route>
       <Route path="/dashboard/wallet">
         {() => <ProtectedRoute component={Wallet} />}
@@ -88,6 +88,12 @@ function Router() {
       <Route component={NotFound} />
     </Switch>
   );
+}
+
+function DashboardHomeRedirect() {
+  const { user } = useAuth();
+  if (user?.isAdmin) return <Redirect to="/admin/users" />;
+  return <Overview />;
 }
 
 function App() {

@@ -23,7 +23,8 @@ function broadcast(data: any) {
 }
 
 function isAdmin(req: Request, res: Response, next: NextFunction) {
-  // Suppression des restrictions d'accès admin
+  if (!req.isAuthenticated()) return res.sendStatus(401);
+  if (!(req.user as any)?.isAdmin) return res.sendStatus(403);
   return next();
 }
 
@@ -221,6 +222,8 @@ export async function registerRoutes(
   });
 
   // --- ADMIN ROUTES ---
+  app.use("/api/admin", isAdmin);
+
   app.get("/api/admin/users", async (req, res) => {
     const usersList = await storage.getUsers();
     // Log for debugging
@@ -695,23 +698,36 @@ export async function registerRoutes(
 }
 
 async function seedDatabase() {
-  // Migrate existing rent machines to new minDeposit of 10
   await db.update(machines).set({ minDeposit: 10 }).where(eq(machines.type, "rent"));
+
+  const defaultRates: Record<string, string> = {
+    "Rent Mini": "2.09",
+    "Rent Starter": "2.53",
+    "Rent Standard": "3.08",
+    "Rent Pro": "3.63",
+    "Rent Elite": "4.18",
+    "Starter Buy": "3.08",
+    "Standard Buy": "3.63",
+    "Pro Buy": "4.18",
+    "Elite Buy": "4.73",
+  };
+
+  for (const [name, dailyRate] of Object.entries(defaultRates)) {
+    await db.update(machines).set({ dailyRate }).where(eq(machines.name, name));
+  }
 
   const existingMachines = await storage.getMachines();
   if (existingMachines.length === 0) {
     await db.insert(machines).values([
-      // Rental Machines
-      { name: "Rent Mini", type: "rent", rentalPrice: "4.99", minDeposit: 10, dailyRate: "1.9", durationDays: 30, description: "Location abordable pour débuter." },
-      { name: "Rent Starter", type: "rent", rentalPrice: "14.99", minDeposit: 10, dailyRate: "2.3", durationDays: 30, description: "Idéal pour booster vos premiers gains." },
-      { name: "Rent Standard", type: "rent", rentalPrice: "24.99", minDeposit: 10, dailyRate: "2.8", durationDays: 30, description: "Bon équilibre entre coût et rendement." },
-      { name: "Rent Pro", type: "rent", rentalPrice: "29.99", minDeposit: 10, dailyRate: "3.3", durationDays: 30, description: "Pour les mineurs avertis." },
-      { name: "Rent Elite", type: "rent", rentalPrice: "49.99", minDeposit: 10, dailyRate: "3.8", durationDays: 30, description: "Performance maximale en location." },
-      // Purchase Machines
-      { name: "Starter Buy", type: "buy", buyPrice: "180", minDeposit: 0, dailyRate: "2.8", durationDays: 365, description: "Achat unique, minage permanent." },
-      { name: "Standard Buy", type: "buy", buyPrice: "450", minDeposit: 0, dailyRate: "3.3", durationDays: 365, description: "Rendement supérieur pour investisseurs." },
-      { name: "Pro Buy", type: "buy", buyPrice: "1100", minDeposit: 0, dailyRate: "3.8", durationDays: 365, description: "Gains optimisés sur le long terme." },
-      { name: "Elite Buy", type: "buy", buyPrice: "2800", minDeposit: 0, dailyRate: "4.3", durationDays: 365, description: "Le top de la performance BlockMint." },
+      { name: "Rent Mini", type: "rent", rentalPrice: "4.99", minDeposit: 10, dailyRate: "2.09", durationDays: 30, description: "Location abordable pour débuter." },
+      { name: "Rent Starter", type: "rent", rentalPrice: "14.99", minDeposit: 10, dailyRate: "2.53", durationDays: 30, description: "Idéal pour booster vos premiers gains." },
+      { name: "Rent Standard", type: "rent", rentalPrice: "24.99", minDeposit: 10, dailyRate: "3.08", durationDays: 30, description: "Bon équilibre entre coût et rendement." },
+      { name: "Rent Pro", type: "rent", rentalPrice: "29.99", minDeposit: 10, dailyRate: "3.63", durationDays: 30, description: "Pour les mineurs avertis." },
+      { name: "Rent Elite", type: "rent", rentalPrice: "49.99", minDeposit: 10, dailyRate: "4.18", durationDays: 30, description: "Performance maximale en location." },
+      { name: "Starter Buy", type: "buy", buyPrice: "180", minDeposit: 0, dailyRate: "3.08", durationDays: 365, description: "Achat unique, minage permanent." },
+      { name: "Standard Buy", type: "buy", buyPrice: "450", minDeposit: 0, dailyRate: "3.63", durationDays: 365, description: "Rendement supérieur pour investisseurs." },
+      { name: "Pro Buy", type: "buy", buyPrice: "1100", minDeposit: 0, dailyRate: "4.18", durationDays: 365, description: "Gains optimisés sur le long terme." },
+      { name: "Elite Buy", type: "buy", buyPrice: "2800", minDeposit: 0, dailyRate: "4.73", durationDays: 365, description: "Le top de la performance BlockMint." },
     ]);
   }
 }

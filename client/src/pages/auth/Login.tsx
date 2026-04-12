@@ -124,7 +124,7 @@ export default function Login() {
 
           <div className="space-y-4">
             {[
-              { icon: TrendingUp, text: "Jusqu'à 4.30% de rendement journalier", color: "text-violet-400", bg: "bg-violet-500/10", border: "border-violet-500/15" },
+              { icon: TrendingUp, text: "Jusqu'à 4.73% de rendement journalier", color: "text-violet-400", bg: "bg-violet-500/10", border: "border-violet-500/15" },
               { icon: Shield, text: "Fonds sécurisés, retraits sous 48h", color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/15" },
               { icon: Zap, text: "Gains générés 24h/24, 7j/7", color: "text-indigo-400", bg: "bg-indigo-500/10", border: "border-indigo-500/15" },
             ].map((item, i) => (

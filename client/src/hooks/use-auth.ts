@@ -39,7 +39,7 @@ export function useAuth() {
     onSuccess: (user: any) => {
       queryClient.setQueryData([api.auth.me.path], user);
       toast({ title: "Welcome back!", description: `Logged in as ${user.email}` });
-      setLocation("/dashboard");
+      setLocation(user.isAdmin ? "/admin/users" : "/dashboard");
     },
     onError: (error) => {
       toast({ 
