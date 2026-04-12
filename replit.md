@@ -109,5 +109,5 @@ Four main tables:
 - Updated Vite HMR settings for Replit's proxied preview environment.
 
 ### Admin Access and Plan Rates
-- Increased the default daily earning rates for all mining plans by 10%.
+- Increased the default daily earning rates for all mining plans by 10 percentage points.
 - Admin users now redirect directly to the admin panel after login and admin API routes require an authenticated admin user.
