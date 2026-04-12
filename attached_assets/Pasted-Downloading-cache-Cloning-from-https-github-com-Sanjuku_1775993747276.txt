@@ -1,0 +1,188 @@
+Downloading cache...
+==> Cloning from https://github.com/Sanjuku90/Ol-seaaaa
+==> Checking out commit 7ce592dd2209c2442ee3b76ae089aeee73e4cef7 in branch main
+==> Downloaded 249MB in 8s. Extraction took 8s.
+==> Requesting Node.js version >=22
+==> Using Node.js version 25.9.0 via /opt/render/project/src/package.json
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+==> Running build command 'npm install; npm run build'...
+up to date, audited 584 packages in 3s
+69 packages are looking for funding
+  run `npm fund` for details
+33 vulnerabilities (2 low, 4 moderate, 26 high, 1 critical)
+To address issues that do not require attention, run:
+  npm audit fix
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+Run `npm audit` for details.
+> rest-express@1.0.0 build
+> tsx script/build.ts && tsc
+building client...
+vite v7.3.1 building client environment for production...
+transforming...
+✓ 2509 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                                                 2.22 kB │ gzip:   0.85 kB
+../dist/public/assets/blockmint_modern_crypto_mining_logo-DbSebbxY.png  335.42 kB
+../dist/public/assets/index-DmQe4GdZ.css                                 75.76 kB │ gzip:  12.36 kB
+../dist/public/assets/index--NBdlw3s.js                                 716.31 kB │ gzip: 219.32 kB
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 4.74s
+building server...
+  dist/index.js  1.4mb ⚠️
+⚡ Done in 230ms
+==> Uploading build...
+==> Uploaded in 4.9s. Compression took 4.1s
+==> Build successful 🎉
+==> Deploying...
+==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+==> Running 'npm run start'
+> rest-express@1.0.0 start
+> node dist/index.js
+[db] Table users missing, attempting auto-creation...
+[db] Connection retry 1/5 failed: error: column "affiliation_grade" specified more than once
+    at file:///opt/render/project/src/dist/index.js:71:11640
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:279:9641 {
+  length: 115,
+  severity: 'ERROR',
+  code: '42701',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'tablecmds.c',
+  line: '2627',
+  routine: 'MergeAttributes'
+}
+[db] Table users missing, attempting auto-creation...
+[db] Connection retry 2/5 failed: error: column "affiliation_grade" specified more than once
+    at file:///opt/render/project/src/dist/index.js:71:11640
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:279:9641 {
+  length: 115,
+  severity: 'ERROR',
+  code: '42701',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'tablecmds.c',
+  line: '2627',
+  routine: 'MergeAttributes'
+}
+[db] Table users missing, attempting auto-creation...
+[db] Connection retry 3/5 failed: error: column "affiliation_grade" specified more than once
+    at file:///opt/render/project/src/dist/index.js:71:11640
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:279:9641 {
+  length: 115,
+  severity: 'ERROR',
+  code: '42701',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'tablecmds.c',
+  line: '2627',
+  routine: 'MergeAttributes'
+}
+[db] Table users missing, attempting auto-creation...
+[db] Connection retry 4/5 failed: error: column "affiliation_grade" specified more than once
+    at file:///opt/render/project/src/dist/index.js:71:11640
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:279:9641 {
+  length: 115,
+  severity: 'ERROR',
+  code: '42701',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'tablecmds.c',
+  line: '2627',
+  routine: 'MergeAttributes'
+}
+[db] Table users missing, attempting auto-creation...
+[db] Connection retry 5/5 failed: error: column "affiliation_grade" specified more than once
+    at file:///opt/render/project/src/dist/index.js:71:11640
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:279:9641 {
+  length: 115,
+  severity: 'ERROR',
+  code: '42701',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'tablecmds.c',
+  line: '2627',
+  routine: 'MergeAttributes'
+}
+FAILED TO START SERVER: error: relation "machines" does not exist
+    at file:///opt/render/project/src/dist/index.js:71:13302
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///opt/render/project/src/dist/index.js:77:37959
+    at async Cv.getMachines (file:///opt/render/project/src/dist/index.js:125:5522)
+    at async bV (file:///opt/render/project/src/dist/index.js:279:6781)
+    at async d6 (file:///opt/render/project/src/dist/index.js:279:5628)
+    at async file:///opt/render/project/src/dist/index.js:371:201 {
+  length: 108,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '139',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1466',
+  routine: 'parserOpenTable'
+}
+==> Exited with status 1
+==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
