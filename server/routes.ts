@@ -88,7 +88,10 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Vous avez déjà atteint la limite de 2 machines de ce type." });
       }
 
-      const totalCost = machine.type === "rent" ? Number(machine.rentalPrice) + input.amount : Number(machine.buyPrice);
+      const BUY_PROMO_DISCOUNT = 0.30;
+      const totalCost = machine.type === "rent"
+        ? Number(machine.rentalPrice) + input.amount
+        : Number(machine.buyPrice) * (1 - BUY_PROMO_DISCOUNT);
 
       if (Number(user.balance) < totalCost) {
         return res.status(400).json({ message: "Solde insuffisant pour effectuer cet achat." });

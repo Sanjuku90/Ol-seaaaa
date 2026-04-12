@@ -111,12 +111,22 @@ export default function Machines() {
     });
   };
 
+  const PROMO_DISCOUNT = 0.30;
+
   const renderMachineCard = (machine: Machine) => {
     const profits = calculateProfit(machine, Number(calcAmount) || 0);
     const existingContract = getContractForMachine(machine.id);
+    const isBuy = machine.type === "buy";
+    const originalBuyPrice = Number(machine.buyPrice);
+    const discountedBuyPrice = isBuy ? originalBuyPrice * (1 - PROMO_DISCOUNT) : 0;
 
     return (
-      <Card key={machine.id} className={`overflow-hidden border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors ${existingContract?.status === "suspended" ? "border-amber-500/50" : ""}`}>
+      <Card key={machine.id} className={`relative overflow-hidden border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors ${existingContract?.status === "suspended" ? "border-amber-500/50" : ""} ${isBuy ? "border-rose-500/20" : ""}`}>
+        {isBuy && (
+          <div className="absolute top-3 right-3 z-10 bg-rose-500 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full shadow-lg">
+            🔥 -30% PROMO
+          </div>
+        )}
         <CardHeader>
           <div className="flex justify-between items-start gap-2">
             <div>
@@ -139,7 +149,10 @@ export default function Machines() {
             {machine.type === "rent" ? (
               <>${machine.rentalPrice}<span className="text-sm text-muted-foreground font-sans font-normal ml-1">/ mois</span></>
             ) : (
-              <>${machine.buyPrice}<span className="text-sm text-muted-foreground font-sans font-normal ml-1">unique</span></>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-sm text-muted-foreground line-through font-normal">${originalBuyPrice.toFixed(2)}</span>
+                <span>${discountedBuyPrice.toFixed(2)}<span className="text-sm text-muted-foreground font-sans font-normal ml-1">unique</span></span>
+              </div>
             )}
           </div>
           <div className="space-y-2 text-sm text-muted-foreground">
@@ -253,7 +266,7 @@ export default function Machines() {
             <DialogDescription>
               {selectedMachine?.type === "rent" 
                 ? `Prix location: $${selectedMachine?.rentalPrice} + Dépôt min: $${selectedMachine?.minDeposit}`
-                : `Prix d'achat: $${selectedMachine?.buyPrice}`}
+                : `Prix d'achat: $${(Number(selectedMachine?.buyPrice) * 0.70).toFixed(2)} · Promo -30% appliquée`}
             </DialogDescription>
           </DialogHeader>
           
@@ -275,16 +288,30 @@ export default function Machines() {
           )}
 
           <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 text-sm space-y-2">
-            <div className="flex justify-between">
-              <span>Frais mensuels</span>
-              <span>$3.00</span>
-            </div>
+            {selectedMachine?.type === "buy" && (
+              <>
+                <div className="flex justify-between text-muted-foreground line-through">
+                  <span>Prix original</span>
+                  <span>${Number(selectedMachine?.buyPrice).toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-rose-400 font-semibold">
+                  <span>Remise promo (-30%)</span>
+                  <span>-${(Number(selectedMachine?.buyPrice) * 0.30).toFixed(2)}</span>
+                </div>
+              </>
+            )}
+            {selectedMachine?.type === "rent" && (
+              <div className="flex justify-between">
+                <span>Frais mensuels</span>
+                <span>$3.00</span>
+              </div>
+            )}
             <div className="flex justify-between font-bold border-t border-primary/20 pt-2">
               <span>Total à payer</span>
               <span>
                 ${selectedMachine?.type === "rent" 
                   ? (Number(selectedMachine?.rentalPrice) + Number(amount)).toFixed(2)
-                  : Number(selectedMachine?.buyPrice).toFixed(2)}
+                  : (Number(selectedMachine?.buyPrice) * 0.70).toFixed(2)}
               </span>
             </div>
           </div>
