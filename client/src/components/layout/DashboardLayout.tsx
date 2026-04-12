@@ -43,20 +43,20 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const initials = user.email.substring(0, 2).toUpperCase();
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full" style={{ background: 'hsl(220 40% 6%)', borderRight: '1px solid hsl(218 25% 11%)' }}>
-      <div className="px-5 py-5 border-b border-white/[0.05]">
+    <div className="flex flex-col h-full" style={{ background: 'hsl(258 22% 6%)', borderRight: '1px solid hsl(255 18% 11%)' }}>
+      <div className="px-5 py-5 border-b border-violet-500/10">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg overflow-hidden bg-emerald-500/10 flex items-center justify-center p-1 ring-1 ring-emerald-500/20">
+          <div className="w-8 h-8 rounded-lg overflow-hidden bg-violet-500/10 flex items-center justify-center p-1 ring-1 ring-violet-500/25">
             <img src={logoImg} alt="BlockMint" className="w-full h-full object-contain" />
           </div>
           <span className="font-display font-bold text-[17px] tracking-tight">
-            Block<span className="text-emerald-400">Mint</span>
+            Block<span className="text-gradient">Mint</span>
           </span>
         </Link>
       </div>
 
       <div className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-        <p className="px-3 mb-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50">Navigation</p>
+        <p className="px-3 mb-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/40">Navigation</p>
         {navigation.map((item) => {
           const isActive = location === item.href || (item.href !== '/dashboard' && location.startsWith(item.href));
           return (
@@ -64,29 +64,29 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <div className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 cursor-pointer group",
                 isActive
-                  ? "bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20"
-                  : "text-muted-foreground hover:text-foreground hover:bg-white/[0.04]"
+                  ? "bg-violet-500/12 text-violet-300 ring-1 ring-violet-500/25"
+                  : "text-muted-foreground hover:text-foreground hover:bg-violet-500/[0.05]"
               )}>
                 <item.icon className={cn(
                   "w-4 h-4 flex-shrink-0 transition-colors",
-                  isActive ? "text-emerald-400" : "text-muted-foreground/70 group-hover:text-foreground"
+                  isActive ? "text-violet-400" : "text-muted-foreground/60 group-hover:text-foreground"
                 )} />
                 <span className="flex-1">{item.name}</span>
-                {isActive && <ChevronRight className="w-3.5 h-3.5 text-emerald-400/50" />}
+                {isActive && <ChevronRight className="w-3.5 h-3.5 text-violet-400/50" />}
               </div>
             </Link>
           );
         })}
       </div>
 
-      <div className="p-3 border-t border-white/[0.05] space-y-2">
-        <div className="flex items-center gap-3 px-3 py-3 rounded-lg bg-white/[0.03] ring-1 ring-white/[0.05]">
-          <div className="w-8 h-8 rounded-full bg-emerald-500/15 ring-1 ring-emerald-500/25 flex items-center justify-center flex-shrink-0">
-            <span className="text-xs font-bold text-emerald-400">{initials}</span>
+      <div className="p-3 border-t border-violet-500/10 space-y-2">
+        <div className="flex items-center gap-3 px-3 py-3 rounded-lg bg-violet-500/5 ring-1 ring-violet-500/10">
+          <div className="w-8 h-8 rounded-full bg-violet-500/15 ring-1 ring-violet-500/30 flex items-center justify-center flex-shrink-0">
+            <span className="text-xs font-bold text-violet-300">{initials}</span>
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold text-foreground truncate">{user.email}</p>
-            <p className="text-[11px] text-emerald-400 font-medium">${Number(user.balance).toFixed(2)}</p>
+            <p className="text-[11px] font-medium" style={{ background: 'linear-gradient(135deg,#a78bfa,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>${Number(user.balance).toFixed(2)}</p>
           </div>
         </div>
         <button

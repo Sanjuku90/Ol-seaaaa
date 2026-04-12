@@ -32,10 +32,10 @@ export default function Login() {
       <div className="flex flex-col items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm">
           <Link href="/" className="inline-flex items-center gap-2 mb-10 group">
-            <div className="w-8 h-8 rounded-lg overflow-hidden bg-emerald-500/10 ring-1 ring-emerald-500/20 flex items-center justify-center p-1">
+            <div className="w-8 h-8 rounded-lg overflow-hidden bg-violet-500/10 ring-1 ring-violet-500/25 flex items-center justify-center p-1">
               <img src={logoImg} alt="BlockMint" className="w-full h-full object-contain" />
             </div>
-            <span className="font-display font-bold text-lg">Block<span className="text-emerald-400">Mint</span></span>
+            <span className="font-display font-bold text-lg">Block<span className="text-gradient">Mint</span></span>
           </Link>
 
           <h1 className="text-2xl font-display font-bold mb-1.5">Bon retour</h1>
@@ -53,7 +53,7 @@ export default function Login() {
                       <Input
                         placeholder="votre@email.com"
                         {...field}
-                        className="h-11 bg-white/[0.04] border-white/[0.08] focus:border-emerald-500/50 focus:ring-emerald-500/20 placeholder:text-muted-foreground/40"
+                        className="h-11 bg-violet-500/[0.04] border-violet-500/15 focus:border-violet-500/50 placeholder:text-muted-foreground/40"
                       />
                     </FormControl>
                     <FormMessage className="text-xs" />
@@ -71,7 +71,7 @@ export default function Login() {
                         type="password"
                         placeholder="••••••••"
                         {...field}
-                        className="h-11 bg-white/[0.04] border-white/[0.08] focus:border-emerald-500/50 focus:ring-emerald-500/20 placeholder:text-muted-foreground/40"
+                        className="h-11 bg-violet-500/[0.04] border-violet-500/15 focus:border-violet-500/50 placeholder:text-muted-foreground/40"
                       />
                     </FormControl>
                     <FormMessage className="text-xs" />
@@ -80,7 +80,8 @@ export default function Login() {
               />
               <Button
                 type="submit"
-                className="w-full h-11 bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/20 font-semibold text-[15px] mt-2"
+                className="w-full h-11 text-white font-semibold text-[15px] mt-2"
+                style={{ background: 'linear-gradient(135deg, #7c3aed, #6d28d9)', boxShadow: '0 6px 25px -5px hsl(263 72% 50% / 0.35)' }}
                 disabled={login.isPending}
               >
                 {login.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
@@ -91,7 +92,7 @@ export default function Login() {
 
           <p className="text-center text-sm text-muted-foreground mt-6">
             Pas encore de compte ?{" "}
-            <Link href="/register" className="font-semibold text-emerald-400 hover:text-emerald-300 transition-colors">
+            <Link href="/register" className="font-semibold text-violet-400 hover:text-violet-300 transition-colors">
               Créer un compte
             </Link>
           </p>
@@ -99,15 +100,19 @@ export default function Login() {
       </div>
 
       {/* Right — Branding */}
-      <div className="hidden lg:flex relative overflow-hidden" style={{ background: 'hsl(220 40% 6%)' }}>
-        <div className="absolute inset-0 dot-grid opacity-50" />
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-emerald-500/8 rounded-full blur-[80px]" />
+      <div className="hidden lg:flex relative overflow-hidden" style={{ background: 'hsl(258 22% 6%)' }}>
+        <div className="absolute inset-0 dot-grid opacity-40" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, hsl(263 72% 67% / 0.1) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, hsl(220 88% 62% / 0.08) 0%, transparent 70%)', filter: 'blur(30px)' }} />
 
         <div className="relative z-10 flex flex-col justify-center px-14 py-16">
           <div className="mb-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-8">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs font-semibold text-emerald-400">Plateforme en ligne</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-8"
+              style={{ background: 'hsl(263 72% 67% / 0.1)', border: '1px solid hsl(263 72% 67% / 0.2)' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+              <span className="text-xs font-semibold text-violet-300">Plateforme en ligne</span>
             </div>
             <h2 className="text-3xl font-display font-bold mb-4 leading-tight">
               Votre capital travaille<br />pendant que vous dormez.
@@ -119,25 +124,26 @@ export default function Login() {
 
           <div className="space-y-4">
             {[
-              { icon: TrendingUp, text: "Jusqu'à 4.30% de rendement journalier" },
-              { icon: Shield, text: "Fonds sécurisés, retraits sous 48h" },
-              { icon: Zap, text: "Gains générés 24h/24, 7j/7" },
+              { icon: TrendingUp, text: "Jusqu'à 4.30% de rendement journalier", color: "text-violet-400", bg: "bg-violet-500/10", border: "border-violet-500/15" },
+              { icon: Shield, text: "Fonds sécurisés, retraits sous 48h", color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/15" },
+              { icon: Zap, text: "Gains générés 24h/24, 7j/7", color: "text-indigo-400", bg: "bg-indigo-500/10", border: "border-indigo-500/15" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3 text-sm">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center flex-shrink-0">
-                  <item.icon className="w-3.5 h-3.5 text-emerald-400" />
+                <div className={`w-8 h-8 rounded-lg ${item.bg} border ${item.border} flex items-center justify-center flex-shrink-0`}>
+                  <item.icon className={`w-3.5 h-3.5 ${item.color}`} />
                 </div>
                 <span className="text-foreground/70">{item.text}</span>
               </div>
             ))}
           </div>
 
-          <div className="mt-10 pt-8 border-t border-white/[0.05]">
+          <div className="mt-10 pt-8" style={{ borderTop: '1px solid hsl(255 18% 13%)' }}>
             <div className="flex items-center gap-4">
               <div className="flex -space-x-2">
                 {["E", "M", "A", "L"].map((l, i) => (
-                  <div key={i} className="w-8 h-8 rounded-full bg-emerald-500/15 ring-2 ring-background flex items-center justify-center">
-                    <span className="text-[10px] font-bold text-emerald-400">{l}</span>
+                  <div key={i} className="w-8 h-8 rounded-full ring-2 ring-background flex items-center justify-center"
+                    style={{ background: 'linear-gradient(135deg, hsl(263 72% 67% / 0.2), hsl(220 88% 62% / 0.15))' }}>
+                    <span className="text-[10px] font-bold text-violet-300">{l}</span>
                   </div>
                 ))}
               </div>
