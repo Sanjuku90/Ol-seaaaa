@@ -97,4 +97,13 @@ Four main tables:
 
 ### Environment Variables Required
 - `DATABASE_URL`: PostgreSQL connection string
-- `SESSION_SECRET`: Secret for session encryption (optional, has fallback)
+- `SESSION_SECRET`: Secret for session encryption (required in production; development uses a local fallback)
+- `EMAIL_USER`: SMTP username for outgoing BlockMint emails (optional; email sending is skipped when absent)
+- `EMAIL_PASS`: SMTP password/app password for outgoing BlockMint emails (optional; email sending is skipped when absent)
+
+## Recent Changes
+
+### Replit Migration
+- Configured the app to run as a Replit web app on port 5000 through the existing Express server.
+- Moved outgoing email credentials out of source code and into environment variables.
+- Updated Vite HMR settings for Replit's proxied preview environment.

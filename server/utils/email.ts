@@ -1,26 +1,31 @@
 import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // Use STARTTLS
-  auth: {
-    user: "trackitnoww@gmail.com",
-    pass: "dxjp wcrk jhvu xufo",
-  },
-  tls: {
-    rejectUnauthorized: false,
-    minVersion: "TLSv1.2"
-  },
-  debug: false,
-  logger: false,
-  connectionTimeout: 20000,
-  greetingTimeout: 20000,
-  socketTimeout: 20000,
-  pool: true,
-  maxConnections: 3,
-  maxMessages: 100
-});
+const emailUser = process.env.EMAIL_USER;
+const emailPass = process.env.EMAIL_PASS;
+
+const transporter = emailUser && emailPass
+  ? nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      requireTLS: true,
+      auth: {
+        user: emailUser,
+        pass: emailPass,
+      },
+      tls: {
+        minVersion: "TLSv1.2",
+      },
+      debug: false,
+      logger: false,
+      connectionTimeout: 20000,
+      greetingTimeout: 20000,
+      socketTimeout: 20000,
+      pool: true,
+      maxConnections: 3,
+      maxMessages: 100,
+    })
+  : null;
 
 const APP_NAME = "BlockMint";
 const PRIMARY_COLOR = "#10b981"; 
@@ -76,6 +81,11 @@ function getHtmlTemplate(title: string, content: string) {
 }
 
 export async function sendEmail(to: string, subject: string, text: string, htmlTitle: string, htmlContent: string) {
+  if (!transporter || !emailUser) {
+    console.warn("[Email] EMAIL_USER and EMAIL_PASS are not configured; skipping email send.");
+    return;
+  }
+
   console.log(`[Email] Attempting to send email to: ${to} | Subject: ${subject}`);
   try {
     /* 
@@ -93,7 +103,7 @@ export async function sendEmail(to: string, subject: string, text: string, htmlT
     */
 
     const info = await transporter.sendMail({
-      from: `"BlockMint" <trackitnoww@gmail.com>`,
+      from: `"BlockMint" <${emailUser}>`,
       to,
       subject,
       text,

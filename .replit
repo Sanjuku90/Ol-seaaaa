@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "web"]
+modules = ["web", "nodejs-22"]
 run = "npm run dev"
 hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
@@ -9,12 +9,16 @@ channel = "stable-25_05"
 localPort = 5000
 externalPort = 80
 
+[[ports]]
+localPort = 24678
+externalPort = 3001
+
 [env]
 PORT = "5000"
 
 [deployment]
 deploymentTarget = "autoscale"
-run = ["node", "./dist/index.cjs"]
+run = ["node", "./dist/index.js"]
 build = ["npm", "run", "build"]
 
 [workflows]
@@ -47,5 +51,3 @@ expertMode = true
 [userenv]
 
 [userenv.shared]
-EMAIL_USER = "trackitnoww@gmail.com"
-EMAIL_PASS = "dxjp wcrk jhvu xufo"
