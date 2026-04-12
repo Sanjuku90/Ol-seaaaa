@@ -99,6 +99,7 @@ app.use((req, res, next) => {
                     referral_earnings DECIMAL(10,2) DEFAULT 0 NOT NULL,
                     indirect_referral_earnings DECIMAL(10,2) DEFAULT 0 NOT NULL,
                     active_referrals INTEGER DEFAULT 0,
+                    last_earnings_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                   );
                 `);
@@ -187,6 +188,22 @@ app.use((req, res, next) => {
                 `);
               }
               console.log(`[db] Table ${table} processed.`);
+            }
+          }
+
+          // Column migrations: add any missing columns to existing tables
+          const columnMigrations: Array<{ table: string; column: string; definition: string }> = [
+            { table: 'users', column: 'last_earnings_update', definition: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' },
+          ];
+          for (const { table, column, definition } of columnMigrations) {
+            const colRes = await client.query(
+              `SELECT 1 FROM information_schema.columns WHERE table_name = $1 AND column_name = $2`,
+              [table, column]
+            );
+            if (colRes.rowCount === 0) {
+              console.log(`[db] Adding missing column ${table}.${column}...`);
+              await client.query(`ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS ${column} ${definition}`);
+              console.log(`[db] Column ${table}.${column} added.`);
             }
           }
         } finally {
