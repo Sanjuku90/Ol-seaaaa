@@ -99,8 +99,6 @@ app.use((req, res, next) => {
                     referral_earnings DECIMAL(10,2) DEFAULT 0 NOT NULL,
                     indirect_referral_earnings DECIMAL(10,2) DEFAULT 0 NOT NULL,
                     active_referrals INTEGER DEFAULT 0,
-                    affiliation_grade TEXT DEFAULT 'Bronze',
-                    phone TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                   );
                 `);
