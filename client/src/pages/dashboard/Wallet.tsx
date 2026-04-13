@@ -16,7 +16,7 @@ import { useCreateTransaction, useTransactions } from "@/hooks/use-platform";
 import { api } from "@shared/routes";
 
 const transactionSchema = z.object({
-  amount: z.coerce.number().min(16, "Le montant minimum est de 16 $"),
+  amount: z.coerce.number().min(21, "Le montant minimum est de 21 $"),
   crypto: z.string().min(1, "Veuillez choisir une cryptomonnaie"),
   walletAddress: z.string().optional(),
   withdrawPassword: z.string().optional(),
