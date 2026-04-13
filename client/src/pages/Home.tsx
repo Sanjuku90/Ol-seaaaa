@@ -38,7 +38,7 @@ export default function Home() {
       icon: Zap,
       title: "Mode Location",
       desc: "Accès immédiat à une machine de minage moyennant un abonnement mensuel et un dépôt minimum. Idéal pour débuter.",
-      points: ["Dépôt min. 15 $", "Gains quotidiens", "Frais maintenance 3$/mois"],
+      points: ["Dépôt min. 16 $", "Gains quotidiens", "Frais maintenance 3$/mois"],
       color: "text-blue-400",
       bg: "bg-blue-500/8",
       border: "border-blue-500/15",
@@ -64,7 +64,7 @@ export default function Home() {
   ];
 
   const faqs = [
-    { q: "Quel est le dépôt minimum ?", a: "Pour les machines en location, le dépôt minimum est de 15 $. Pour les achats, le prix de départ est de 90 $ (après promo -50%)." },
+    { q: "Quel est le dépôt minimum ?", a: "Pour les machines en location, le dépôt minimum est de 16 $. Pour les achats, le prix de départ est de 90 $ (après promo -50%)." },
     { q: "Comment sont calculés les gains ?", a: "Les gains sont calculés quotidiennement en fonction du taux journalier de chaque machine (entre 11.9% et 14.3% selon le modèle)." },
     { q: "Quels sont les frais de retrait ?", a: "Les frais de retrait sont de 4% une fois la maturité atteinte, et de 19% avant maturité." },
     { q: "Quelles cryptomonnaies sont acceptées ?", a: "Nous acceptons USDT TRC20, USDT ERC20, Bitcoin et BNB BEP20." },
@@ -240,12 +240,12 @@ export default function Home() {
                   value={calcAmount}
                   onValueChange={setCalcAmount}
                   max={10000}
-                  min={15}
+                  min={16}
                   step={10}
                   className="py-2"
                 />
                 <div className="flex justify-between text-xs text-muted-foreground/50 mt-1">
-                  <span>$15</span>
+                  <span>$16</span>
                   <span>$10 000</span>
                 </div>
               </div>
