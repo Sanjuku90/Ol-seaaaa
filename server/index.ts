@@ -244,6 +244,20 @@ app.use((req, res, next) => {
     },
     () => {
       log(`serving on port ${port}`);
+
+      if (process.env.NODE_ENV === "production" && process.env.RENDER_EXTERNAL_URL) {
+        const pingUrl = `${process.env.RENDER_EXTERNAL_URL}/api/health`;
+        const PING_INTERVAL_MS = 14 * 60 * 1000;
+        setInterval(async () => {
+          try {
+            const res = await fetch(pingUrl);
+            log(`self-ping ${res.status}`, "keepalive");
+          } catch (err) {
+            log(`self-ping failed: ${err}`, "keepalive");
+          }
+        }, PING_INTERVAL_MS);
+        log(`keepalive ping scheduled every 14 min → ${pingUrl}`, "keepalive");
+      }
     },
   );
 })().catch((err) => {
