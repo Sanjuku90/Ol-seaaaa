@@ -6,7 +6,7 @@ import { db } from "./db";
 import { machines, users, transactions, contracts, loginAttempts } from "@shared/schema";
 import { api } from "@shared/routes";
 import { z } from "zod";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, and } from "drizzle-orm";
 import { WebSocket, WebSocketServer } from "ws";
 import { sendEmail } from "./utils/email";
 
@@ -109,10 +109,12 @@ export async function registerRoutes(
       // Deduct balance
       await storage.updateUserBalance((req.user as any).id, -totalCost);
 
+      const contractAmount = machine.type === "buy" ? totalCost : input.amount;
+
       const contract = await storage.createContract(
         (req.user as any).id, 
         input.machineId, 
-        input.amount, 
+        contractAmount, 
         input.autoReinvest
       );
 
@@ -702,6 +704,16 @@ export async function registerRoutes(
 }
 
 async function seedDatabase() {
+  // Fix buy machine contracts that were stored with $0 amount (bug fix migration)
+  const BUY_PROMO_DISCOUNT = 0.50;
+  const buyMachinesList = await db.select().from(machines).where(eq(machines.type, "buy"));
+  for (const machine of buyMachinesList) {
+    const correctAmount = (Number(machine.buyPrice) * (1 - BUY_PROMO_DISCOUNT)).toFixed(2);
+    await db.update(contracts)
+      .set({ amount: correctAmount })
+      .where(and(eq(contracts.machineId, machine.id), eq(contracts.amount, "0.00")));
+  }
+
   await db.update(machines).set({ minDeposit: 21 }).where(eq(machines.type, "rent"));
 
   const defaultRates: Record<string, string> = {

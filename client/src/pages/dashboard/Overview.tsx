@@ -140,15 +140,18 @@ export default function Overview() {
     };
   }, [queryClient]);
 
-  // Real-time live ticker: increments balance & accumulated rewards every second
+  // Real-time live ticker: computes earnings since server's lastEarningsUpdate
+  // This way gains survive navigation (they're anchored to the server timestamp)
   useEffect(() => {
     if (!user || !contracts || !machines) return;
 
     const getMachineById = (id: number) => machines.find(m => m.id === id);
     const activeContracts = contracts.filter(c => c.status === "active");
 
+    // Server's last known balance & reward values (as of lastEarningsUpdate)
     const baseBalance = Number(user.balance);
-    const baseAccumulated = contracts.reduce((sum, c) => sum + Number(c.accumulatedRewards || 0), 0);
+    const serverLastUpdate = user.lastEarningsUpdate ? new Date(user.lastEarningsUpdate).getTime() : Date.now();
+
     const baseContractRewards: Record<number, number> = {};
     contracts.forEach(c => { baseContractRewards[c.id] = Number(c.accumulatedRewards || 0); });
 
@@ -160,25 +163,25 @@ export default function Overview() {
     });
     const totalRatePerSecond = Object.values(contractRatesPerSecond).reduce((a, b) => a + b, 0);
 
-    setLiveBalance(baseBalance);
-    setLiveAccumulated(baseAccumulated);
-    setLiveContractRewards(baseContractRewards);
-
-    const snapshotTime = Date.now();
-
-    const ticker = setInterval(() => {
-      const elapsed = (Date.now() - snapshotTime) / 1000;
-      setLiveBalance(baseBalance + totalRatePerSecond * elapsed);
-      setLiveAccumulated(baseAccumulated + totalRatePerSecond * elapsed);
+    const tick = () => {
+      // Seconds elapsed since the server last calculated earnings
+      const elapsedSinceServerUpdate = Math.max(0, (Date.now() - serverLastUpdate) / 1000);
+      setLiveBalance(baseBalance + totalRatePerSecond * elapsedSinceServerUpdate);
+      setLiveAccumulated(
+        Object.values(baseContractRewards).reduce((a, b) => a + b, 0) +
+        totalRatePerSecond * elapsedSinceServerUpdate
+      );
       setLiveContractRewards(() => {
-        const updated: Record<number, number> = { ...baseContractRewards };
-        activeContracts.forEach(c => {
-          updated[c.id] = baseContractRewards[c.id] + (contractRatesPerSecond[c.id] || 0) * elapsed;
+        const updated: Record<number, number> = {};
+        contracts.forEach(c => {
+          updated[c.id] = baseContractRewards[c.id] + (contractRatesPerSecond[c.id] || 0) * elapsedSinceServerUpdate;
         });
         return updated;
       });
-    }, 1000);
+    };
 
+    tick();
+    const ticker = setInterval(tick, 1000);
     return () => clearInterval(ticker);
   }, [user, contracts, machines]);
 
