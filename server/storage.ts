@@ -79,12 +79,20 @@ export class DatabaseStorage implements IStorage {
 
     const userContracts = await this.getContracts(user.id);
     const activeContracts = userContracts.filter(c => c.status === "active");
-    
+
     let totalEarnings = 0;
     for (const contract of activeContracts) {
       const dailyRate = Number(contract.machine.dailyRate) / 100;
       const hourlyRate = (Number(contract.amount) * dailyRate) / 24;
-      totalEarnings += hourlyRate * diffHours;
+      const contractEarnings = hourlyRate * diffHours;
+      totalEarnings += contractEarnings;
+
+      if (contractEarnings > 0) {
+        const earningsStr = contractEarnings.toFixed(6);
+        await db.update(contracts)
+          .set({ accumulatedRewards: sql`${contracts.accumulatedRewards} + ${earningsStr}::numeric` })
+          .where(eq(contracts.id, contract.id));
+      }
     }
 
     if (totalEarnings > 0) {

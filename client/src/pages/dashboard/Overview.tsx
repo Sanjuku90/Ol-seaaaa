@@ -42,6 +42,9 @@ export default function Overview() {
   const queryClient = useQueryClient();
   const [increaseAmount, setIncreaseAmount] = useState("");
   const [selectedContractForIncrease, setSelectedContractForIncrease] = useState<Contract | null>(null);
+  const [liveBalance, setLiveBalance] = useState(0);
+  const [liveAccumulated, setLiveAccumulated] = useState(0);
+  const [liveContractRewards, setLiveContractRewards] = useState<Record<number, number>>({});
 
   const { data: user } = useQuery<User>({ 
     queryKey: ["/api/user"],
@@ -114,7 +117,6 @@ export default function Overview() {
       try {
         const data = JSON.parse(event.data);
         if (data.type === "BALANCE_UPDATE" || data.type === "PROFIT_GENERATED" || data.type === "TRANSACTION_UPDATE") {
-          // Force immediate refetch of user and contracts data
           queryClient.invalidateQueries({ queryKey: ["/api/user"] });
           queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
         }
@@ -127,7 +129,6 @@ export default function Overview() {
       console.error("WebSocket error:", error);
     };
 
-    // Fallback refetch interval just in case
     const interval = setInterval(() => {
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
@@ -139,10 +140,52 @@ export default function Overview() {
     };
   }, [queryClient]);
 
+  // Real-time live ticker: increments balance & accumulated rewards every second
+  useEffect(() => {
+    if (!user || !contracts || !machines) return;
+
+    const getMachineById = (id: number) => machines.find(m => m.id === id);
+    const activeContracts = contracts.filter(c => c.status === "active");
+
+    const baseBalance = Number(user.balance);
+    const baseAccumulated = contracts.reduce((sum, c) => sum + Number(c.accumulatedRewards || 0), 0);
+    const baseContractRewards: Record<number, number> = {};
+    contracts.forEach(c => { baseContractRewards[c.id] = Number(c.accumulatedRewards || 0); });
+
+    const contractRatesPerSecond: Record<number, number> = {};
+    activeContracts.forEach(c => {
+      const machine = getMachineById(c.machineId);
+      const dailyRate = Number(machine?.dailyRate ?? 0) / 100;
+      contractRatesPerSecond[c.id] = (Number(c.amount) * dailyRate) / 86400;
+    });
+    const totalRatePerSecond = Object.values(contractRatesPerSecond).reduce((a, b) => a + b, 0);
+
+    setLiveBalance(baseBalance);
+    setLiveAccumulated(baseAccumulated);
+    setLiveContractRewards(baseContractRewards);
+
+    const snapshotTime = Date.now();
+
+    const ticker = setInterval(() => {
+      const elapsed = (Date.now() - snapshotTime) / 1000;
+      setLiveBalance(baseBalance + totalRatePerSecond * elapsed);
+      setLiveAccumulated(baseAccumulated + totalRatePerSecond * elapsed);
+      setLiveContractRewards(() => {
+        const updated: Record<number, number> = { ...baseContractRewards };
+        activeContracts.forEach(c => {
+          updated[c.id] = baseContractRewards[c.id] + (contractRatesPerSecond[c.id] || 0) * elapsed;
+        });
+        return updated;
+      });
+    }, 1000);
+
+    return () => clearInterval(ticker);
+  }, [user, contracts, machines]);
+
   const activeContracts = contracts?.filter(c => c.status === "active" || c.status === "suspended") || [];
   
-  const totalBalance = Number(user?.balance || 0);
-  const totalAccumulated = contracts?.reduce((acc, c) => acc + Number(c.accumulatedRewards || 0), 0) || 0;
+  const totalBalance = liveBalance || Number(user?.balance || 0);
+  const totalAccumulated = liveAccumulated || contracts?.reduce((acc, c) => acc + Number(c.accumulatedRewards || 0), 0) || 0;
   
   const getMachine = (id: number) => machines?.find(m => m.id === id);
 
@@ -150,7 +193,7 @@ export default function Overview() {
     const machine = getMachine(contract.machineId);
     if (!machine) return null;
 
-    const accumulated = Number(contract.accumulatedRewards || 0);
+    const accumulated = liveContractRewards[contract.id] ?? Number(contract.accumulatedRewards || 0);
     const minDep = machine.type === "rent" ? Number(machine.minDeposit || 30) : 1; // Dummy min for Buy machines progress
     const progress = machine.type === "rent" 
       ? Math.min(100, (accumulated / minDep) * 100)
